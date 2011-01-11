@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Habanero.Testability.Testers</name>
+    </assembly>
+    <members>
+        <member name="T:Habanero.Testability.Testers.BOTester">
+            <summary>
+            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.IBusinessObject"/> 
+            This tester provides methods for testing the basic aspects of properties of
+            a business object see <see cref="T:Habanero.Base.IPropDef"/>
+            such as ShouldBeCompulsory.
+            If any of these Asserts fail then an <see cref="T:NUnit.Framework.AssertionException"/>. is thrown.
+            Else the Assert executes without an Exception
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.ShouldHaveAllPropsMapped">
+            <summary>
+            For each property defined in the ClassDefs for this Business
+            Object should have all Properties Mapped.<br/>
+            
+            See <see cref="M:Habanero.Testability.Testers.BOTester.ShouldHavePropertyMapped(System.String)"/> for more details on how this 
+            mapping testing is done.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.ShouldHavePropertyMapped(System.String)">
+            <summary>
+            Tests that the Mapping within the Property Gettter and Setter
+            are mapped correctly i.e. the string "ProspectTypeName" in 
+            the Getter and the string "ProspectTypeName" in the setter are 
+            both the same and they are mapped to a valid property Def in the ClassDef.
+            <code>
+             public virtual string ProspectTypeName
+             {
+                 get { return ((string)(base.GetPropertyValue("ProspectTypeName"))); }
+                 set { base.SetPropertyValue("ProspectTypeName", value); }
+             }
+            </code>
+            This is done by setting the Property via reflection (if it has a set)
+            and setting it via reflection (if it has a get) and comparing these values
+            to the values for the BOProp to ensure that all mappings are correct.
+            </summary>
+            <param name="propertyName"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.ShouldHaveSingleRelationshipMapped(System.String)">
+            <summary>
+            Tests that the Mapping within the Property Gettter and Setter
+            of a relationship are mapped correctly i.e. the string "SingleRelGetterNotMapped" in 
+            the Getter and the string "SingleRelationship" in the setter are 
+            both the same and they are mapped to a valid <see cref="T:Habanero.Base.IRelationshipDef"/> in the ClassDef
+            <see cref="T:Habanero.Base.IClassDef"/>.
+            <code>
+              public virtual FakeBO SingleRelationship
+              {
+                  get { return Relationships.GetRelatedObject{FakeBO}("SingleRelationship"); }
+                  set { Relationships.SetRelatedObject("SingleRelationship", value); }
+              }
+            </code>
+            This is done by setting the Property via reflection (if it has a set)
+            and setting it via reflection (if it has a get) and comparing these values
+            to the values for the BOProp to ensure that all mappings are correct.
+            </summary>
+            <param name="relationshipName"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.GetPropTester(System.String)">
+            <summary>
+            Returns a <see cref="T:Habanero.Testability.Testers.PropDefTester"/> for the property specified by propName
+            </summary>
+            <param name="propName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.GetSingleRelationshipTester(System.String)">
+            <summary>
+            Returns a <see cref="T:Habanero.Testability.Testers.PropDefTester"/> for the property specified by propName
+            </summary>
+            <param name="propName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.ShouldBeUniqueConstraint(System.String)">
+            <summary>
+            Asserts that the property identified by <paramref name="propName"/> is a Unique Constraint
+            </summary>
+            <param name="propName"></param>
+        </member>
+        <member name="T:Habanero.Testability.Testers.BOTester`1">
+            <summary>
+            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.IPropDef"/> 
+            This tester provides methods for testing the basic attributes of a <see cref="T:Habanero.Base.IPropDef"/>
+            such as ShouldBeCompulsory.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.#ctor">
+            <summary>
+             Constructs a tester.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldHavePropertyMapped(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Tests that the Mapping within the Property Gettter and Setter
+            are mapped correctly i.e. the string "ProspectTypeName" in 
+            the Getter and the string "ProspectTypeName" in the setter are 
+            both the same and they are mapped to a valid property Def in the ClassDef.
+            <code>
+             public virtual string ProspectTypeName
+             {
+                 get { return ((string)(base.GetPropertyValue("ProspectTypeName"))); }
+                 set { base.SetPropertyValue("ProspectTypeName", value); }
+             }
+            </code>
+            This is done by setting the Property via reflection (if it has a set)
+            and setting it via reflection (if it has a get) and comparing these values
+            to the values for the BOProp to ensure that all mappings are correct.
+            </summary>
+            <param name="propExpression"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldHaveSingleRelationshipMapped(System.Linq.Expressions.Expression{System.Func{`0,Habanero.Base.IBusinessObject}})">
+            <summary>
+            Tests that the Mapping within the Property Gettter and Setter
+            of a relationship are mapped correctly i.e. the string "SingleRelGetterNotMapped" in 
+            the Getter and the string "SingleRelationship" in the setter are 
+            both the same and they are mapped to a valid <see cref="T:Habanero.Base.IRelationshipDef"/> in the ClassDef
+            <see cref="T:Habanero.Base.IClassDef"/>.
+            <code>
+              public virtual FakeBO SingleRelationship
+              {
+                  get { return Relationships.GetRelatedObject{FakeBO}("SingleRelationship"); }
+                  set { Relationships.SetRelatedObject("SingleRelationship", value); }
+              }
+            </code>
+            This is done by setting the Property via reflection (if it has a set)
+            and setting it via reflection (if it has a get) and comparing these values
+            to the values for the BOProp to ensure that all mappings are correct.
+            </summary>
+            <param name="singleRelExpression"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldHaveDefault(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Raises <see cref="T:NUnit.Framework.AssertionException"/> if the prop identified by
+            <paramref name="propExpression"/> does not have a default value set.
+            Does nothing otherwise
+            </summary>
+            <param name="propExpression"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldNotHaveDefault(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Raises <see cref="T:NUnit.Framework.AssertionException"/> if the prop identified by
+            <paramref name="propExpression"/> has a default value set.
+            Does nothing otherwise
+            </summary>
+            <param name="propExpression"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldHaveDefault(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            Raises <see cref="T:NUnit.Framework.AssertionException"/> if the prop identified by
+            <paramref name="propExpression"/> does not have a default value set.
+            Does nothing otherwise
+            </summary>
+            <param name="propExpression"></param>
+            <param name="defaultValue">The default value for this property.</param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldNotHaveDefault(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            Raises <see cref="T:NUnit.Framework.AssertionException"/> if the prop identified by
+            <paramref name="propExpression"/> has a default value set.
+            Does nothing otherwise
+            </summary>
+            <param name="propExpression"></param>
+            <param name="expectedDefaultValue"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldBeCompulsory(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Raises <see cref="T:NUnit.Framework.AssertionException"/> if the prop identified by
+            <paramref name="propExpression"/> does not have a default value set.
+            Does nothing otherwise
+            </summary>
+            <param name="propExpression"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldNotBeCompulsory(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Raises <see cref="T:NUnit.Framework.AssertionException"/> if the prop identified by
+            <paramref name="propExpression"/> does not have a default value set.
+            Does nothing otherwise
+            </summary>
+            <param name="propExpression"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldHaveReadWriteRule(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},Habanero.Base.PropReadWriteRule)">
+            <summary>
+            Raises <see cref="T:NUnit.Framework.AssertionException"/> if the prop identified by
+            <paramref name="propExpression"/> does not have a default value set.
+            Does nothing otherwise
+            </summary>
+            <param name="propExpression"></param>
+            <param name="expectedReadWriteRule">The expected ReadWriteRule</param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.ShouldBeUniqueConstraint(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Asserts that the property identified by <paramref name="propExpression"/> is a Unique Constraint
+            </summary>
+            <param name="propExpression"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.GetPropTester(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Returns a <see cref="T:Habanero.Testability.Testers.PropDefTester"/> for the property specified by <paramref name="propExpression"/>
+            </summary>
+            <param name="propExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.GetSingleRelationshipTester(System.Linq.Expressions.Expression{System.Func{`0,Habanero.Base.IBusinessObject}})">
+            <summary>
+            Returns a <see cref="T:Habanero.Testability.Testers.PropDefTester"/> for the property specified by <paramref name="propExpression"/>
+            </summary>
+            <param name="propExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Testability.Testers.PropDefTester">
+            <summary>
+            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.IPropDef"/> 
+            This tester provides methods for testing the basic attributes of a <see cref="T:Habanero.Base.IPropDef"/>
+            such as ShouldBeCompulsory.
+            If any of these Asserts fail then an <see cref="T:NUnit.Framework.AssertionException"/>. is thrown.
+            Else the Assert executes without an Exception
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Testers.SingleValueTester">
+            <summary>
+            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.ISingleValueDef"/> 
+            This tester provides methods for testing the basic attributes of a <see cref="T:Habanero.Base.ISingleValueDef"/>
+            such as ShouldBeIsCompulsory.
+            If any of these Asserts fail then an <see cref="T:NUnit.Framework.AssertionException"/>. is thrown.
+            Else the Assert executes without an Exception
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.SingleValueTester.ShouldBeCompulsory">
+            <summary>
+             The <see cref="T:Habanero.Base.ISingleValueDef"/> i.e. <see cref="T:Habanero.Base.ISingleRelationshipDef"/> or <see cref="T:Habanero.Base.IPropDef"/> should be defined as compulsory
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.SingleValueTester.ShouldNotBeCompulsory">
+            <summary>
+             The <see cref="T:Habanero.Base.ISingleValueDef"/> i.e. <see cref="T:Habanero.Base.ISingleRelationshipDef"/> or <see cref="T:Habanero.Base.IPropDef"/> should be defined as compulsory
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.SingleValueTester.ShouldHavePropertyMapped">
+            <summary>
+            Tests that the Mapping within the Property Gettter and Setter
+            are mapped correctly i.e. the string "ProspectTypeName" in 
+            the Getter and the string "ProspectTypeName" in the setter are 
+            both the same and they are mapped to a valid property Def in the ClassDef.
+            <code>
+             public virtual string ProspectTypeName
+             {
+                 get { return ((string)(base.GetPropertyValue("ProspectTypeName"))); }
+                 set { base.SetPropertyValue("ProspectTypeName", value); }
+             }
+            </code>
+            
+            Or in the case of a single relationship
+            Should be mapped to a valid <see cref="T:Habanero.Base.ISingleRelationshipDef"/> in the ClassDef
+            <see cref="T:Habanero.Base.IClassDef"/>.
+            <code>
+              public virtual FakeBO SingleRelationship
+              {
+                  get { return Relationships.GetRelatedObject{FakeBO}("SingleRelationship"); }
+                  set { Relationships.SetRelatedObject("SingleRelationship", value); }
+              }
+            </code>
+            This is done by setting the Property via reflection (if it has a set)
+            and setting it via reflection (if it has a get) and comparing these values
+            to the values for the BOProp to ensure that all mappings are correct.
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Testers.SingleValueTester.SingleValueDef">
+            <summary>
+            The <see cref="T:Habanero.Base.ISingleValueDef"/> that is being tested by this Tester
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Testers.SingleValueTester.PropertyName">
+            <summary>
+            The Property name of the BOProp or SingleRelationship that is being tested.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.#ctor(Habanero.Base.IPropDef)">
+            <summary>
+            </summary>
+            <param name="propDef"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveRule">
+            <summary>
+            Should have a rule this Assert does not specify what rule just that it has a Rule
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveDefault">
+            <summary>
+            Should have a default value this Assert does not specify what the default value should be 
+            but merely assserts that there is one.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveDefault(System.String)">
+            <summary>
+            Asserts that this <see cref="P:Habanero.Testability.Testers.PropDefTester.PropDef"/> have a default matching the <paramref name="expectedDefaultValueString"/>
+            </summary>
+            <param name="expectedDefaultValueString"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldNotHaveDefault">
+            <summary>
+            Asserts that this <see cref="P:Habanero.Testability.Testers.PropDefTester.PropDef"/> does not have a default/&gt;
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldNotHaveDefault(System.String)">
+            <summary>
+            Asserts that this <see cref="P:Habanero.Testability.Testers.PropDefTester.PropDef"/> does not have a default matching the <paramref name="expectedDefaultValueString"/>
+            </summary>
+            <param name="expectedDefaultValueString"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveReadWriteRule(Habanero.Base.PropReadWriteRule)">
+            <summary>
+            Asserts that this <see cref="P:Habanero.Testability.Testers.PropDefTester.PropDef"/> has read write rules matching the <paramref name="expectedReadWriteRule"/>
+            </summary>
+            <param name="expectedReadWriteRule"></param>
+        </member>
+        <member name="P:Habanero.Testability.Testers.PropDefTester.PropDef">
+            <summary>
+            the Property Def that is being tested.
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Testers.PropDefExtensions">
+            <summary>
+             Extension methods for easily testing an <see cref="T:Habanero.Base.IPropDef"/>
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldBeCompulsory(Habanero.Base.IPropDef)">
+            <summary>
+            Asserts that the property Def is set up as compulsory
+            </summary>
+            <param name="propDef"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldNotBeCompulsory(Habanero.Base.IPropDef)">
+            <summary>
+            Asserts that the propDef is not set up as compulsory
+            </summary>
+            <param name="propDef"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldNotHaveDefault(Habanero.Base.IPropDef)">
+            <summary>
+            Asserts that the <see cref="T:Habanero.BO.ClassDefinition.PropDef"/> does not have a default
+            </summary>
+            <param name="propDef"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldHaveDefault(Habanero.Base.IPropDef)">
+            <summary>
+            Asserts that the <see cref="T:Habanero.BO.ClassDefinition.PropDef"/> has a default
+            </summary>
+            <param name="propDef"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldHaveDefault(Habanero.Base.IPropDef,System.String)">
+            <summary>
+            Asserts that the <see cref="T:Habanero.BO.ClassDefinition.PropDef"/> has a default matching the <paramref name="expectedDefaultValueString"/>
+            </summary>
+            <param name="propDef"></param>
+            <param name="expectedDefaultValueString"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldNotHaveDefault(Habanero.Base.IPropDef,System.String)">
+            <summary>
+            Asserts that the <see cref="T:Habanero.BO.ClassDefinition.PropDef"/> does not have a default matching the <paramref name="expectedDefaultValueString"/>
+            </summary>
+            <param name="propDef"></param>
+            <param name="expectedDefaultValueString"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldHaveReadWriteRule(Habanero.Base.IPropDef,Habanero.Base.PropReadWriteRule)">
+            <summary>
+            Asserts that the <see cref="T:Habanero.BO.ClassDefinition.PropDef"/> does not have a default matching the <paramref name="expectedReadWriteRule"/>
+            </summary>
+            <param name="propDef"></param>
+            <param name="expectedReadWriteRule"></param>
+        </member>
+        <member name="T:Habanero.Testability.Testers.SingleRelDefTester">
+            <summary>
+            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.IRelationshipDef"/> 
+            This tester provides methods for testing the basic attributes of a <see cref="T:Habanero.Base.IRelationshipDef"/>
+            such as ShouldBeIsCompulsory.
+            If any of these Asserts fail then an <see cref="T:NUnit.Framework.AssertionException"/>. is thrown.
+            Else the Assert executes without an Exception
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Testers.SingleRelDefTester.RelationshipName">
+            <summary>
+            The Name of the SingleRelationshipDef that is being tested.
+            </summary>
+        </member>
+    </members>
+</doc>
