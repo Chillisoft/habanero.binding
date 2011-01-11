@@ -1,0 +1,26 @@
+﻿<classes>
+  <class name="Employee" assembly="BindingListViewSample.BO" displayName="Employee">
+    <property name="EmployeeID" type="Guid" readWriteRule="WriteNew" compulsory="true" />
+    <property name="FirstName" compulsory="true" />
+    <property name="LastName" compulsory="true" />
+    <property name="Salary" type="Decimal" compulsory="true" />
+    <property name="BirthDate" type="DateTime" compulsory="true" />
+    <primaryKey>
+      <prop name="EmployeeID" />
+    </primaryKey>
+    <ui>
+      <grid>
+        <column property="FirstName" />
+        <column property="LastName" />
+        <column property="Salary" />
+        <column property="BirthDate" />
+      </grid>
+      <form>
+        <field property="FirstName" layout="Label" />
+        <field property="LastName" layout="Label" />
+        <field property="Salary" layout="Label" />
+        <field property="BirthDate" type="DateTimePicker" layout="Label" />
+      </form>
+    </ui>
+  </class>
+</classes>
