@@ -46,7 +46,7 @@ end
 
 exec :checkout_smooth do |cmd| #command to check out smooth source using SVN
 	cmd.path_to_command = "../../../../Utilities/BuildServer/Subversion/bin/svn.exe"
-	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/Habanero Community/SmoothHabanero/branches/v1.5/" "temp/Smooth1.5/" --username chilli --password chilli --non-interactive)
+	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/HabaneroCommunity/SmoothHabanero/branches/v1.5/" "temp/Smooth1.5/" --username chilli --password chilli --non-interactive)
 end
 
 msbuild :msdo_smooth do |msb| #builds smooth with msbuild
@@ -68,7 +68,7 @@ end
 
 exec :checkout_testability do |cmd| #command to check out testability source using SVN
 	cmd.path_to_command = "../../../../Utilities/BuildServer/Subversion/bin/svn.exe"
-	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/Habanero Community/Habanero.Testability/branches/v1.3_HabV2.6/" "temp/Testability1.3_HabV2.6/" --username chilli --password chilli --non-interactive)
+	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Testability/branches/v1.3_HabV2.6/" "temp/Testability1.3_HabV2.6/" --username chilli --password chilli --non-interactive)
 end
 
 msbuild :msdo_testability do |msb| #builds testability with msbuild
