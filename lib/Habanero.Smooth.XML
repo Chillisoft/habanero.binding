@@ -15,151 +15,106 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Habanero.Smooth.AllClassesAutoMapperExtensions">
-            <summary>
-            Extension methods used so that a more smooth syntax can be used when
-            coding and using Habanero.Smooth.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.AllClassesAutoMapperExtensions.MapClasses(System.Reflection.Assembly)">
-            <summary>
-            Maps All classes in the Given Assembly to a <see cref="T:Habanero.Base.ClassDefCol"/>
-            </summary>
-            <param name="assembly"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.AllClassesAutoMapperExtensions.MapClasses(System.Type)">
-            <summary>
-            Maps all classes in the Assembly for the given type <see cref="T:Habanero.Base.ClassDefCol"/>
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.AllClassesAutoMapperExtensions.MapClasses(System.Type,System.Func{System.Type,System.Boolean})">
-            <summary>
-            Maps all classes in the Assembly for the given type <see cref="T:Habanero.Base.ClassDefCol"/>
-            </summary>
-            <param name="type"></param>
-            <param name="where">a valid where clause used to limit the Classes being mapped</param>
-            <returns></returns>
-        </member>
-        <member name="T:Habanero.Smooth.AllClassesAutoMapper">
-            <summary>
-            Maps all Business Objects in an ITypeSource to a <see cref="T:Habanero.Base.IClassDef"/>
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.AllClassesAutoMapper.#ctor(Habanero.Smooth.ITypeSource)">
-            <summary>
-            Constructs the AllClassesAutoMapper with a specified Source.
-            </summary>
-            <param name="source"></param>
-        </member>
-        <member name="M:Habanero.Smooth.AllClassesAutoMapper.Map">
-            <summary>
-            Maps the <see cref="T:Habanero.Base.IBusinessObject"/> classes in the <see cref="T:Habanero.Smooth.ITypeSource"/>.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.AllClassesAutoMapper.CreateReverseRelationship(Habanero.Base.ClassDefCol,Habanero.Base.IClassDef,Habanero.Base.IRelationshipDef)">
-            <summary>
-             Creates a Reverse Relationship when required.
-            </summary>
-            <param name="classDefCol"></param>
-            <param name="classDef"></param>
-            <param name="relationship"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.AllClassesAutoMapper.RelatedObjectClassDef(Habanero.Base.ClassDefCol,Habanero.Base.IRelationshipDef)">
-            <summary>
-            The <see cref="T:Habanero.BO.ClassDefinition.ClassDef"/> for the related object.
-            </summary>
-        </member>
-        <member name="P:Habanero.Smooth.AllClassesAutoMapper.PropNamingConvention">
-            <summary>
-            Returns the PropNaming Convention that is being used for this Mapping.
-            </summary>
-        </member>
-        <member name="P:Habanero.Smooth.AllClassesAutoMapper.ClassDefCol">
-            <summary>
-            The preixisting ClassDef that is being used for this mapping.
-            </summary>
-        </member>
         <member name="M:Habanero.Smooth.AssemblyTypeSource.#ctor(System.Type)">
             <summary>
             sets the assembly to be the assembly that the Type type belongs to.
             </summary>
             <param name="type"></param>
         </member>
-        <member name="T:Habanero.Smooth.AutoMapIgnoreAttribute">
+        <member name="M:Habanero.Smooth.OneToManyAutoMapperExtensions.MapOneToMany(System.Reflection.PropertyInfo)">
             <summary>
-            You can mark any property or class as ignore and in these cases Habanero.Smooth
-            will totally ignore these.
+            Automap the propInfo as a 
+            </summary>
+            <param name="propInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Smooth.OneToManyAutoMapper">
+            <summary>
+            AutoMapper that used used to create the relationship in the case 
+            for a One To Many Relationship.
             </summary>
         </member>
-        <member name="T:Habanero.Smooth.AutoMapPrimaryKeyAttribute">
+        <member name="M:Habanero.Smooth.OneToManyAutoMapper.#ctor(System.Reflection.PropertyInfo)">
             <summary>
-            Attribute used for marking a specific property as the Primary Key.
-            This is only required in cases where the convention is not followed.
-            The standard convention is
-            the PrimaryKeyProp is the ClassName + "ID" and the PrimaryKeyProp is a Guid
+            Construct the AutoMapper for a specified PropertyInfo.
+            </summary>
+            <param name="propInfo"></param>
+        </member>
+        <member name="M:Habanero.Smooth.OneToManyAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
+            <summary>
+            Construct the AutoMapper for a specified propertyWrapper.
+            </summary>
+            <param name="propertyWrapper"></param>
+        </member>
+        <member name="M:Habanero.Smooth.OneToManyAutoMapper.MapOneToMany">
+            <summary>
+            Map the relationship including the Relationship props.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToManyAutoMapper.MustBeMapped">
+            <summary>
+            Must the Relationship be Mapped.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToManyAutoMapper.CreateRelPropDef">
+            <summary>
+            Create a new Relationship Prop Def.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToManyAutoMapper.GetOwningPropName(Habanero.Smooth.ReflectionWrappers.TypeWrapper)">
+            <summary>
+            Returns the owning property name 
+            </summary>
+            <param name="ownerClassType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToManyAutoMapper.GetRelatedPropName">
+            <summary>
+            Returns the Related Property name.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Habanero.Smooth.OneToManyAutoMapper.PropNamingConvention">
+            <summary>
+            Returns the property naming convention.
             </summary>
         </member>
-        <member name="T:Habanero.Smooth.AutoMapRelationshipAttribute">
+        <member name="T:Habanero.Smooth.CustomTypeSource">
             <summary>
-            Base class for the <see cref="T:Habanero.Smooth.AutoMapOneToManyAttribute"/>, <see cref="T:Habanero.Smooth.AutoMapManyToOneAttribute"/> and <see cref="T:Habanero.Smooth.AutoMapOneToOneAttribute"/>
+            A <see cref="T:Habanero.Smooth.ITypeSource"/> that allows you to set any types you want
             </summary>
         </member>
-        <member name="P:Habanero.Smooth.AutoMapRelationshipAttribute.ReverseRelationshipName">
+        <member name="M:Habanero.Smooth.CustomTypeSource.#ctor">
             <summary>
-            The specified Reverse RelationshipName
+            
             </summary>
         </member>
-        <member name="P:Habanero.Smooth.AutoMapRelationshipAttribute.RelationshipType">
+        <member name="M:Habanero.Smooth.CustomTypeSource.#ctor(System.Collections.Generic.IEnumerable{System.Type})">
             <summary>
-            The RelationshipType that is specified.
+            
             </summary>
+            <param name="types"></param>
         </member>
-        <member name="T:Habanero.Smooth.AutoMapOneToOneAttribute">
+        <member name="M:Habanero.Smooth.CustomTypeSource.Add(System.Collections.Generic.IEnumerable{System.Type})">
             <summary>
-            Automap a relationship between two Business Objects as a One to One.
+            
             </summary>
+            <param name="types"></param>
         </member>
-        <member name="T:Habanero.Smooth.AutoMapCompulsoryAttribute">
+        <member name="M:Habanero.Smooth.CustomTypeSource.Add(System.Type)">
             <summary>
-            Automap a Property as Compulsory.
+            Adds a <paramref name="type"/> to the TypeSource.
             </summary>
+            <param name="type"></param>
         </member>
-        <member name="T:Habanero.Smooth.AutoMapOneToManyAttribute">
+        <member name="M:Habanero.Smooth.CustomTypeSource.Add``1">
             <summary>
-            AutoMap a One to Many Relationship between two Business Objects.
+            Adds a <typeparamref name="T"/> to the TypeSource.
             </summary>
-        </member>
-        <member name="T:Habanero.Smooth.AutoMapManyToOneAttribute">
-            <summary>
-            Attribute to automap a Many to one Relationship between two BusinessObjects
-            </summary>
-        </member>
-        <member name="T:Habanero.Smooth.AutoMapUniqueConstraintAttribute">
-            <summary>
-            Property to add a unique constraint to a property.
-            Note_ To handle composite unique constraints add this attribute to two
-            properties where each property has the same UniqueConstraintName.
-            </summary>
-        </member>
-        <member name="T:Habanero.Smooth.AutoMapDefaultAttribute">
-            <summary>
-            Attribute to add a default value to a property
-            </summary>
-        </member>
-        <member name="T:Habanero.Smooth.AutoMapReadWriteRuleAttribute">
-            <summary>
-            Attribute to mark the ReadWriteRules on a Property.
-            </summary>
-        </member>
-        <member name="T:Habanero.Smooth.AutoMapAutoIncrementingAttribute">
-            <summary>
-            Marks a property as autoincrementing
-            </summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="T:Habanero.Smooth.ClassAutoMapperExtensions">
             <summary>
@@ -255,378 +210,6 @@
             </summary>
             <param name="classDef"></param>
             <param name="relDefs"></param>
-        </member>
-        <member name="T:Habanero.Smooth.CustomTypeSource">
-            <summary>
-            A <see cref="T:Habanero.Smooth.ITypeSource"/> that allows you to set any types you want
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.CustomTypeSource.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.CustomTypeSource.#ctor(System.Collections.Generic.IEnumerable{System.Type})">
-            <summary>
-            
-            </summary>
-            <param name="types"></param>
-        </member>
-        <member name="M:Habanero.Smooth.CustomTypeSource.Add(System.Collections.Generic.IEnumerable{System.Type})">
-            <summary>
-            
-            </summary>
-            <param name="types"></param>
-        </member>
-        <member name="M:Habanero.Smooth.CustomTypeSource.Add(System.Type)">
-            <summary>
-            Adds a <paramref name="type"/> to the TypeSource.
-            </summary>
-            <param name="type"></param>
-        </member>
-        <member name="M:Habanero.Smooth.CustomTypeSource.Add``1">
-            <summary>
-            Adds a <typeparamref name="T"/> to the TypeSource.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="T:Habanero.Smooth.Guard">
-            <summary>
-            Performs common argument validation.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.Guard.AgainstNullOrEmptyString(System.String,System.String)">
-            <summary>
-            Checks a string argument to ensure it isn't null or empty.
-            </summary>
-            <param name="argumentValue">The argument value to check.</param>
-            <param name="argumentName">The name of the argument.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="argumentValue"/> is a null reference.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="argumentValue"/> is <see cref="F:System.String.Empty"/>.</exception>
-        </member>
-        <member name="M:Habanero.Smooth.Guard.AgainstEmptyString(System.String,System.String)">
-            <summary>
-            Checks a string argument to ensure it isn't empty.
-            </summary>
-            <param name="argumentValue">The argument value to check.</param>
-            <param name="argumentName">The name of the argument.</param>
-            <exception cref="T:System.ArgumentException"><paramref name="argumentValue"/> is <see cref="F:System.String.Empty"/>.</exception>
-        </member>
-        <member name="M:Habanero.Smooth.Guard.AgainstNull(System.Object,System.String)">
-            <summary>
-            Checks an argument to ensure it isn't null.
-            </summary>
-            <param name="argumentValue">The argument value to check.</param>
-            <param name="argumentName">The name of the argument.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="argumentValue"/> is a null reference.</exception>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapperExtensions.MapOneToMany(System.Reflection.PropertyInfo)">
-            <summary>
-            Automap the propInfo as a 
-            </summary>
-            <param name="propInfo"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Habanero.Smooth.OneToManyAutoMapper">
-            <summary>
-            AutoMapper that used used to create the relationship in the case 
-            for a One To Many Relationship.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapper.#ctor(System.Reflection.PropertyInfo)">
-            <summary>
-            Construct the AutoMapper for a specified PropertyInfo.
-            </summary>
-            <param name="propInfo"></param>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
-            <summary>
-            Construct the AutoMapper for a specified propertyWrapper.
-            </summary>
-            <param name="propertyWrapper"></param>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapper.MapOneToMany">
-            <summary>
-            Map the relationship including the Relationship props.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapper.MustBeMapped">
-            <summary>
-            Must the Relationship be Mapped.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapper.CreateRelPropDef">
-            <summary>
-            Create a new Relationship Prop Def.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapper.GetOwningPropName(Habanero.Smooth.ReflectionWrappers.TypeWrapper)">
-            <summary>
-            Returns the owning property name 
-            </summary>
-            <param name="ownerClassType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToManyAutoMapper.GetRelatedPropName">
-            <summary>
-            Returns the Related Property name.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Habanero.Smooth.OneToManyAutoMapper.PropNamingConvention">
-            <summary>
-            Returns the property naming convention.
-            </summary>
-        </member>
-        <member name="T:Habanero.Smooth.OneToOneAutoMapper">
-             <summary>
-            Conventions
-             1) If no single reverse relationship and no Attribute is found then it is assumed that relationship is a M:1 i.e. its rev is a 1:M
-             2) If no single rev rel and 1:1Attribute with no RevRelName then RevRelName = ClassName
-             3) If no single rev rel and 1:1Att with RevRelName then RevRelName = DeclaredRevRelName
-             4) If has single rev rel then RevRelName = foundRevRelationshipName 
-             Determing RelatedProps 
-             if ownerClass.HasProp(RelName+ID) and relatedClass.NotHasProp(RevRelName+ID) 
-                  owningBOHasForeignKey = true;
-                  ownerProp = foundOwnerPropName
-                  relatedProp = RelatedClass.ID.
-             if relatedClass.HasProp(reverseRel+ID) and ownerClass.NotHasProp(RelName+ID)
-                  owningBOHasForeignKey = false;
-                  ownerProp = OwnerClass.Id
-                  relatedProp = foundRelatedPropName
-             if ownerClass.HasProp(RelName+ID) and relatedClass.HasProp(RevRelName+ID)
-                  if(RelName == relatedClassName) owningBOHasForeignKey = true;
-                  ownerProp = foundOwnerClassId
-                  relatedProp = foundRelatedPropName
-             Else if ownerClassName LT relatedClassName
-                 owningBOHasForeignKey = false;
-                 ownerProp = OwnerClassId
-                 relatedProp = reverseRelationshipName+ID
-             Else
-                owningBOHasForeignKey = true;
-                ownerProp = RelationshipName+ID
-                relatedProp = RelatedClass.ID
-             </summary>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
-            <summary>
-             Construct a One to One Relationship mapper.
-            </summary>
-            <param name="propWrap"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.MapOneToOne">
-            <summary>
-            Maps the <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/> to a <see cref="T:Habanero.Base.IRelationshipDef"/>.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.MustBeMapped">
-            <summary>
-            Determines based on heuristics whether the Property wrapped by the
-            <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/> must be mapped to a One to One
-            Relationship or not
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.GetOwningPropName">
-            <summary>
-            Using a set of heuristics the Owning Property Name
-            is determined from the RelationshipName and any attributes on the
-            Property.
-            I.e. The Property of the class that owns this One To One Relationship.
-            I.e. The Property on the Class that owns the Property that wrapped by
-            the PropertyWrapper.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.GetRelatedPropName">
-            <summary>
-            Using a set of heuristics the Related Property Name
-            is determined from the RelationshipName and any attributes on the
-            Property.
-            I.e. The Property of the class that is related by One To One Relationship.
-            I.e. The Property on the Class that is returned by the Property that is wrapped by
-            the PropertyWrapper.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.ReverseRelationshipIsDefinedAsAggregationOrComposition">
-            <summary>
-            If the reverse relationship is defined as Composition or Aggregation via attrubutes then return true.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.IsDefinedAsCompositionOrAggregation(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
-            <summary>
-            If the <paramref name="propertyWrapper"/> is defined as Composition or Aggregation via attrubutes then return true.
-            </summary>
-            <param name="propertyWrapper"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.IsDefinedAsAssociation">
-            <summary>
-            If this relationship is defined (I.e. defined via an attribute) as Association then return true.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapper.CreateRelPropDef">
-            <summary>
-            Create a RelPropDef based on the OwningPrropName and the RelatedPropName.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Habanero.Smooth.OneToOneAutoMapper.PropNamingConvention">
-            <summary>
-            Returns the object that contains the naming conventions used
-            by this auto mapper.
-            </summary>
-        </member>
-        <member name="P:Habanero.Smooth.OneToOneAutoMapper.OwningBoHasForeignKey">
-            <summary>
-            Determines whether the Owning Class or the related class has the foriegn key.
-            This is determined by looking at the Primary keys of each class.
-            </summary>
-        </member>
-        <member name="P:Habanero.Smooth.OneToOneAutoMapper.ReverseRelationshipName">
-            <summary>
-            The relationship name of the Relationship on the Related class that is the 
-            reverse relationship of this relationship.
-            </summary>
-        </member>
-        <member name="T:Habanero.Smooth.OneToOneAutoMapperExtensions">
-            <summary>
-            Provides extension methods to provide a more fluent mechanism for 
-            determining a RelationshipDef from the Property.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.OneToOneAutoMapperExtensions.MapOneToOne(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
-            <summary>
-             Creates the <see cref="T:Habanero.Base.IRelationshipDef"/> from the PropertyWrapper.
-            </summary>
-            <param name="propWrapper"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Habanero.Smooth.PropertyAutoMapper">
-            <summary>
-             This is a class that will automap all properties in the BusinessObject.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.PropertyAutoMapper.#ctor(System.Reflection.PropertyInfo)">
-            <summary>
-             Constructs the Property Automapper for a particular <see cref="T:System.Reflection.PropertyInfo"/>.
-            </summary>
-            <param name="propInfo"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
-        </member>
-        <member name="M:Habanero.Smooth.PropertyAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
-            <summary>
-            Constructs the Property Automapper for a particular <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/>
-            where a PropertyWrapper typically wraps a <see cref="T:System.Reflection.PropertyInfo"/> and provides additional methods.
-            </summary>
-            <param name="propertyWrapper"></param>
-        </member>
-        <member name="M:Habanero.Smooth.PropertyAutoMapper.MapProperty">
-            <summary>
-            Will attempt to map a PropertyInfo to an IPropDef.
-            If it cannot be mapped then will return null.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:Habanero.Smooth.PropMapperExtensions">
-            <summary>
-            Provides extension methods that allow a more fluent programming style 
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.PropMapperExtensions.MapProperty(System.Reflection.PropertyInfo)">
-            <summary>
-            Based on the information available for the PropertyInfo (Name, Attributes, DataTypes etc)
-            And a set of Heuristics a Property Definition is created for this <see cref="T:System.Reflection.PropertyInfo"/>
-            </summary>
-            <param name="propInfo"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.PropMapperExtensions.CanMapToProp(System.Type)">
-            <summary>
-            Using the heuristic that the property should be a mappable type
-            or an <see cref="T:System.Enum"/> to be mapped as a property else it should be a 
-            Relationship or a component.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Habanero.Smooth.ManyToOneAutoMapper">
-            <summary>
-            A Class to Reflectively map a <see cref="T:System.Reflection.PropertyInfo"/> to a ManyToOne Habanero Relationship.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.#ctor(System.Reflection.PropertyInfo)">
-            <summary>
-            Constructs the Reflective Mapper based on a PropertyInfo
-            </summary>
-            <param name="propInfo"></param>
-        </member>
-        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
-            <summary>
-            Constructs the Reflective Mapper based on a <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/>
-            </summary>
-            <param name="propWrapper"></param>
-        </member>
-        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.MapManyToOne">
-            <summary>
-            Maps the <see cref="T:System.Reflection.PropertyInfo"/> to a Many to One relationship
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.GetRelatedPropName(Habanero.Smooth.ReflectionWrappers.TypeWrapper)">
-            <summary>
-            Returns the Related Property Name based on a Heuristic dependent upon the 
-            Related ClassType i.e. the <paramref name="propertyType"/>.
-            </summary>
-            <param name="propertyType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.MustBeMapped">
-            <summary>
-            Determines whether this Property Info must be mapped based on 
-            Its AutoMapping Attributes.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Habanero.Smooth.ManyToOneAutoMapper.PropNamingConvention">
-            <summary>
-            Returns the PropNaming Convention that is being used for this Mapping.
-            </summary>
-        </member>
-        <member name="T:Habanero.Smooth.ReflectionClassDefLoader">
-            <summary>
-             Provides a <see cref="T:Habanero.BO.Loaders.IClassDefsLoader"/> that will load a class Definition
-             based on reflection and heuristics.
-            </summary>
-        </member>
-        <member name="M:Habanero.Smooth.ReflectionClassDefLoader.#ctor(Habanero.Smooth.ITypeSource)">
-            <summary>
-             constructor that takes a <see cref="T:Habanero.Smooth.ITypeSource"/> that wil be used to build the
-             ClassDefinitions.
-            </summary>
-            <param name="source"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
-        </member>
-        <member name="M:Habanero.Smooth.ReflectionClassDefLoader.LoadClassDefs(System.String)">
-            <summary>
-            Thius is not implemented since with a Reflective ClassDefLoader you will never load from 
-            a string xml def.
-            </summary>
-            <param name="classDefsXml"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Smooth.ReflectionClassDefLoader.LoadClassDefs">
-            <summary>
-            Loads one ClassDef for each Type in the <see cref="T:Habanero.Smooth.ITypeSource"/>.
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:Habanero.Smooth.ReflectionWrappers.PropertyExtensions">
             <summary>
@@ -970,6 +553,335 @@
             </summary>
             <returns>A <see cref="!:propertyInfo"/> object for the first implementation of this property.</returns>
         </member>
+        <member name="T:Habanero.Smooth.Guard">
+            <summary>
+            Performs common argument validation.
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.Guard.AgainstNullOrEmptyString(System.String,System.String)">
+            <summary>
+            Checks a string argument to ensure it isn't null or empty.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="argumentValue"/> is a null reference.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="argumentValue"/> is <see cref="F:System.String.Empty"/>.</exception>
+        </member>
+        <member name="M:Habanero.Smooth.Guard.AgainstEmptyString(System.String,System.String)">
+            <summary>
+            Checks a string argument to ensure it isn't empty.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="argumentValue"/> is <see cref="F:System.String.Empty"/>.</exception>
+        </member>
+        <member name="M:Habanero.Smooth.Guard.AgainstNull(System.Object,System.String)">
+            <summary>
+            Checks an argument to ensure it isn't null.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="argumentValue"/> is a null reference.</exception>
+        </member>
+        <member name="T:Habanero.Smooth.ReflectionClassDefLoader">
+            <summary>
+             Provides a <see cref="T:Habanero.BO.Loaders.IClassDefsLoader"/> that will load a class Definition
+             based on reflection and heuristics.
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.ReflectionClassDefLoader.#ctor(Habanero.Smooth.ITypeSource)">
+            <summary>
+             constructor that takes a <see cref="T:Habanero.Smooth.ITypeSource"/> that wil be used to build the
+             ClassDefinitions.
+            </summary>
+            <param name="source"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Habanero.Smooth.ReflectionClassDefLoader.LoadClassDefs(System.String)">
+            <summary>
+            Thius is not implemented since with a Reflective ClassDefLoader you will never load from 
+            a string xml def.
+            </summary>
+            <param name="classDefsXml"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.ReflectionClassDefLoader.LoadClassDefs">
+            <summary>
+            Loads one ClassDef for each Type in the <see cref="T:Habanero.Smooth.ITypeSource"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Smooth.ManyToOneAutoMapper">
+            <summary>
+            A Class to Reflectively map a <see cref="T:System.Reflection.PropertyInfo"/> to a ManyToOne Habanero Relationship.
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.#ctor(System.Reflection.PropertyInfo)">
+            <summary>
+            Constructs the Reflective Mapper based on a PropertyInfo
+            </summary>
+            <param name="propInfo"></param>
+        </member>
+        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
+            <summary>
+            Constructs the Reflective Mapper based on a <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/>
+            </summary>
+            <param name="propWrapper"></param>
+        </member>
+        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.MapManyToOne">
+            <summary>
+            Maps the <see cref="T:System.Reflection.PropertyInfo"/> to a Many to One relationship
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.GetRelatedPropName(Habanero.Smooth.ReflectionWrappers.TypeWrapper)">
+            <summary>
+            Returns the Related Property Name based on a Heuristic dependent upon the 
+            Related ClassType i.e. the <paramref name="propertyType"/>.
+            </summary>
+            <param name="propertyType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.ManyToOneAutoMapper.MustBeMapped">
+            <summary>
+            Determines whether this Property Info must be mapped based on 
+            Its AutoMapping Attributes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Habanero.Smooth.ManyToOneAutoMapper.PropNamingConvention">
+            <summary>
+            Returns the PropNaming Convention that is being used for this Mapping.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.InheritanceAutoMapperExtensions">
+            <summary>
+            Simple Extension methods to make the code for 
+            automapping extension methods more fluid.
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.InheritanceAutoMapperExtensions.MapInheritance(System.Type)">
+            <summary>
+            Maps any Inhertiance Relationships for the <paramref name="type"/>.
+            and returns the <see cref="T:Habanero.Base.ISuperClassDef"/> that is used to 
+            map these in Habanero.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.InheritanceAutoMapperExtensions.MapInheritance(Habanero.Smooth.ReflectionWrappers.TypeWrapper)">
+            <summary>
+            Maps any Inhertiance Relationships for the <paramref name="typeWrapper"/>.
+            and returns the <see cref="T:Habanero.Base.ISuperClassDef"/> that is used to 
+            map these in Habanero.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.InheritanceAutoMapper">
+            <summary>
+            Automatically maps an inheritance Relationship.
+            based on the heuristic of ChildClass: ParentClass
+            where the ChildClass and ParentClass are both <see cref="T:Habanero.BO.BusinessObject"/>s.
+            The Inhertiance Relationship is always taken as Single Table.
+            
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.OneToOneAutoMapper">
+             <summary>
+            Conventions
+             1) If no single reverse relationship and no Attribute is found then it is assumed that relationship is a M:1 i.e. its rev is a 1:M
+             2) If no single rev rel and 1:1Attribute with no RevRelName then RevRelName = ClassName
+             3) If no single rev rel and 1:1Att with RevRelName then RevRelName = DeclaredRevRelName
+             4) If has single rev rel then RevRelName = foundRevRelationshipName 
+             Determing RelatedProps 
+             if ownerClass.HasProp(RelName+ID) and relatedClass.NotHasProp(RevRelName+ID) 
+                  owningBOHasForeignKey = true;
+                  ownerProp = foundOwnerPropName
+                  relatedProp = RelatedClass.ID.
+             if relatedClass.HasProp(reverseRel+ID) and ownerClass.NotHasProp(RelName+ID)
+                  owningBOHasForeignKey = false;
+                  ownerProp = OwnerClass.Id
+                  relatedProp = foundRelatedPropName
+             if ownerClass.HasProp(RelName+ID) and relatedClass.HasProp(RevRelName+ID)
+                  if(RelName == relatedClassName) owningBOHasForeignKey = true;
+                  ownerProp = foundOwnerClassId
+                  relatedProp = foundRelatedPropName
+             Else if ownerClassName LT relatedClassName
+                 owningBOHasForeignKey = false;
+                 ownerProp = OwnerClassId
+                 relatedProp = reverseRelationshipName+ID
+             Else
+                owningBOHasForeignKey = true;
+                ownerProp = RelationshipName+ID
+                relatedProp = RelatedClass.ID
+             </summary>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
+            <summary>
+             Construct a One to One Relationship mapper.
+            </summary>
+            <param name="propWrap"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.MapOneToOne">
+            <summary>
+            Maps the <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/> to a <see cref="T:Habanero.Base.IRelationshipDef"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.MustBeMapped">
+            <summary>
+            Determines based on heuristics whether the Property wrapped by the
+            <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/> must be mapped to a One to One
+            Relationship or not
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.GetOwningPropName">
+            <summary>
+            Using a set of heuristics the Owning Property Name
+            is determined from the RelationshipName and any attributes on the
+            Property.
+            I.e. The Property of the class that owns this One To One Relationship.
+            I.e. The Property on the Class that owns the Property that wrapped by
+            the PropertyWrapper.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.GetRelatedPropName">
+            <summary>
+            Using a set of heuristics the Related Property Name
+            is determined from the RelationshipName and any attributes on the
+            Property.
+            I.e. The Property of the class that is related by One To One Relationship.
+            I.e. The Property on the Class that is returned by the Property that is wrapped by
+            the PropertyWrapper.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.ReverseRelationshipIsDefinedAsAggregationOrComposition">
+            <summary>
+            If the reverse relationship is defined as Composition or Aggregation via attrubutes then return true.
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.IsDefinedAsCompositionOrAggregation(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
+            <summary>
+            If the <paramref name="propertyWrapper"/> is defined as Composition or Aggregation via attrubutes then return true.
+            </summary>
+            <param name="propertyWrapper"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.IsDefinedAsAssociation">
+            <summary>
+            If this relationship is defined (I.e. defined via an attribute) as Association then return true.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapper.CreateRelPropDef">
+            <summary>
+            Create a RelPropDef based on the OwningPrropName and the RelatedPropName.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Habanero.Smooth.OneToOneAutoMapper.PropNamingConvention">
+            <summary>
+            Returns the object that contains the naming conventions used
+            by this auto mapper.
+            </summary>
+        </member>
+        <member name="P:Habanero.Smooth.OneToOneAutoMapper.OwningBoHasForeignKey">
+            <summary>
+            Determines whether the Owning Class or the related class has the foriegn key.
+            This is determined by looking at the Primary keys of each class.
+            </summary>
+        </member>
+        <member name="P:Habanero.Smooth.OneToOneAutoMapper.ReverseRelationshipName">
+            <summary>
+            The relationship name of the Relationship on the Related class that is the 
+            reverse relationship of this relationship.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.OneToOneAutoMapperExtensions">
+            <summary>
+            Provides extension methods to provide a more fluent mechanism for 
+            determining a RelationshipDef from the Property.
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.OneToOneAutoMapperExtensions.MapOneToOne(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
+            <summary>
+             Creates the <see cref="T:Habanero.Base.IRelationshipDef"/> from the PropertyWrapper.
+            </summary>
+            <param name="propWrapper"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Smooth.AllClassesAutoMapperExtensions">
+            <summary>
+            Extension methods used so that a more smooth syntax can be used when
+            coding and using Habanero.Smooth.
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.AllClassesAutoMapperExtensions.MapClasses(System.Reflection.Assembly)">
+            <summary>
+            Maps All classes in the Given Assembly to a <see cref="T:Habanero.Base.ClassDefCol"/>
+            </summary>
+            <param name="assembly"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.AllClassesAutoMapperExtensions.MapClasses(System.Type)">
+            <summary>
+            Maps all classes in the Assembly for the given type <see cref="T:Habanero.Base.ClassDefCol"/>
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.AllClassesAutoMapperExtensions.MapClasses(System.Type,System.Func{System.Type,System.Boolean})">
+            <summary>
+            Maps all classes in the Assembly for the given type <see cref="T:Habanero.Base.ClassDefCol"/>
+            </summary>
+            <param name="type"></param>
+            <param name="where">a valid where clause used to limit the Classes being mapped</param>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Smooth.AllClassesAutoMapper">
+            <summary>
+            Maps all Business Objects in an ITypeSource to a <see cref="T:Habanero.Base.IClassDef"/>
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.AllClassesAutoMapper.#ctor(Habanero.Smooth.ITypeSource)">
+            <summary>
+            Constructs the AllClassesAutoMapper with a specified Source.
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:Habanero.Smooth.AllClassesAutoMapper.Map">
+            <summary>
+            Maps the <see cref="T:Habanero.Base.IBusinessObject"/> classes in the <see cref="T:Habanero.Smooth.ITypeSource"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.AllClassesAutoMapper.CreateReverseRelationship(Habanero.Base.ClassDefCol,Habanero.Base.IClassDef,Habanero.Base.IRelationshipDef)">
+            <summary>
+             Creates a Reverse Relationship when required.
+            </summary>
+            <param name="classDefCol"></param>
+            <param name="classDef"></param>
+            <param name="relationship"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.AllClassesAutoMapper.RelatedObjectClassDef(Habanero.Base.ClassDefCol,Habanero.Base.IRelationshipDef)">
+            <summary>
+            The <see cref="T:Habanero.BO.ClassDefinition.ClassDef"/> for the related object.
+            </summary>
+        </member>
+        <member name="P:Habanero.Smooth.AllClassesAutoMapper.PropNamingConvention">
+            <summary>
+            Returns the PropNaming Convention that is being used for this Mapping.
+            </summary>
+        </member>
+        <member name="P:Habanero.Smooth.AllClassesAutoMapper.ClassDefCol">
+            <summary>
+            The preixisting ClassDef that is being used for this mapping.
+            </summary>
+        </member>
         <member name="T:Habanero.Smooth.ReflectionWrappers.TypeWrapperExtensions">
             <summary>
              Simple class providing Extension methods for the
@@ -1175,6 +1087,32 @@
             the <see cref="P:Habanero.Smooth.ReflectionWrappers.TypeWrapper.UnderlyingType"/> of other.
             </summary>
         </member>
+        <member name="M:Habanero.Smooth.ReflectionWrappers.TypeWrapper.GetAttribute``1">
+            <summary>
+            Returns the First Attribute on the wrapped <see cref="T:System.Reflection.PropertyInfo"/> of type <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.ReflectionWrappers.TypeWrapper.GetAttributes``1">
+            <summary>
+            Returns all Attributes of type <typeparamref name="T"/> on the wrapped <see cref="T:System.Reflection.PropertyInfo"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.ReflectionWrappers.TypeWrapper.GetTableName">
+            <summary>
+             Returns the mapped TableName for the underlying type
+            </summary>
+            <returns>null if the </returns>
+        </member>
+        <member name="M:Habanero.Smooth.ReflectionWrappers.TypeWrapper.IsEnumType">
+            <summary>
+            Is this type an Enum or a Nullable Enum Type. <see cref="T:System.Enum"/>
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:Habanero.Smooth.ReflectionWrappers.TypeWrapper.IsRealClass">
             <summary>
             Returns tru if the <see cref="P:Habanero.Smooth.ReflectionWrappers.TypeWrapper.UnderlyingType"/> is a real class 
@@ -1252,35 +1190,128 @@
             e.g. Guid? is actually Nullable{Guid}.
             </summary>
         </member>
-        <member name="T:Habanero.Smooth.InheritanceAutoMapperExtensions">
+        <member name="T:Habanero.Smooth.PropertyAutoMapper">
             <summary>
-            Simple Extension methods to make the code for 
-            automapping extension methods more fluid.
+             This is a class that will automap all properties in the BusinessObject.
             </summary>
         </member>
-        <member name="M:Habanero.Smooth.InheritanceAutoMapperExtensions.MapInheritance(System.Type)">
+        <member name="M:Habanero.Smooth.PropertyAutoMapper.#ctor(System.Reflection.PropertyInfo)">
             <summary>
-            Maps any Inhertiance Relationships for the <paramref name="type"/>.
-            and returns the <see cref="T:Habanero.Base.ISuperClassDef"/> that is used to 
-            map these in Habanero.
+             Constructs the Property Automapper for a particular <see cref="T:System.Reflection.PropertyInfo"/>.
+            </summary>
+            <param name="propInfo"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Habanero.Smooth.PropertyAutoMapper.#ctor(Habanero.Smooth.ReflectionWrappers.PropertyWrapper)">
+            <summary>
+            Constructs the Property Automapper for a particular <see cref="T:Habanero.Smooth.ReflectionWrappers.PropertyWrapper"/>
+            where a PropertyWrapper typically wraps a <see cref="T:System.Reflection.PropertyInfo"/> and provides additional methods.
+            </summary>
+            <param name="propertyWrapper"></param>
+        </member>
+        <member name="M:Habanero.Smooth.PropertyAutoMapper.MapProperty">
+            <summary>
+            Will attempt to map a PropertyInfo to an IPropDef.
+            If it cannot be mapped then will return null.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Smooth.PropMapperExtensions">
+            <summary>
+            Provides extension methods that allow a more fluent programming style 
+            </summary>
+        </member>
+        <member name="M:Habanero.Smooth.PropMapperExtensions.MapProperty(System.Reflection.PropertyInfo)">
+            <summary>
+            Based on the information available for the PropertyInfo (Name, Attributes, DataTypes etc)
+            And a set of Heuristics a Property Definition is created for this <see cref="T:System.Reflection.PropertyInfo"/>
+            </summary>
+            <param name="propInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Smooth.PropMapperExtensions.CanMapToProp(System.Type)">
+            <summary>
+            Using the heuristic that the property should be a mappable type
+            or an <see cref="T:System.Enum"/> to be mapped as a property else it should be a 
+            Relationship or a component.
             </summary>
             <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="M:Habanero.Smooth.InheritanceAutoMapperExtensions.MapInheritance(Habanero.Smooth.ReflectionWrappers.TypeWrapper)">
+        <member name="T:Habanero.Smooth.AutoMapIgnoreAttribute">
             <summary>
-            Maps any Inhertiance Relationships for the <paramref name="typeWrapper"/>.
-            and returns the <see cref="T:Habanero.Base.ISuperClassDef"/> that is used to 
-            map these in Habanero.
+            You can mark any property or class as ignore and in these cases Habanero.Smooth
+            will totally ignore these.
             </summary>
         </member>
-        <member name="T:Habanero.Smooth.InheritanceAutoMapper">
+        <member name="T:Habanero.Smooth.AutoMapTableNameAttribute">
             <summary>
-            Automatically maps an inheritance Relationship.
-            based on the heuristic of ChildClass: ParentClass
-            where the ChildClass and ParentClass are both <see cref="T:Habanero.BO.BusinessObject"/>s.
-            The Inhertiance Relationship is always taken as Single Table.
-            
+            Attribute to mark the mapped TableName on a class.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapPrimaryKeyAttribute">
+            <summary>
+            Attribute used for marking a specific property as the Primary Key.
+            This is only required in cases where the convention is not followed.
+            The standard convention is
+            the PrimaryKeyProp is the ClassName + "ID" and the PrimaryKeyProp is a Guid
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapRelationshipAttribute">
+            <summary>
+            Base class for the <see cref="T:Habanero.Smooth.AutoMapOneToManyAttribute"/>, <see cref="T:Habanero.Smooth.AutoMapManyToOneAttribute"/> and <see cref="T:Habanero.Smooth.AutoMapOneToOneAttribute"/>
+            </summary>
+        </member>
+        <member name="P:Habanero.Smooth.AutoMapRelationshipAttribute.ReverseRelationshipName">
+            <summary>
+            The specified Reverse RelationshipName
+            </summary>
+        </member>
+        <member name="P:Habanero.Smooth.AutoMapRelationshipAttribute.RelationshipType">
+            <summary>
+            The RelationshipType that is specified.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapOneToOneAttribute">
+            <summary>
+            Automap a relationship between two Business Objects as a One to One.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapCompulsoryAttribute">
+            <summary>
+            Automap a Property as Compulsory.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapOneToManyAttribute">
+            <summary>
+            AutoMap a One to Many Relationship between two Business Objects.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapManyToOneAttribute">
+            <summary>
+            Attribute to automap a Many to one Relationship between two BusinessObjects
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapUniqueConstraintAttribute">
+            <summary>
+            Property to add a unique constraint to a property.
+            Note_ To handle composite unique constraints add this attribute to two
+            properties where each property has the same UniqueConstraintName.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapDefaultAttribute">
+            <summary>
+            Attribute to add a default value to a property
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapReadWriteRuleAttribute">
+            <summary>
+            Attribute to mark the ReadWriteRules on a Property.
+            </summary>
+        </member>
+        <member name="T:Habanero.Smooth.AutoMapAutoIncrementingAttribute">
+            <summary>
+            Marks a property as autoincrementing
             </summary>
         </member>
     </members>

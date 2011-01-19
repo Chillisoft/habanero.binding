@@ -4,92 +4,79 @@
         <name>Habanero.Testability</name>
     </assembly>
     <members>
-        <member name="T:Habanero.Testability.BOFactory">
+        <member name="T:Habanero.Testability.ValidValueGenerator">
             <summary>
-            A generalised factory for creating any habanero business object.
+            This is a base class for a valid value generator of any type.
+            Generally the <see cref="T:Habanero.Base.IPropDef"/>'s <see cref="T:Habanero.Base.IPropRule"/>s will 
+            be taken into consideration when determining the valid value.
+            E.g. Int, Decimal.
+            Although this class is public it is primarily intended to be used internally by 
+            the <see cref="T:Habanero.Testability.BOTestFactory`1"/> and <see cref="T:Habanero.Testability.BOTestFactory"/>.
             </summary>
         </member>
-        <member name="T:Habanero.Testability.IBOFactory">
+        <member name="M:Habanero.Testability.ValidValueGenerator.GenerateValidValue">
             <summary>
-            The IBOFactory is an interface for creating a Standard Business Object.
-            This is used so as to prevent the random construction of business objects in code
-            all over the project as well as to allow the easy mocking/Stubbing or faking of business
-            object creation when requried for testing.
+            Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
+            will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
+            by the BOTestFactory to create valid values taking into account InterPropRules
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Testability.ValidValueGeneratorRegistry">
+            <summary>
+            This is a registry of the Valid Value Generators to be used for Generating Various Data Types e.g. String, Guid.
+            This was creates so as to allow the Developer to override the <see cref="T:Habanero.Testability.ValidValueGenerator"/> for a specified type.<br/>
+            E.g. If you want to generate all strings in the entire project based on some other algorithm (Currently using A Guid) then
+            you can replace it by registering. Also if you have additional types that you want to support as a default e.g. 
+            If you create a value type such as Address that a number of properties in various business objects in your project can use
+            then you can register the ValidValueGenerator for Address.
+            As Testability supports additional types e.g. TimeSpan Valid Value Generators can also be added for these.
             </summary>
         </member>
-        <member name="M:Habanero.Testability.IBOFactory.CreateBusinessObject``1">
+        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.#ctor">
             <summary>
-            Creates a business object of Type <typeparamref name="T"/>
+            Construct ValidValueGenRegistry
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.Register``2">
+            <summary>
+            Registeres a specific type <typeparamref name="TValidValuGenType"/> of <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the specified 
+            Type <typeparamref name="T"/>
             </summary>
             <typeparam name="T"></typeparam>
-            <returns></returns>
+            <typeparam name="TValidValuGenType"></typeparam>
         </member>
-        <member name="M:Habanero.Testability.IBOFactory.CreateBusinessObject(System.Type)">
-            <summary>
-            Creates of business object of type <paramref name="type"/>
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
+        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.Register``1(System.Type)">
+             <summary>
+             Registeres a specific type <pararef name="type"/> of <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the 
+             Type <typeparamref name="T"/>
+             </summary>
+             <typeparam name="T"></typeparam>
+            
         </member>
-        <member name="M:Habanero.Testability.BOFactory.CreateBusinessObject``1">
+        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.Resolve(Habanero.Base.ISingleValueDef)">
             <summary>
-            Creates a business object of Type <typeparamref name="T"/>
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Testability.BOFactory.CreateBusinessObject(System.Type)">
-            <summary>
-            Creates the specified business object of tppe <paramref name="type"/>
-            </summary>
-            <param name="type">The type of business object being created.</param>
-            <returns>the created BO</returns>
-        </member>
-        <member name="T:Habanero.Testability.BOPropValueGeneratorRegistry">
-            <summary>
-            This is a registry of the ValidValueGenerators Registered for a specific PropertyDefinition <see cref="T:Habanero.Base.ISingleValueDef"/>
-            of a particular Property for a specified Business Object type.
-            This was creates so as to allow the Developer to override the Generic <see cref="T:Habanero.Testability.ValidValueGenerator"/>.<br/>
-            E.g. if the Business object Property has specific rules or things that must be set to ensure that it is a valid 
-            saveable business object. Then you can register a specialised Valid Value Generator that will generate the appropriate
-             value for that Business Object Property.<br/>
-            This is also used behind the scenes when you want to generate a business object with a specified non compulsory property
-            in a particular case. Then a Valid Value Generator is registered for that <see cref="T:Habanero.Base.ISingleValueDef"/> and the non compulsory prop
-            will have a value set. For more details see <see cref="T:Habanero.Testability.BOTestFactory"/>
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.Register(Habanero.Base.ISingleValueDef,System.Type,System.Object)">
-            <summary>
-            Register a Valid Value Generator to be used for generating values for a specified PropDef.
-            </summary>
-            <param name="propDef">The property definition for which this generator type is being assigned</param>
-            <param name="validValuGenType">The type of generator which will be instantiated when a valid value is needed</param>
-            <param name="parameter">An additional parameter to pass to the constructor of the generator</param>
-        </member>
-        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.Resolve(Habanero.Base.ISingleValueDef)">
-            <summary>
-            Resolves the registered <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the PropDef if one is registered.
-            Else tries to find a <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the specified PropDefs Property Type 
-            using the <see cref="T:Habanero.Testability.ValidValueGeneratorRegistry"/>
+            Resolves the registered <see cref="T:Habanero.Testability.ValidValueGenerator"/> if one is registered.
+            Else returns null./&gt;
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.IsRegistered(Habanero.Base.ISingleValueDef)">
-            <summary>
-            Returns True if a value Gen is registered with the singleValueDef <paramref name="propDef"/>
-            </summary>
-            <param name="propDef"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.ClearAll">
-            <summary>
-             Clears all ValidValue Generators registered.
-            </summary>
-        </member>
-        <member name="P:Habanero.Testability.BOPropValueGeneratorRegistry.Instance">
+        <member name="P:Habanero.Testability.ValidValueGeneratorRegistry.Instance">
             <summary>
             Returns the Singleton Registry Instance
             </summary>
+        </member>
+        <member name="T:Habanero.Testability.BOTestFactory`1">
+            <summary>
+            The BOTestFactory is a factory used to construct a Business Object for testing.
+            The Constructed Business object can be constructed a a valid (i.e. saveable Business object)
+            <see cref="M:Habanero.Testability.BOTestFactory`1.CreateValidBusinessObject"/> a Default Busienss object <see cref="M:Habanero.Testability.BOTestFactory`1.CreateDefaultBusinessObject"/>.<br/>
+            A Valid Property Value can also be generated for any particular Prop using one of the overloads of <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidPropValue``1(`0,System.Linq.Expressions.Expression{System.Func{`0,``0}})"/>,
+            <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidPropValue(System.String)"/> or any of the methods from the base type <see cref="T:Habanero.Testability.BOTestFactory"/>
+            A Valid Relationship can be generated for any particular relationship using <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidRelationshipValue``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})"/>.<br/>
+            of <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidRelationshipValue(System.String)"/><br/>
+            </summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="T:Habanero.Testability.BOTestFactory">
             <summary>
@@ -104,6 +91,18 @@
             the Generic BOTestFactory <see cref="T:Habanero.Testability.BOTestFactory`1"/> this test factory has even more powerfull
             mechanisms to use for generating valid Relationship and PropValues.
             </summary>
+        </member>
+        <member name="M:Habanero.Testability.BOTestFactory.#ctor(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="boType"></param>
+        </member>
+        <member name="M:Habanero.Testability.BOTestFactory.CreateDefaultBusinessObject">
+            <summary>
+            Creates a business object with only its default values set (i.e. defaults from its ClassDef).
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Habanero.Testability.BOTestFactory.CreateValidBusinessObject">
             <summary>
@@ -265,18 +264,6 @@
             Returns a saved valid business object of Type
             </summary>
             <returns></returns>
-        </member>
-        <member name="T:Habanero.Testability.BOTestFactory`1">
-            <summary>
-            The BOTestFactory is a factory used to construct a Business Object for testing.
-            The Constructed Business object can be constructed a a valid (i.e. saveable Business object)
-            <see cref="M:Habanero.Testability.BOTestFactory`1.CreateValidBusinessObject"/> a Default Busienss object <see cref="M:Habanero.Testability.BOTestFactory`1.CreateDefaultBusinessObject"/>.<br/>
-            A Valid Property Value can also be generated for any particular Prop using one of the overloads of <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidPropValue``1(`0,System.Linq.Expressions.Expression{System.Func{`0,``0}})"/>,
-            <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidPropValue(System.String)"/> or any of the methods from the base type <see cref="T:Habanero.Testability.BOTestFactory"/>
-            A Valid Relationship can be generated for any particular relationship using <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidRelationshipValue``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})"/>.<br/>
-            of <see cref="M:Habanero.Testability.BOTestFactory`1.GetValidRelationshipValue(System.String)"/><br/>
-            </summary>
-            <typeparam name="T"></typeparam>
         </member>
         <member name="M:Habanero.Testability.BOTestFactory`1.#ctor">
             <summary>
@@ -462,156 +449,7 @@
             or via <see cref="M:Habanero.Testability.BOTestFactory`1.CreateValidBusinessObject"/>
             </summary>
         </member>
-        <member name="T:Habanero.Testability.BOTestFactoryRegistry">
-            <summary>
-            This is a registry of the BOTestFactories for various Business Object types.
-            This was creates so as to allow the Developer to override the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/>.<br/>
-            E.g. if the Business object has specific rules or things that must be set to ensure that it is a valid 
-            saveable business object. This specialised <see cref="T:Habanero.Testability.BOTestFactory`1"/> must then be 
-            registered with this Registery.<br/>
-            When any other TestBusiness Object has a compulsory relationship involving the Business Object with the Specialised
-            BOTestFactory the specialised factory will be used instead of the generalised Test factory.
-            This allows a situation such as Creating a valid Asset wich has a compulsory relationship to AssetType.
-            For a valid Asset to be created a valid Asset Type is required. If the Asset type has a specialised
-            BOTestFactoryAssetType then the asset must use this specialised factory else it will not be constructed in a valid.
-            manner.
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Register``2">
-            <summary>
-            Registeres a specific type <typeparamref name="TBOTestFactory"/> of <see cref="T:Habanero.Testability.BOTestFactory"/> for the specified 
-            <see cref="T:Habanero.Base.IBusinessObject"/> <typeparamref name="TBO"/>
-            </summary>
-            <typeparam name="TBO"></typeparam>
-            <typeparam name="TBOTestFactory"></typeparam>
-        </member>
-        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Register``1(Habanero.Testability.BOTestFactory)">
-            <summary>
-            Registers an instance of <see cref="T:Habanero.Testability.BOTestFactory"/>
-            </summary>
-            <typeparam name="TBO"></typeparam>
-            <param name="boTestFactory"></param>
-        </member>
-        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Register``1(System.Type)">
-             <summary>
-             Registeres a specific type of <see cref="T:Habanero.Testability.BOTestFactory"/>
-             </summary>
-             <typeparam name="TBO"></typeparam>
-            
-        </member>
-        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Resolve``1">
-            <summary>
-            Resolves the registered <see cref="T:Habanero.Testability.BOTestFactory"/> if one is registered else resolves the 
-            Generid <see cref="T:Habanero.Testability.BOTestFactory`1"/>
-            </summary>
-            <typeparam name="TBO"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Resolve(System.Type)">
-            <summary>
-            Resolves the registered <see cref="T:Habanero.Testability.BOTestFactory"/> if one is registered.
-            Else tries to find a Sub Class of the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/> 
-              in the App Domain and returns an instance of it.
-            else constructs the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/>
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Habanero.Testability.BOTestFactoryRegistry.Instance">
-            <summary>
-            Returns the Singleton Registry Instance
-            </summary>
-        </member>
-        <member name="T:Habanero.Testability.AppDomainTypeSource">
-            <summary>
-            Gets the Types for the Currently Loaded App Domain
-            </summary>
-        </member>
-        <member name="T:Habanero.Testability.BODefaultValueRegistry">
-            <summary>
-            This is a registry of the BOTestValues for various Properties and Single Relationships of a BusinessObject.
-            This was creates so as to allow the Developer to <see cref="M:Habanero.Testability.BOTestFactory`1.SetValueFor``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},``0)"/> and 
-            such that when the Object is created with the <see cref="M:Habanero.Testability.BOTestFactory.CreateBusinessObject"/> etc or updated with
-            <see cref="M:Habanero.Testability.BOTestFactory.UpdateCompulsoryProperties(Habanero.Base.IBusinessObject)"/> this will be the value used.
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.BODefaultValueRegistry.Register(System.String,System.Object)">
-            <summary>
-            Registers the Default value to be used for the Method
-            </summary>
-            <param name="methodName"></param>
-            <param name="defaultValue"></param>
-        </member>
-        <member name="M:Habanero.Testability.BODefaultValueRegistry.Resolve(System.String)">
-            <summary>
-            Resolves the registered <see cref="T:Habanero.Testability.BOTestFactory"/> if one is registered.
-            Else tries to find a Sub Class of the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/> 
-              in the App Domain and returns an instance of it.
-            else constructs the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/>
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Habanero.Testability.BODefaultValueRegistry.IsRegistered(System.String)">
-            <summary>
-            Returns True if a value is registered with the name <paramref name="methodName"/>
-            </summary>
-            <param name="methodName"></param>
-            <returns></returns>
-        </member>
-        <member name="P:Habanero.Testability.BODefaultValueRegistry.Instance">
-            <summary>
-            Returns the Singleton Registry Instance
-            </summary>
-        </member>
-        <member name="T:Habanero.Testability.Messages">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:Habanero.Testability.Messages.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:Habanero.Testability.Messages.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:Habanero.Testability.Messages.You_cannot_use_a_ValidValueGeneratorFromList_for_generating_values_of_typeT">
-            <summary>
-              Looks up a localized string similar to You cannot use a ValidValueGeneratorFromBOList for generating values of type &apos;{0}&apos; since the Property is of type &apos;{1} : &apos;.
-            </summary>
-        </member>
-        <member name="T:Habanero.Testability.ValidValueGeneratorFromBOList`1">
-            <summary>
-            This will return an BusinessObject based on a randomly selected <see cref="T:Habanero.Base.IBusinessObject"/> 
-            from an available List of BusinessObjects.
-            If the list of available items is not set or is set to null via the constructor,
-             then the List of available items will be loaded from the DataStore.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="T:Habanero.Testability.ValidValueGeneratorFromList`1">
-            <summary>
-            This will return an Item of {T} based on a randomly selected item
-            from an available List of Items.
-            If the list of available items is not set or is set to null via the constructor,
-             then the List of available items will be loaded using the LoadItems method.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="T:Habanero.Testability.ValidValueGenerator">
-            <summary>
-            This is a base class for a valid value generator of any type.
-            Generally the <see cref="T:Habanero.Base.IPropDef"/>'s <see cref="T:Habanero.Base.IPropRule"/>s will 
-            be taken into consideration when determining the valid value.
-            E.g. Int, Decimal.
-            Although this class is public it is primarily intended to be used internally by 
-            the <see cref="T:Habanero.Testability.BOTestFactory`1"/> and <see cref="T:Habanero.Testability.BOTestFactory"/>.
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.ValidValueGenerator.GenerateValidValue">
+        <member name="M:Habanero.Testability.ValidValueGeneratorString.GenerateValidValue">
             <summary>
             Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
             will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
@@ -646,85 +484,28 @@
             <param name="maxValue"></param>
             <returns></returns>
         </member>
-        <member name="T:Habanero.Testability.ValidValueGeneratorRegEx">
+        <member name="T:Habanero.Testability.ValidValueGeneratorFromList`1">
             <summary>
-            Generates valid values that match a given regular expression.
-            The generation is done using Rex.exe, a Microsoft Research Project executable that must be placed in the
-            working directory of the application.  The executable is run as a command-line application that runs slowly the
-            first time and then faster once the operating system stores/caches the exe.
-            
-            You can find the homepage of Rex here: http://research.microsoft.com/en-us/projects/rex/
-            You can find additional commentary/limitations on Rex here: http://www.kodefuguru.com/post/2010/05/03/Generate-Matches-for-Regular-Expressions-Using-Rex.aspx
+            This will return an Item of {T} based on a randomly selected item
+            from an available List of Items.
+            If the list of available items is not set or is set to null via the constructor,
+             then the List of available items will be loaded using the LoadItems method.
             </summary>
-            <remarks>
-            A potential future improvement of this test is to allow you to build up a cache of values.  For instance, you could
-            store the first 100 values generated and then access that cache rather than regenerate.  This could give you a significant
-            performance boost.  The main trouble is how to set that cache size - where do you pass the size through to the generator?
-            </remarks>
+            <typeparam name="T"></typeparam>
         </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorRegEx.#ctor(Habanero.Base.ISingleValueDef,System.String)">
+        <member name="T:Habanero.Testability.ValidValueGeneratorEnum">
             <summary>
-            Creates a new instance of the generator
+            This will generate a valid value for the Enum identified by
+            <see cref="T:Habanero.Base.IPropDef"/>.<see cref="!:IPropDef.PropertyType"/>
             </summary>
-            <param name="singleValueDef">The property definition that indicates which property the values are being generated for</param>
-            <param name="regExPhrase">The regular expression against which generated values must match</param>
         </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorRegEx.GenerateValidValue">
+        <member name="M:Habanero.Testability.ValidValueGeneratorEnum.GenerateValidValue">
             <summary>
             Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
             will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
             by the BOTestFactory to create valid values taking into account InterPropRules
             </summary>
-            <returns>Returns a string value</returns>
-        </member>
-        <member name="P:Habanero.Testability.ValidValueGeneratorRegEx.RegExPhrase">
-            <summary>
-            Gets the regular expression against which generated values must match
-            </summary>
-        </member>
-        <member name="T:Habanero.Testability.ValidValueGeneratorRegistry">
-            <summary>
-            This is a registry of the Valid Value Generators to be used for Generating Various Data Types e.g. String, Guid.
-            This was creates so as to allow the Developer to override the <see cref="T:Habanero.Testability.ValidValueGenerator"/> for a specified type.<br/>
-            E.g. If you want to generate all strings in the entire project based on some other algorithm (Currently using A Guid) then
-            you can replace it by registering. Also if you have additional types that you want to support as a default e.g. 
-            If you create a value type such as Address that a number of properties in various business objects in your project can use
-            then you can register the ValidValueGenerator for Address.
-            As Testability supports additional types e.g. TimeSpan Valid Value Generators can also be added for these.
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.#ctor">
-            <summary>
-            Construct ValidValueGenRegistry
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.Register``2">
-            <summary>
-            Registeres a specific type <typeparamref name="TValidValuGenType"/> of <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the specified 
-            Type <typeparamref name="T"/>
-            </summary>
-            <typeparam name="T"></typeparam>
-            <typeparam name="TValidValuGenType"></typeparam>
-        </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.Register``1(System.Type)">
-             <summary>
-             Registeres a specific type <pararef name="type"/> of <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the 
-             Type <typeparamref name="T"/>
-             </summary>
-             <typeparam name="T"></typeparam>
-            
-        </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorRegistry.Resolve(Habanero.Base.ISingleValueDef)">
-            <summary>
-            Resolves the registered <see cref="T:Habanero.Testability.ValidValueGenerator"/> if one is registered.
-            Else returns null./&gt;
-            </summary>
             <returns></returns>
-        </member>
-        <member name="P:Habanero.Testability.ValidValueGeneratorRegistry.Instance">
-            <summary>
-            Returns the Singleton Registry Instance
-            </summary>
         </member>
         <member name="T:Habanero.Testability.RandomValueGen">
              <summary>
@@ -795,18 +576,137 @@
             <param name="type"></param>
             <returns></returns>
         </member>
-        <member name="T:Habanero.Testability.ValidValueGeneratorBool">
+        <member name="T:Habanero.Testability.ValidValueGeneratorFromBOList`1">
             <summary>
-            Generates a valid value for PropDef of type DateTime.
+            This will return an BusinessObject based on a randomly selected <see cref="T:Habanero.Base.IBusinessObject"/> 
+            from an available List of BusinessObjects.
+            If the list of available items is not set or is set to null via the constructor,
+             then the List of available items will be loaded from the DataStore.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Habanero.Testability.BOPropValueGeneratorRegistry">
+            <summary>
+            This is a registry of the ValidValueGenerators Registered for a specific PropertyDefinition <see cref="T:Habanero.Base.ISingleValueDef"/>
+            of a particular Property for a specified Business Object type.
+            This was creates so as to allow the Developer to override the Generic <see cref="T:Habanero.Testability.ValidValueGenerator"/>.<br/>
+            E.g. if the Business object Property has specific rules or things that must be set to ensure that it is a valid 
+            saveable business object. Then you can register a specialised Valid Value Generator that will generate the appropriate
+             value for that Business Object Property.<br/>
+            This is also used behind the scenes when you want to generate a business object with a specified non compulsory property
+            in a particular case. Then a Valid Value Generator is registered for that <see cref="T:Habanero.Base.ISingleValueDef"/> and the non compulsory prop
+            will have a value set. For more details see <see cref="T:Habanero.Testability.BOTestFactory"/>
             </summary>
         </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorBool.GenerateValidValue">
+        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.Register(Habanero.Base.ISingleValueDef,System.Type,System.Object)">
             <summary>
-            Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
-            will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
-            by the BOTestFactory to create valid values taking into account InterPropRules
+            Register a Valid Value Generator to be used for generating values for a specified PropDef.
+            </summary>
+            <param name="propDef">The property definition for which this generator type is being assigned</param>
+            <param name="validValuGenType">The type of generator which will be instantiated when a valid value is needed</param>
+            <param name="parameter">An additional parameter to pass to the constructor of the generator</param>
+        </member>
+        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.Resolve(Habanero.Base.ISingleValueDef)">
+            <summary>
+            Resolves the registered <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the PropDef if one is registered.
+            Else tries to find a <see cref="T:Habanero.Testability.ValidValueGenerator"/> for the specified PropDefs Property Type 
+            using the <see cref="T:Habanero.Testability.ValidValueGeneratorRegistry"/>
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.IsRegistered(Habanero.Base.ISingleValueDef)">
+            <summary>
+            Returns True if a value Gen is registered with the singleValueDef <paramref name="propDef"/>
+            </summary>
+            <param name="propDef"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.BOPropValueGeneratorRegistry.ClearAll">
+            <summary>
+             Clears all ValidValue Generators registered.
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.BOPropValueGeneratorRegistry.Instance">
+            <summary>
+            Returns the Singleton Registry Instance
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.BOFactory">
+            <summary>
+            A generalised factory for creating any habanero business object.
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.IBOFactory">
+            <summary>
+            The IBOFactory is an interface for creating a Standard Business Object.
+            This is used so as to prevent the random construction of business objects in code
+            all over the project as well as to allow the easy mocking/Stubbing or faking of business
+            object creation when requried for testing.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.IBOFactory.CreateBusinessObject``1">
+            <summary>
+            Creates a business object of Type <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.IBOFactory.CreateBusinessObject(System.Type)">
+            <summary>
+            Creates of business object of type <paramref name="type"/>
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.BOFactory.CreateBusinessObject``1">
+            <summary>
+            Creates a business object of Type <typeparamref name="T"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.BOFactory.CreateBusinessObject(System.Type)">
+            <summary>
+            Creates the specified business object of tppe <paramref name="type"/>
+            </summary>
+            <param name="type">The type of business object being created.</param>
+            <returns>the created BO</returns>
+        </member>
+        <member name="T:Habanero.Testability.BODefaultValueRegistry">
+            <summary>
+            This is a registry of the BOTestValues for various Properties and Single Relationships of a BusinessObject.
+            This was creates so as to allow the Developer to <see cref="M:Habanero.Testability.BOTestFactory`1.SetValueFor``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},``0)"/> and 
+            such that when the Object is created with the <see cref="M:Habanero.Testability.BOTestFactory.CreateBusinessObject"/> etc or updated with
+            <see cref="M:Habanero.Testability.BOTestFactory.UpdateCompulsoryProperties(Habanero.Base.IBusinessObject)"/> this will be the value used.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.BODefaultValueRegistry.Register(System.String,System.Object)">
+            <summary>
+            Registers the Default value to be used for the Method
+            </summary>
+            <param name="methodName"></param>
+            <param name="defaultValue"></param>
+        </member>
+        <member name="M:Habanero.Testability.BODefaultValueRegistry.Resolve(System.String)">
+            <summary>
+            Resolves the registered <see cref="T:Habanero.Testability.BOTestFactory"/> if one is registered.
+            Else tries to find a Sub Class of the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/> 
+              in the App Domain and returns an instance of it.
+            else constructs the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.BODefaultValueRegistry.IsRegistered(System.String)">
+            <summary>
+            Returns True if a value is registered with the name <paramref name="methodName"/>
+            </summary>
+            <param name="methodName"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Habanero.Testability.BODefaultValueRegistry.Instance">
+            <summary>
+            Returns the Singleton Registry Instance
+            </summary>
         </member>
         <member name="T:Habanero.Testability.ValidValueGeneratorDate">
             <summary>
@@ -837,27 +737,95 @@
             <param name="maxValue"></param>
             <returns></returns>
         </member>
-        <member name="T:Habanero.Testability.ValidValueGeneratorEnum">
+        <member name="T:Habanero.Testability.BOTestFactoryRegistry">
             <summary>
-            This will generate a valid value for the Enum identified by
-            <see cref="T:Habanero.Base.IPropDef"/>.<see cref="!:IPropDef.PropertyType"/>
+            This is a registry of the BOTestFactories for various Business Object types.
+            This was creates so as to allow the Developer to override the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/>.<br/>
+            E.g. if the Business object has specific rules or things that must be set to ensure that it is a valid 
+            saveable business object. This specialised <see cref="T:Habanero.Testability.BOTestFactory`1"/> must then be 
+            registered with this Registery.<br/>
+            When any other TestBusiness Object has a compulsory relationship involving the Business Object with the Specialised
+            BOTestFactory the specialised factory will be used instead of the generalised Test factory.
+            This allows a situation such as Creating a valid Asset wich has a compulsory relationship to AssetType.
+            For a valid Asset to be created a valid Asset Type is required. If the Asset type has a specialised
+            BOTestFactoryAssetType then the asset must use this specialised factory else it will not be constructed in a valid.
+            manner.
             </summary>
         </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorEnum.GenerateValidValue">
+        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Register``2">
             <summary>
-            Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
-            will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
-            by the BOTestFactory to create valid values taking into account InterPropRules
+            Registeres a specific type <typeparamref name="TBOTestFactory"/> of <see cref="T:Habanero.Testability.BOTestFactory"/> for the specified 
+            <see cref="T:Habanero.Base.IBusinessObject"/> <typeparamref name="TBO"/>
+            </summary>
+            <typeparam name="TBO"></typeparam>
+            <typeparam name="TBOTestFactory"></typeparam>
+        </member>
+        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Register``1(Habanero.Testability.BOTestFactory)">
+            <summary>
+            Registers an instance of <see cref="T:Habanero.Testability.BOTestFactory"/>
+            </summary>
+            <typeparam name="TBO"></typeparam>
+            <param name="boTestFactory"></param>
+        </member>
+        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Register``1(System.Type)">
+             <summary>
+             Registeres a specific type of <see cref="T:Habanero.Testability.BOTestFactory"/>
+             </summary>
+             <typeparam name="TBO"></typeparam>
+            
+        </member>
+        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Resolve``1">
+            <summary>
+            Resolves the registered <see cref="T:Habanero.Testability.BOTestFactory"/> if one is registered else resolves the 
+            Generid <see cref="T:Habanero.Testability.BOTestFactory`1"/>
+            </summary>
+            <typeparam name="TBO"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.BOTestFactoryRegistry.Resolve(System.Type)">
+            <summary>
+            Resolves the registered <see cref="T:Habanero.Testability.BOTestFactory"/> if one is registered.
+            Else tries to find a Sub Class of the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/> 
+              in the App Domain and returns an instance of it.
+            else constructs the Generic <see cref="T:Habanero.Testability.BOTestFactory`1"/>
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Habanero.Testability.ValidValueGeneratorString.GenerateValidValue">
+        <member name="M:Habanero.Testability.BOTestFactoryRegistry.ClearAll">
             <summary>
-            Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
-            will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
-            by the BOTestFactory to create valid values taking into account InterPropRules
+            Clears all registered test factories
             </summary>
-            <returns></returns>
+        </member>
+        <member name="P:Habanero.Testability.BOTestFactoryRegistry.Instance">
+            <summary>
+            Returns the Singleton Registry Instance
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.AppDomainTypeSource">
+            <summary>
+            Gets the Types for the Currently Loaded App Domain
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Messages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Messages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Messages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Messages.You_cannot_use_a_ValidValueGeneratorFromList_for_generating_values_of_typeT">
+            <summary>
+              Looks up a localized string similar to You cannot use a ValidValueGeneratorFromBOList for generating values of type &apos;{0}&apos; since the Property is of type &apos;{1} : &apos;.
+            </summary>
         </member>
         <member name="T:Habanero.Testability.ValidValueGeneratorTextFile">
             <summary>
@@ -898,6 +866,55 @@
             <summary>
             Gets the cached sample values per filename
             </summary>
+        </member>
+        <member name="T:Habanero.Testability.ValidValueGeneratorRegEx">
+            <summary>
+            Generates valid values that match a given regular expression.
+            The generation is done using Rex.exe, a Microsoft Research Project executable that must be placed in the
+            working directory of the application.  The executable is run as a command-line application that runs slowly the
+            first time and then faster once the operating system stores/caches the exe.
+            
+            You can find the homepage of Rex here: http://research.microsoft.com/en-us/projects/rex/
+            You can find additional commentary/limitations on Rex here: http://www.kodefuguru.com/post/2010/05/03/Generate-Matches-for-Regular-Expressions-Using-Rex.aspx
+            </summary>
+            <remarks>
+            A potential future improvement of this test is to allow you to build up a cache of values.  For instance, you could
+            store the first 100 values generated and then access that cache rather than regenerate.  This could give you a significant
+            performance boost.  The main trouble is how to set that cache size - where do you pass the size through to the generator?
+            </remarks>
+        </member>
+        <member name="M:Habanero.Testability.ValidValueGeneratorRegEx.#ctor(Habanero.Base.ISingleValueDef,System.String)">
+            <summary>
+            Creates a new instance of the generator
+            </summary>
+            <param name="singleValueDef">The property definition that indicates which property the values are being generated for</param>
+            <param name="regExPhrase">The regular expression against which generated values must match</param>
+        </member>
+        <member name="M:Habanero.Testability.ValidValueGeneratorRegEx.GenerateValidValue">
+            <summary>
+            Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
+            will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
+            by the BOTestFactory to create valid values taking into account InterPropRules
+            </summary>
+            <returns>Returns a string value</returns>
+        </member>
+        <member name="P:Habanero.Testability.ValidValueGeneratorRegEx.RegExPhrase">
+            <summary>
+            Gets the regular expression against which generated values must match
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.ValidValueGeneratorBool">
+            <summary>
+            Generates a valid value for PropDef of type DateTime.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.ValidValueGeneratorBool.GenerateValidValue">
+            <summary>
+            Generates a valid value taking into account only the <see cref="T:Habanero.Base.IPropRule"/>s. I.e. any <see cref="T:Habanero.BO.Rules.InterPropRule"/>s 
+            will not be taken into account. The <see cref="T:Habanero.Testability.IValidValueGeneratorNumeric"/>'s methods are used
+            by the BOTestFactory to create valid values taking into account InterPropRules
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

@@ -14,6 +14,13 @@
             Else the Assert executes without an Exception
             </summary>
         </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.ShouldHaveReadWriteRule(System.String,Habanero.Base.PropReadWriteRule)">
+            <summary>
+            Asserts that the property identified by propName has the expectedReadWriteRule
+            </summary>
+            <param name="propName"></param>
+            <param name="expectedReadWriteRule"></param>
+        </member>
         <member name="M:Habanero.Testability.Testers.BOTester.ShouldHaveAllPropsMapped">
             <summary>
             For each property defined in the ClassDefs for this Business
@@ -21,6 +28,11 @@
             
             See <see cref="M:Habanero.Testability.Testers.BOTester.ShouldHavePropertyMapped(System.String)"/> for more details on how this 
             mapping testing is done.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester.ShouldHaveAllSingleRelationshipsMapped">
+            <summary>
+            Asserts that all single relationships are mapped correctly
             </summary>
         </member>
         <member name="M:Habanero.Testability.Testers.BOTester.ShouldHavePropertyMapped(System.String)">

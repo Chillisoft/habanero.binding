@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Habanero.Testability.Helpers</name>
+    </assembly>
+    <members>
+        <member name="T:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1">
+            <summary>
+            This is a Fake BO which is used for testing.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.#ctor">
+            <summary>
+            Default constructor. 
+            The <see cref="T:Habanero.Base.IClassDef"/> will be implied from <typeparamref name="TBusinessObject"/> and the Current Database Connection will be used.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.#ctor(Habanero.Base.IClassDef)">
+            <summary>
+            Use this constructor if you will only know <typeparamref name="TBusinessObject"/> at run time - <see cref="T:Habanero.BO.BusinessObject"/> will be the generic type
+            and the objects in the collection will be determined from the <see cref="T:Habanero.Base.IClassDef"/> passed in.
+            </summary>
+            <param name="classDef">The <see cref="T:Habanero.Base.IClassDef"/> of the objects to be contained in this collection</param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.#ctor(`0)">
+            <summary>
+            Constructor to initialize a new collection with a
+            class definition provided by an existing business object
+            </summary>
+            <param name="bo">The business object whose class definition
+            is used to initialize the collection</param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Reconstitutes the collection from a stream that was serialized.
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.Add(`0)">
+            <summary>
+            Adds a business object to the collection
+            </summary>
+            <param name="bo">The business object to add</param>
+            <exception cref="T:System.ArgumentNullException"><c>bo</c> is null.</exception>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.Refresh">
+            <summary>
+            Refreshes the business objects in the collection
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.Clear">
+            <summary>
+            Clears the collection
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.GetSortedList(System.String,System.Boolean)">
+            <summary>
+            Returns a list containing all the objects sorted by the property
+            name and in the order specified
+            </summary>
+            <param name="propertyName">The property name</param>
+            <param name="isAscending">True for ascending, false for descending
+            </param>
+            <returns>Returns a sorted list</returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.GetList">
+            <summary>
+            Returns the business object collection as an <see cref="T:System.Collections.Generic.IList`1"/>.
+            </summary>
+            <returns>Returns an <see cref="T:System.Collections.Generic.IList`1"/> object</returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.SaveAll">
+            <summary>
+            Commits to the database all the business objects that are either
+            new or have been altered since the last committal
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.CancelEdits">
+            <summary>
+            Restores all the business objects to their last persisted state, that
+            is their state and values at the time they were last saved to the database
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.MarkForDelete(`0)">
+            <summary>
+             Marks the business object as MarkedForDeletion and places the object
+            </summary>
+            <param name="businessObject"></param>
+        </member>
+    </members>
+</doc>
