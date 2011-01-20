@@ -11,26 +11,34 @@ using Habanero.BO;
 
 namespace Habanero.Binding
 {
-    public class BindingListView<T> : BindingList<T>, IBindingListView, ITypedList
+    /// <summary>
+    /// A filterable, sortable view of a <see cref="BusinessObjectCollection{TBusinessObject}"/>.
+    /// This can be used for binding to an Editable Grid.
+    /// It can also obviously be used to bind to any other collecton bindable control such as 
+    /// a combo box, Listbox, readonly grid etc.
+    /// Note_ this does not support hierachical binding so it will not support binding to a
+    /// tree view.
+    /// If you want to bind a <see cref="BusinessObjectCollection{TBusinessObject}"/>
+    ///  to a tree view where its compositional or aggregate children are automatically bound then
+    ///  please look at Habanero.Faces.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class BindingListView<T> : IBindingListView, ITypedList, ICancelAddNew
         where T : class, IBusinessObject, new()
     {
         #region Fields
 
         /// <summary>
-        /// Called if list was changed.
+        /// 
         /// </summary>
-        private int[] _sortIndices;
-
         public event ListChangedEventHandler ListChanged;
-        private int[] _filterIndices;
-        private ListSortDescriptionCollection _sortDescriptions;
-        private string _currentFilterExpression = string.Empty;
         private DataTable _filterTable;
         private PropertyDescriptorCollection _descriptorCollection;
-        private ArrayList _sortedList;
-        private ArrayList _unsortedItems;
+        /// <summary>
+        /// 
+        /// </summary>
         public IViewBuilder ViewBuilder { get; set; }
-        private string _filterValue = null;
+        private string _currentFilterExpression = null;
 
         #endregion
 
@@ -62,6 +70,8 @@ namespace Habanero.Binding
             foreach (PropertyDescriptor property in _descriptorCollection)
             {
                 Type colType = property.PropertyType;
+                //TODO brett 19 Jan 2011: This should be refactored to use common syntax e.g. from wrappers.
+                //  there is code in Smooth to do this I would sugges either using this or moving this all into reflection utils.
                 if (colType.IsGenericType && colType.GetGenericTypeDefinition().Equals(typeof (Nullable<>)))
                     colType = colType.GetGenericArguments()[0];
                 _filterTable.Columns.Add(property.Name, colType);
@@ -73,7 +83,7 @@ namespace Habanero.Binding
         /// <summary>
         /// Gets the business object collection
         /// </summary>
-        public BusinessObjectCollection<T> BusinessObjectCollection { get; set; }
+        public BusinessObjectCollection<T> BusinessObjectCollection { get; private set; }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -84,7 +94,7 @@ namespace Habanero.Binding
         /// </returns>
         public IEnumerator GetEnumerator()
         {
-            for (int i = 0; i < this.Count; i++)
+            for (var i = 0; i < this.Count; i++)
                 yield return this[i];
         }
 
@@ -109,8 +119,8 @@ namespace Habanero.Binding
         /// Gets the number of objects contained in the <see cref="IBusinessObjectCollection"/>. 
         /// </summary>
         public int Count
-        {
-            get { return _filterIndices == null ? BusinessObjectCollection.Count : _filterIndices.Length; }
+        { //TODO brett 19 Jan 2011: get { return _filterIndices == null ? BusinessObjectCollection.Count : _filterIndices.Length; }
+            get { return BusinessObjectCollection.Count; }
         }
 
         /// <summary>
@@ -163,6 +173,7 @@ namespace Habanero.Binding
         /// </summary>
         public void Clear()
         {
+
             BusinessObjectCollection.Clear();
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
         }
@@ -228,13 +239,8 @@ namespace Habanero.Binding
         {
             get
             {
-                if (_filterIndices != null)
-                    index = _filterIndices[index];
-
-                if (_sortIndices != null && index < _sortIndices.Length)
-                    index = _sortIndices[index];
-
-                return (T) BusinessObjectCollection[index];
+                //TODO brett 19 Jan 2011: This needs to return the item from the filtered list
+                return BusinessObjectCollection[index];
             }
             set
             {
@@ -258,17 +264,13 @@ namespace Habanero.Binding
         {
             get { return true; }
         }
-/*
-        /// <summary>
-        ///  Adds a new business object to the collection.
-        /// </summary>
-        /// <returns>New business object</returns>
-        public object  AddNew()
+
+        public object AddNew()
         {
             var bo = new T();
             BusinessObjectCollection.Add(bo);
             return bo;
-        }*/
+        }
 
         /// <summary>
         /// NOT IMPLEMENTED
@@ -277,64 +279,6 @@ namespace Habanero.Binding
         public void AddIndex(PropertyDescriptor property)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Sorts the collection based on a PropertyDescriptor and a ListSortDirection.
-        /// </summary>
-        /// <param name="property">The <see cref="PropertyDescriptor"/> to sort by.</param>
-        /// <param name="direction">One of the <see cref="ListSortDirection"/> values.</param>
-        public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
-        {
-            try
-            {
-                _sortedList = new ArrayList();
-                var listSortDescription = new ListSortDescription(property, direction);
-                var listSortDescriptions = new[] {listSortDescription};
-                var sorts = new ListSortDescriptionCollection(listSortDescriptions);
-
-                // Check to see if the property type we are sorting by implements
-                // the IComparable interface.
-                Type interfaceType = property.PropertyType.GetInterface("IComparable");
-                if (interfaceType != null)
-                {
-                    _unsortedItems = new ArrayList(this.Count);
-
-                    // Loop through each item, adding it the the sortedItems ArrayList.
-                    foreach (T item in this.BusinessObjectCollection)
-                    {
-                        if (item == null) continue;
-                        var propertyValue = property.GetValue(item);
-                        if (propertyValue != null) _sortedList.Add(propertyValue);
-                        _unsortedItems.Add(item);
-                    }
-                    // Call Sort on the ArrayList.
-                    _sortedList.Sort();
-                    if (direction == ListSortDirection.Descending)
-                        _sortedList.Reverse();
-
-                    for (int i = 0; i < this.Count; i++)
-                    {
-                        int position = Find(property, _sortedList[i]);
-                        if (position > 0 && position != i)
-                        {
-                            T temp = this.BusinessObjectCollection[i];
-                            this.BusinessObjectCollection[i] = this.BusinessObjectCollection[position];
-                            this.BusinessObjectCollection[position] = temp;
-                        }
-                    }
-                    //Raise the ListChanged event so bound controls refresh their values.
-                    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-                }
-                else
-                {
-                    ApplySort(sorts);
-                }
-            }
-            catch (Exception ex)
-            {
-                GlobalRegistry.UIExceptionNotifier.Notify(ex, "Error", "Error");
-            }
         }
 
         /// <summary>
@@ -359,7 +303,7 @@ namespace Habanero.Binding
         /// NOT IMPLEMENTED
         /// </summary>
         /// <param name="property"> PropertyDescriptor to remove from the indexes used for searching.</param>
-        protected void RemoveIndex(PropertyDescriptor property)
+        public void RemoveIndex(PropertyDescriptor property)
         {
             throw new NotImplementedException();
         }
@@ -369,14 +313,13 @@ namespace Habanero.Binding
         /// </summary>
         public void RemoveSort()
         {
-            _sortDescriptions = new ListSortDescriptionCollection();
-            _sortIndices = null;
+            this.BusinessObjectCollection.Sort();
         }
 
         /// <summary>
         /// Whether you can add items to the business object collection
         /// </summary>
-        bool IBindingList.AllowNew
+        public bool AllowNew
         {
             get { return true; }
         }
@@ -384,7 +327,7 @@ namespace Habanero.Binding
         /// <summary>
         /// whether you can update items in the business object collection
         /// </summary>
-        bool IBindingList.AllowEdit
+        public bool AllowEdit
         {
             get { return true; }
         }
@@ -396,21 +339,27 @@ namespace Habanero.Binding
         /// <returns>
         /// true if you can remove items from the list; otherwise, false.
         /// </returns>
-        bool IBindingList.AllowRemove
+        public bool AllowRemove
         {
             get { return true; }
         }
-
+        /// <summary>
+        /// Supports Change Notification
+        /// </summary>
         public bool SupportsChangeNotification
         {
             get { return true; }
         }
-
+        /// <summary>
+        /// Supports Searching
+        /// </summary>
         public bool SupportsSearching
         {
             get { return false; }
         }
-
+        /// <summary>
+        /// Supports Sorting
+        /// </summary>
         public bool SupportsSorting
         {
             get { return true; }
@@ -454,18 +403,86 @@ namespace Habanero.Binding
             }
         }
 
+        /// <summary>
+        /// Sorts the collection based on a PropertyDescriptor and a ListSortDirection.
+        /// </summary>
+        /// <param name="property">The <see cref="PropertyDescriptor"/> to sort by.</param>
+        /// <param name="direction">One of the <see cref="ListSortDirection"/> values.</param>
+        public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
+        {
+            try
+            {
+                if (property is PropertyDescriptorPropDef)
+                {
+                    this.BusinessObjectCollection.Sort(property.Name, true, direction == ListSortDirection.Ascending);
+                }
+                else
+                {
+                    this.BusinessObjectCollection.Sort(property.Name, false, direction == ListSortDirection.Ascending);
+                }
+/*
+                _sortedList = new ArrayList();
+                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                var listSortDescription = new ListSortDescription(property, direction);
+                var listSortDescriptions = new[] { listSortDescription };
+                var sorts = new ListSortDescriptionCollection(listSortDescriptions);
+
+                // Check to see if the property type we are sorting by implements
+                // the IComparable interface.
+                Type interfaceType = property.PropertyType.GetInterface("IComparable");
+                if (interfaceType != null)
+                {
+                    _unsortedItems = new ArrayList(this.Count);
+                    this.BusinessObjectCollection.Sort();
+                    // Loop through each item, adding it the the sortedItems ArrayList.
+                    foreach (T item in this.BusinessObjectCollection)
+                    {
+                        if (item == null) continue;
+                        var propertyValue = property.GetValue(item);
+                        if (propertyValue != null) _sortedList.Add(propertyValue);
+                        _unsortedItems.Add(item);
+                    }
+                    // Call Sort on the ArrayList. 
+                    _sortedList.Sort();
+                    if (direction == ListSortDirection.Descending)
+                        _sortedList.Reverse();
+
+                    for (int i = 0; i < this.Count; i++)
+                    {
+                        int position = Find(property, _sortedList[i]);
+                        if (position > 0 && position != i)
+                        {
+                            T temp = this.BusinessObjectCollection[i];
+                            this.BusinessObjectCollection[i] = this.BusinessObjectCollection[position];
+                            this.BusinessObjectCollection[position] = temp;
+                        }
+                    }
+                    //Raise the ListChanged event so bound controls refresh their values.
+                    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                }
+                else
+                {
+                    ApplySort(sorts);
+                }*/
+            }
+            catch (Exception ex)
+            {
+                GlobalRegistry.UIExceptionNotifier.Notify(ex, "Error", "Error");
+            }
+        }
+
         public void ApplySort(ListSortDescriptionCollection descriptionCollection)
         {
             SortDescriptions = descriptionCollection;
-            _sortIndices = new int[BusinessObjectCollection.Count];
-            object[] items = new object[BusinessObjectCollection.Count];
-            for (int i = 0; i < _sortIndices.Length; i++)
-            {
-                _sortIndices[i] = i;
-                items[i] = BusinessObjectCollection[i];
-            }
-            BusinessObjectCollection.Sort(new GenericComparer<T>(descriptionCollection));
-            //            BusinessObjectCollection.Sort(new GenericComparer(descriptionCollection));
+            /*              _sortIndices = new int[BusinessObjectCollection.Count];
+                      object[] items = new object[BusinessObjectCollection.Count];
+                      for (int i = 0; i < _sortIndices.Length; i++)
+                      {
+                          _sortIndices[i] = i;//Index for the sorted Collection allows you to create a sorted collection without
+                          // a real collection underneath.
+                          items[i] = BusinessObjectCollection[i];
+                      }*/
+            BusinessObjectCollection.Sort(new GenericComparer<T>(SortDescriptions));
             Filter = _currentFilterExpression;
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
@@ -486,17 +503,17 @@ namespace Habanero.Binding
         /// </returns>
         public string Filter
         {
-            get { return _filterValue; }
+            get { return _currentFilterExpression; }
             set
             {
-                if (_filterValue == value) return;
+                if (_currentFilterExpression == value) return;
 
                 // If the value is not null or empty, but doesn't
                 // match expected format, throw an exception.
-                if (!string.IsNullOrEmpty(value) && !Regex.IsMatch(value, BuildRegExForFilterFormat(), RegexOptions.Singleline))
+                if (!string.IsNullOrEmpty(value) &&
+                    !Regex.IsMatch(value, BuildRegExForFilterFormat(), RegexOptions.Singleline))
                     throw new ArgumentException("Filter is not in the format: propName[<>=]'value'.");
-                //Turn off list-changed events.
-                RaiseListChangedEvents = false;
+
 
                 // If the value is null or empty, reset list.
                 if (string.IsNullOrEmpty(value))
@@ -513,7 +530,7 @@ namespace Habanero.Binding
                         // Check to see if the filter was set previously.
                         // Also, check if current filter is a subset of 
                         // the previous filter.
-                        if (!String.IsNullOrEmpty(_filterValue) && !value.Contains(_filterValue))
+                        if (!String.IsNullOrEmpty(_currentFilterExpression) && !value.Contains(_currentFilterExpression))
                             ResetList();
 
                         // Parse and apply the filter.
@@ -523,11 +540,11 @@ namespace Habanero.Binding
                     }
                 }
                 // Set the filter value and turn on list changed events.
-                _filterValue = value;
-                RaiseListChangedEvents = true;
+                _currentFilterExpression = value;
                 OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
         }
+
 
         private void ApplyFilter(SingleFilterInfo filterParts)
         {
@@ -556,6 +573,7 @@ namespace Habanero.Binding
                 if (filterParts.OperatorValue == FilterOperator.Like && IsMatch(filterParts, compareValue))
                     results.Add(item);
             }
+            //TODO brett 19 Jan 2011:  this needs to be looked at
             TempBusinessObjectCollection = BusinessObjectCollection.Clone();
             BusinessObjectCollection.Clear();
             foreach (T itemFound in results)
@@ -567,22 +585,25 @@ namespace Habanero.Binding
             return compareValue.ToString().Contains(filterParts.CompareValue.ToString());
         }
 
+        //TODO brett 19 Jan 2011: This needs to be looked at
         protected BusinessObjectCollection<T> TempBusinessObjectCollection { get; set; }
 
         private SingleFilterInfo ParseFilter(string filterPart)
         {
             var filterInfo = new SingleFilterInfo
-                {
-                    OperatorValue = DetermineFilterOperator(filterPart)
-                };
+                                 {
+                                     OperatorValue = DetermineFilterOperator(filterPart)
+                                 };
 
-            string[] filterStringParts = filterInfo.OperatorValue == FilterOperator.Like ? filterPart.Split(new[] { " Like " },
-                StringSplitOptions.RemoveEmptyEntries) : filterPart.Split(new char[] { (char)filterInfo.OperatorValue });
+            string[] filterStringParts = filterInfo.OperatorValue == FilterOperator.Like
+                                             ? filterPart.Split(new[] {" Like "},
+                                                                StringSplitOptions.RemoveEmptyEntries)
+                                             : filterPart.Split(new char[] {(char) filterInfo.OperatorValue});
 
             filterInfo.PropName = filterStringParts[0].Replace("[", "").Replace("]", "").Replace(" AND ", "").Trim();
 
             // Get the property descriptor for the filter property name.
-            PropertyDescriptor filterPropDesc = TypeDescriptor.GetProperties(typeof (T))[filterInfo.PropName];
+            var filterPropDesc = TypeDescriptor.GetProperties(typeof (T))[filterInfo.PropName];
 
             // Convert the filter compare value to the property type.
             if (filterPropDesc == null)
@@ -638,17 +659,11 @@ namespace Habanero.Binding
 
         private void ResetList()
         {
-//            this.ClearItems();
-//            foreach (T t in BusinessObjectCollection)
-//                Items.Add(t);
             BusinessObjectCollection.Clear();
             foreach (T t in TempBusinessObjectCollection)
             {
                 BusinessObjectCollection.Add(t);
             }
-            if (IsSortedCore)
-                if (SortPropertyCore != null) 
-                    ApplySortCore(SortPropertyCore, SortDirectionCore);
         }
 
         // Build a regular expression to determine if 
@@ -713,14 +728,35 @@ namespace Habanero.Binding
         /// <summary>
         ///  Called when the list changes or an item in the list changes.
         /// </summary>
-        protected override void OnListChanged(ListChangedEventArgs args)
+        protected void OnListChanged(ListChangedEventArgs args)
         {
             if (ListChanged != null) ListChanged(this, args);
         }
 
         #endregion
+
+        #region ICancelAddNew
+
+        public void CancelNew(int itemIndex)
+        {
+//TODO brett 19 Jan 2011: this should just cancel the added object
+            throw new NotImplementedException();
+        }
+
+        public void EndNew(int itemIndex)
+        {
+            //TODO brett 19 Jan 2011: 
+            // this is a commit from the grids perspective of a new object.
+            // this could be a save of the BO or a nothing. depending on whether the 
+            // developer wants to save when the user moves off of a new Row or wants a seperate 
+            // save button.
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
     }
-    
+
     /// <summary>
     /// A generic comparer for List&lt;T&gt;.Sort(IComparer).
     /// For strings, use <see cref="System.StringComparer"/>

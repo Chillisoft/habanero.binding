@@ -30,11 +30,11 @@ namespace Habanero.Binding
         public virtual PropertyDescriptorCollection GetGridView()
         {
             var classDef = ClassDef.Get<T>();
-            IUIDef uiDef = classDef.UIDefCol.Contains(_uiName)
+            var uiDef = classDef.UIDefCol.Contains(_uiName)
                                ? classDef.UIDefCol[_uiName]
                                : new UIViewCreator().GetDefaultUIDef(classDef);
-            IUIGrid uiGrid = uiDef.UIGrid;
-            var propertyDescriptors = uiGrid.Select(column => GetPropertyDescriptor(column)).ToList();
+            var uiGrid = uiDef.UIGrid;
+            var propertyDescriptors = uiGrid.Select(GetPropertyDescriptor).ToList();
             propertyDescriptors.Add(new PropertyDescriptorID());
             return new PropertyDescriptorCollection(propertyDescriptors.ToArray());
         }
