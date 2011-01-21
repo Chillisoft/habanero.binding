@@ -1,15 +1,14 @@
 using System;
 using System.ComponentModel;
 using System.Collections;
+using System.Data;
 using Habanero.Base;
 
 // ReSharper disable CheckNamespace
 namespace Habanero.Binding
-
 {
     public class CachedBindingListView<T> : IBindingListView, ITypedList where T : class, IBusinessObject, new()
     {
-
         #region fields
 
         /// <summary>
@@ -109,11 +108,24 @@ namespace Habanero.Binding
             set
             {
                 Filtering(value);
-                if (PageProvider.RowCount > 0)
-                    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
-                else
-                    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                RaiseListChangedEvent(GetIndexToSelect());
             }
+        }
+
+        private int GetIndexToSelect()
+        {
+            if (HasItems()) return 0;
+            return -1;
+        }
+
+        private void RaiseListChangedEvent(int selectedIndex)
+        {
+            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, selectedIndex));
+        }
+
+        private bool HasItems()
+        {
+            return PageProvider.RowCount > 0;
         }
 
         /// <summary>
@@ -365,7 +377,7 @@ namespace Habanero.Binding
 
         public PropertyDescriptorCollection GetItemProperties(PropertyDescriptor[] listAccessors)
         {
-            if (this.ViewBuilder != null) return this.ViewBuilder.GetGridView();
+            if (this.ViewBuilder != null) return this.ViewBuilder.GetPropertyDescriptors();
             return TypeDescriptor.GetProperties(typeof(T));
             //return ListBindingHelper.GetListItemProperties(typeof(T));
         }
@@ -485,7 +497,9 @@ namespace Habanero.Binding
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// A Builder that builds the columns available for the View (The grid etc)
+        /// </summary>
         public IViewBuilder ViewBuilder { get; set; }
 
         #endregion

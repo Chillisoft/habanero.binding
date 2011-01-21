@@ -142,7 +142,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             var mockPageProvider = MockRepository.GenerateStub<PageProvider<FakeBO>>();
             IViewBuilder viewBuilder = MockRepository.GenerateStub<IViewBuilder>();
-            viewBuilder.Stub(builder => builder.GetGridView()).Return(
+            viewBuilder.Stub(builder => builder.GetPropertyDescriptors()).Return(
                 new PropertyDescriptorCollection(new PropertyDescriptor[0]));
             var list = new CachedBindingListViewSpy<FakeBO>(mockPageProvider) {ViewBuilder = viewBuilder};
             //---------------Assert Precondition----------------

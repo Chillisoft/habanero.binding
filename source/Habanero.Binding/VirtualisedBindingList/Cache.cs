@@ -144,6 +144,9 @@ namespace Habanero.Binding
 
         #region Constructor
 
+        ///<summary>
+        ///</summary>
+        ///<param name="pageProvider"></param>
         public Cache(IPageProvider<T> pageProvider)
         {
             _pageProvider = pageProvider;
@@ -164,11 +167,11 @@ namespace Habanero.Binding
 
             T element = Activator.CreateInstance<T>();
             //If element is in cache
-            if (IfPageCached_ThenSetElement(rowIndex, ref element))
+            if (IfPageCachedThenSetElement(rowIndex, ref element))
             {
                 return element;
             }
-            return RetrieveData_CacheIt_ThenReturnElement(
+            return RetrieveDataCacheItThenReturnElement(
                 rowIndex);
         }
 
@@ -183,6 +186,8 @@ namespace Habanero.Binding
             };
         }
 
+        ///<summary>
+        ///</summary>
         public void Reset()
         {
             LoadFirstTwoPages();
@@ -209,7 +214,7 @@ namespace Habanero.Binding
         /// </summary>
         /// <param name="rowIndex">Row index</param>
         /// <returns>Element</returns>
-        private T RetrieveData_CacheIt_ThenReturnElement(int rowIndex)
+        private T RetrieveDataCacheItThenReturnElement(int rowIndex)
         {
             IList<T> list = _pageProvider.GetDataPage(DataPage.MapToPageNumber(rowIndex, RowsPerPage));
             _cachePages[GetIndexToUnusedPage(rowIndex)] = new DataPage(list, rowIndex, RowsPerPage);
@@ -222,7 +227,7 @@ namespace Habanero.Binding
         /// <param name="rowIndex">Row index</param>
         /// <param name="element">Element</param>
         /// <returns>If cache contains an element with this index</returns>
-        private bool IfPageCached_ThenSetElement(int rowIndex, ref T element)
+        private bool IfPageCachedThenSetElement(int rowIndex, ref T element)
         {
             if (IsRowCachedInPage(0, rowIndex))
             {

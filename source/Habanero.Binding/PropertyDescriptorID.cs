@@ -13,7 +13,9 @@ namespace Habanero.Binding
     public class PropertyDescriptorID : PropertyDescriptor
     {
         private const string PROP_NAME = "HABANERO_OBJECTID";
-
+        /// <summary>
+        /// 
+        /// </summary>
         public PropertyDescriptorID()
             : base(PROP_NAME, null)
         {
@@ -26,7 +28,7 @@ namespace Habanero.Binding
 
         public override string Name
         {
-            get { return PropertyName; }
+            get { return this.PropertyName; }
         }
 
         public override bool CanResetValue(object component)
@@ -48,6 +50,7 @@ namespace Habanero.Binding
 
         public override void ResetValue(object component)
         {
+            //TODO brett 20 Jan 2011:  this should probably do nothing or throw error?
             IBusinessObject bo = GetBusinessObject(component);
             var boProp = GetBOProp(bo);
             boProp.RestorePropValue();

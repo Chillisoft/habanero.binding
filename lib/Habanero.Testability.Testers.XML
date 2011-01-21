@@ -302,6 +302,27 @@
             Should have a rule this Assert does not specify what rule just that it has a Rule
             </summary>
         </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveRule``1">
+            <summary>
+            Should have a rule of the specified type e.g. <see cref="T:Habanero.BO.PropRuleDate"/>.
+            Note_ this Test does not test that the min, max values etc are correct for the
+            rule merely that there is a rule of that type.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveRule``1(System.String,System.String)">
+            <summary>
+            Should have a rule of the specified type e.g. <see cref="T:Habanero.BO.PropRuleDate"/>.
+            Note_ this Test does not test that the min, max values etc are correct for the
+            rule merely that there is a rule of that type.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveRule``2(System.Nullable{``1},System.Nullable{``1})">
+            <summary>
+            Should have a rule of the specified type e.g. <see cref="T:Habanero.BO.PropRuleDate"/>.
+            Note_ this Test does not test that the min, max values etc are correct for the
+            rule merely that there is a rule of that type.
+            </summary>
+        </member>
         <member name="M:Habanero.Testability.Testers.PropDefTester.ShouldHaveDefault">
             <summary>
             Should have a default value this Assert does not specify what the default value should be 
@@ -340,6 +361,13 @@
             <summary>
              Extension methods for easily testing an <see cref="T:Habanero.Base.IPropDef"/>
             </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.PropDefExtensions.IsOfType``1(Habanero.Base.IPropRule)">
+            <summary>
+            Checks if the PropRule is of the correct Type
+            </summary>
+            <param name="rule"></param>
+            <returns></returns>
         </member>
         <member name="M:Habanero.Testability.Testers.PropDefExtensions.ShouldBeCompulsory(Habanero.Base.IPropDef)">
             <summary>

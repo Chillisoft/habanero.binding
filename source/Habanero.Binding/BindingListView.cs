@@ -351,7 +351,7 @@ namespace Habanero.Binding
             get { return true; }
         }
         /// <summary>
-        /// Supports Searching
+        /// Gets whether the list supports searching using the Find method. (Inherited from IBindingList.)
         /// </summary>
         public bool SupportsSearching
         {
@@ -716,10 +716,9 @@ namespace Habanero.Binding
             return this.GetType().Name;
         }
 
-
         public PropertyDescriptorCollection GetItemProperties(PropertyDescriptor[] listAccessors)
         {
-            if (this.ViewBuilder != null) return this.ViewBuilder.GetGridView();
+            if (this.ViewBuilder != null) return this.ViewBuilder.GetPropertyDescriptors();
             return TypeDescriptor.GetProperties(typeof (T));
         }
 

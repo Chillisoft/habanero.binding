@@ -12,7 +12,7 @@ namespace Habanero.Binding.Tests
 {
     // ReSharper disable InconsistentNaming
     [TestFixture]
-    public class TestViewBuilder
+    public class TestUIDefViewBuilder
     {
         [SetUp]
         public void SetupTest()
@@ -54,7 +54,7 @@ namespace Habanero.Binding.Tests
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
-            IViewBuilder viewBuilder = new ViewBuilder<FakeBO>();
+            IViewBuilder viewBuilder = new UIDefViewBuilder<FakeBO>();
              //---------------Test Result -----------------------
             Assert.IsNotNull(viewBuilder);
         }
@@ -63,11 +63,11 @@ namespace Habanero.Binding.Tests
         public void Test_GetGridView_ShouldAddIDDescriptor()
         {
             //---------------Set up test pack-------------------
-            IViewBuilder viewBuilder = new ViewBuilder<FakeBO>();
+            IViewBuilder viewBuilder = new UIDefViewBuilder<FakeBO>();
             //---------------Assert Precondition----------------
             Assert.IsTrue(ClassDef.ClassDefs.Contains(typeof(FakeBO)));
             //---------------Execute Test ----------------------
-            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetGridView();
+            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.IsNotNull(descriptorCollection);
             Assert.AreEqual(2, descriptorCollection.Count);
@@ -78,11 +78,11 @@ namespace Habanero.Binding.Tests
         public void Test_GetGridView_WhenNoUIViewSpecified_ShouldReturnPropDescColForDefaultView()
         {
             //---------------Set up test pack-------------------
-            IViewBuilder viewBuilder = new ViewBuilder<FakeBO>();
+            IViewBuilder viewBuilder = new UIDefViewBuilder<FakeBO>();
             //---------------Assert Precondition----------------
             Assert.IsTrue(ClassDef.ClassDefs.Contains(typeof(FakeBO)));
             //---------------Execute Test ----------------------
-            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetGridView();
+            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.IsNotNull(descriptorCollection);
             Assert.AreEqual(2, descriptorCollection.Count);
@@ -94,11 +94,11 @@ namespace Habanero.Binding.Tests
         public void Test_GetGridView_WithTwoProps_ShouldReturnPropDescColWithBothProps()
         {
             //---------------Set up test pack-------------------
-            IViewBuilder viewBuilder = new ViewBuilder<FakeBOW2Props>();
+            IViewBuilder viewBuilder = new UIDefViewBuilder<FakeBOW2Props>();
             //---------------Assert Precondition----------------
             Assert.IsTrue(ClassDef.ClassDefs.Contains(typeof(FakeBOW2Props)));
             //---------------Execute Test ----------------------
-            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetGridView();
+            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.AreEqual(3, descriptorCollection.Count);
             var propertyDescriptor = descriptorCollection[0];
@@ -119,12 +119,12 @@ namespace Habanero.Binding.Tests
             defaultUiDef.Name = RandomValueGen.GetRandomString();
             defaultUiDef.UIGrid.Add(new UIGridColumn(null, "ReflectiveProp",null, null, true, 100, PropAlignment.left, null));
             classDef.UIDefCol.Add(defaultUiDef);
-            var viewBuilder = new ViewBuilder<FakeBOWReflectiveProp>(defaultUiDef.Name);
+            var viewBuilder = new UIDefViewBuilder<FakeBOWReflectiveProp>(defaultUiDef.Name);
             //---------------Assert Precondition----------------
 //            Assert.IsTrue(ClassDef.ClassDefs.Contains(typeof(FakeBOWReflectiveProp)));
             Assert.AreEqual(1, defaultUiDef.UIDefCol.Count, "There should be only the reflective column");
             //---------------Execute Test ----------------------
-            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetGridView();
+            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.AreEqual(2, descriptorCollection.Count);
             var propertyDescriptor = descriptorCollection[0];
@@ -149,8 +149,8 @@ namespace Habanero.Binding.Tests
             Assert.IsTrue(classDef.UIDefCol.Contains(noneDefaultUI));
             Assert.AreEqual(1, uiDef.UIDefCol.Count, "There should be only the reflective column");
             //---------------Execute Test ----------------------
-            var viewBuilder = new ViewBuilder<FakeBOWReflectiveProp>(noneDefaultUI);
-            var descriptorCollection = viewBuilder.GetGridView();
+            var viewBuilder = new UIDefViewBuilder<FakeBOWReflectiveProp>(noneDefaultUI);
+            var descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.AreEqual(2, descriptorCollection.Count, "Reflective column plus ID column");
             var propertyDescriptor = descriptorCollection[0];
@@ -174,8 +174,8 @@ namespace Habanero.Binding.Tests
             Assert.IsTrue(classDef.UIDefCol.Contains("default"));
             Assert.IsFalse(classDef.UIDefCol.Contains(noneExistantView));
             //---------------Execute Test ----------------------
-            var viewBuilder = new ViewBuilder<FakeBOWReflectiveProp>(noneExistantView);
-            var descriptorCollection = viewBuilder.GetGridView();
+            var viewBuilder = new UIDefViewBuilder<FakeBOWReflectiveProp>(noneExistantView);
+            var descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.AreEqual(2, descriptorCollection.Count);
             var propertyDescriptor = descriptorCollection[0];
@@ -196,7 +196,23 @@ namespace Habanero.Binding.Tests
             get { return GetPropertyValueString("FakeBOName"); }
             set { SetPropertyValue("FakeBOName", value); }
         }
+    }
+    public class FakeBoOnePropOneSingleRelationship: BusinessObject
+    {
+        /// <summary>
+        /// The FakeBO this FakeBoOnePropOneSingleRelationship is for.
+        /// </summary>
+        public virtual FakeBO FakeBO
+        {
+            get { return Relationships.GetRelatedObject<FakeBO>("FakeBO"); }
+            set { Relationships.SetRelatedObject("FakeBO", value); }
+        }
 
+        public string FakeBOName
+        {
+            get { return GetPropertyValueString("FakeBOName"); }
+            set { SetPropertyValue("FakeBOName", value); }
+        }
     }
 
     public class FakeBOW5Props : BusinessObject
@@ -226,6 +242,22 @@ namespace Habanero.Binding.Tests
     }
 
     public class FakeBOW2Props: BusinessObject
+    {
+        public FakeObjectNotABo FakeObjectNotABo { get; set; }
+        public string Prop1
+        {
+            get { return GetPropertyValueString("Prop1"); }
+            set { SetPropertyValue("Prop1", value); }
+        }
+        public string Prop2
+        {
+            get { return GetPropertyValueString("Prop2"); }
+            set { SetPropertyValue("Prop2", value); }
+        }
+        [AutoMapIgnore]
+        public string ReflectiveProp { get; set; }
+    }
+    public class FakeBOW2HabiProps_TwoReflectiveProps: BusinessObject
     {
         public FakeObjectNotABo FakeObjectNotABo { get; set; }
         public string Prop1

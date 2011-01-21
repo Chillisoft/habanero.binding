@@ -58,11 +58,14 @@
     </Compile>
     <Compile Include="BindingListRequest.cs" />
     <Compile Include="BindingListView.cs" />
+    <Compile Include="BindingListViewNew.cs" />
     <Compile Include="DataFilter.cs" />
     <Compile Include="FilterOperator.cs" />
     <Compile Include="ObservableBusinessObject.cs" />
     <Compile Include="PropertyDescriptorID.cs" />
+    <Compile Include="PropertyDescriptorReflectiveProp.cs" />
     <Compile Include="SingleFilterInfo.cs" />
+    <Compile Include="TempSampleCode\Class1.cs" />
     <Compile Include="VirtualisedBindingList\Cache.cs" />
     <Compile Include="VirtualisedBindingList\CachedBindingListView.cs" />
     <Compile Include="VirtualisedBindingList\IPageProvider.cs" />
@@ -70,7 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyDescriptorPropDef.cs" />
     <Compile Include="PropertyDescriptorPropInfo.cs" />
-    <Compile Include="ViewBuilder.cs" />
+    <Compile Include="UIDefViewBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,34 +11,44 @@ namespace Habanero.Binding
     /// <summary>
     /// This was copied from the article http://www.sql.ru/forum/actualthread.aspx?tid=579972
     /// </summary>
-    public class PropertyDescriptorPropInfo : PropertyDescriptor
+    public class PropertyDescriptorReflectiveProp : PropertyDescriptor
     {
         //Created and kept as a member variable for performance improvements.
-        protected PropertyInfo PropInfo { get; private set; }
+        protected PropertyInfo PropInfo { get; set; }
 
-        /// <summary>
-        /// Constructs the PropertyDescriptor with the specified <see cref="PropertyInfo"/>
-        /// </summary>
-        /// <param name="propertyInfo"></param>
-        public PropertyDescriptorPropInfo(PropertyInfo propertyInfo)
-
-            : this(propertyInfo, new Attribute[0])
+        public PropertyDescriptorReflectiveProp(IUIGridColumn gridColumn)
+            : base(gridColumn.PropertyName, null)
         {
+            if (gridColumn == null) throw new ArgumentNullException("gridColumn");
+            if(gridColumn.ClassDef == null) throw new HabaneroArgumentException("gridColumn.ClassDef");
+            GridColumn = gridColumn;
+            var propertyName = gridColumn.PropertyName.Trim('-');
+            PropInfo = ReflectionUtilities.GetPropertyInfo(gridColumn.ClassDef.ClassType, propertyName);
+            CheckPropInfo(gridColumn);
         }
 
-        /// <summary>
-        /// Constructs the PropertyDescriptor with the specified <see cref="PropertyInfo"/> and 
-        /// its Array of attributes.
-        /// </summary>
-        /// <param name="propertyInfo"></param>
-        /// <param name="attribs"></param>
-        public PropertyDescriptorPropInfo(PropertyInfo propertyInfo, Attribute[] attribs)
+        protected virtual void CheckPropInfo(IUIGridColumn gridColumn)
+        {
+            if(PropInfo.IsNull())
+            {
+                var errMessage 
+                    = string.Format("The GridColumn for reflective property '{0}' " 
+                                    + "is invalid since this reflective property does not exist on the class of type '{1}' "
+                                    , gridColumn.PropertyName, gridColumn.ClassDef.ClassName);
+                throw new HabaneroArgumentException("gridColumn", errMessage);
+            }
+        }
 
-            : base(propertyInfo.Name, attribs)
+        private IUIGridColumn GridColumn { get; set; }
+
+/*        public PropertyDescriptorPropInfo(PropertyInfo prop, Attribute[] attribs)
+
+            : base(prop.Name, attribs)
         {
 
-            PropInfo = propertyInfo;
-        }
+            _propInfo = prop;
+
+        }*/
  
         private object DefaultValue
         {
@@ -55,26 +65,21 @@ namespace Habanero.Binding
         /// <summary>
         /// Indicates whether the PropDescripor is ReadOnly.
         /// This takes into account the following.
-        /// 1) Does the reflective PropInfo have a Setter.
-        /// 2) Is a readOnlyAtribute (true) set on PropInfo (i.e. on the Property declared in the class.
+        /// 1) Has the GridColumn Been set to ReadOnly Explicitely e.g. via ClassDef.xml.
+        /// 2) Does the reflective PropInfo have a Setter.
+        /// 3) Is a readOnlyAtribute (true) set on PropInfo.
         /// </summary>
         public override bool IsReadOnly
         {
             get
             {
-                return !this.PropInfo.HasSetMethod() || this.HasReadOnlyAttribute;
+                return !this.GridColumn.Editable || HasReadOnlyAttribute;
             }
         }
 
-
         private bool HasReadOnlyAttribute
         {
-            get
-            {
-                var readOnlyAttribute = this.PropInfo.GetAttribute<ReadOnlyAttribute>();
-                if (readOnlyAttribute == null) return false;
-                return readOnlyAttribute.IsReadOnly;
-            }
+            get { return this.Attributes.Contains(new System.ComponentModel.ReadOnlyAttribute(true)); }
         }
 
         public override object GetValue(object component)
@@ -105,17 +110,25 @@ namespace Habanero.Binding
             return null;
         }
 
+        public override string Name
+        {
+            get { return this.PropertyName; }
+        }
+
+        private string PropertyName
+        {
+            get { return this.GridColumn.PropertyName; }
+        }
 
         // ReSharper disable RedundantCast
         //Using this redundant cast to prevent reference check warning.
         private void CheckComponentType(object component)
         {
             if (component == null) throw new ArgumentNullException("component");
-            if (this.ComponentType != component.GetType())
-            {
+            if ((Type)this.ComponentType != component.GetType())
+
                 throw new InvalidCastException("You cannot GetValue since the component is not of type " +
-                                               this.ComponentType.Name);
-            }
+                                               this.GridColumn.ClassDef.ClassName);
         }
         // ReSharper restore RedundantCast
         public override bool CanResetValue(object component)
@@ -164,96 +177,40 @@ namespace Habanero.Binding
 
         public override Type ComponentType
         {
-            get { return this.PropInfo.ReflectedType; }
+            get { return this.GridColumn.ClassDef == null ? PropInfo.DeclaringType : this.GridColumn.ClassDef.ClassType; }
         }
 
-        /// <summary>
-        /// The property type of the <see cref="PropertyInfo"/> wrapped by this descriptor.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Type"/> that represents the type of the property.
-        /// </returns>
         public override Type PropertyType
         {
-            get { return this.PropInfo.PropertyType; }
+            get { return this.GridColumn.GetPropertyType(); }
         }
 
-        //TODO brett 21 Jan 2011: Should use DisplayNameAttribute if it has one
         /// <summary>
-        /// Gets the name that can be displayed in a window, such as a Properties window.
+        /// If this Property is associated with a LookupList then 
+        /// this will return the Lookup list.
         /// </summary>
-        /// <returns>
-        /// The name to display for the member.
-        /// </returns>
+        public virtual ILookupList LookupList
+        {
+            get { return this.GridColumn.LookupList; }
+        }
+        /// <summary>
+        /// Returns the width defined on the UIProp.
+        /// </summary>
+        public int Width
+        {
+            get { return this.GridColumn.Width; }
+        }
+        /// <summary>
+        /// The alignment from the UIProp
+        /// </summary>
+        public PropAlignment Alignment
+        {
+            get { return this.GridColumn.Alignment; }
+        }
+
         public override string DisplayName
         {
-            get { return StringUtilities.DelimitPascalCase(this.Name, " "); }
-        }
-    }
-    
-    /// <summary>
-    /// Provides extension methods for PropertyDescriptor.
-    /// </summary>
-    public static class AttributeExt
-    {
-        /// <summary>
-        /// Gets the specified attribute from the PropertyDescriptor.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="prop"></param>
-        /// <returns></returns>
-        public static T GetAttribute<T>(this PropertyDescriptor prop) where T : Attribute
-        {
-            foreach (Attribute att in prop.Attributes)
-            {
-                var tAtt = att as T;
-                if (tAtt != null) return tAtt;
-            }
-            return null;
-        }
-        /// <summary>
-        /// Does the wrapped <see cref="PropertyInfo"/> have an attribute of type <typeparamref name="T"/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static bool HasAttribute<T>(this PropertyDescriptor prop) where T : Attribute
-        {
-            T attribute = prop.GetAttribute<T>();
-            return attribute != null;
-        }
-        /// <summary>
-        /// Gets the specified attribute from the PropertyDescriptor.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="prop"></param>
-        /// <returns></returns>
-        public static T GetAttribute<T>(this PropertyInfo prop) where T : Attribute
-        {
-            foreach (Attribute att in prop.GetCustomAttributes(typeof(T), true))
-            {
-                var tAtt = att as T;
-                if (tAtt != null) return tAtt;
-            }
-            return null;
-        }
-        /// <summary>
-        /// Does the wrapped <see cref="PropertyInfo"/> have an attribute of type <typeparamref name="T"/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static bool HasAttribute<T>(this PropertyInfo prop) where T : Attribute
-        {
-            T attribute = prop.GetAttribute<T>();
-            return attribute != null;
-        }
-        /// <summary>
-        /// Returns true if the property has a public Set Method and false otherwise
-        /// </summary>
-        /// <param name="prop"></param>
-        /// <returns></returns>
-        public static bool HasSetMethod(this PropertyInfo prop)
-        {
-            return prop.GetSetMethod(false) != null;
+            get { return GridColumn.GetHeading(); }
         }
     }
 }

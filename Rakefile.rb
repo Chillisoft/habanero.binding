@@ -15,8 +15,6 @@ task :do_binding => [:copy_dlls_to_binding_lib,:clean_binding,:msdo_binding,:run
 $binding_sln_path = 'source/Habanero.Binding - 2010.sln'
 $Nunit_path = "C:/Program Files (x86)/NUnit 2.5.8/bin/net-2.0/nunit-console-x86.exe"# nunit-console-x86.exe is run to prevent the "Profiler connection not established" error from old Ncover versions
 $Nunit_options = '/xml=nunit-result.xml'
-    
-
 
 task :clean_habanero do
 	FileUtils.rm_rf 'temp/Habanero/trunk/bin/'
@@ -32,59 +30,70 @@ msbuild :msdo_habanero do |msb| #builds habanero with msbuild
 	msb.path_to_command = "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/MSBuild.exe"
 	msb.verbosity = "quiet"
     msb.solution = "temp/Habanero/trunk/source/Habanero.sln"
-  end
+end
   
   
 #do_smooth tasks
   task :copy_dlls_to_smooth_lib  do #copies habanero DLLs to smooth lib
-	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero*.dll'), 'temp/HabaneroCommunity/SmoothHabanero/trunk/lib'
+	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero*.dll'), 'temp/SmoothHabanero/trunk/lib'
 end
 
   task :clean_smooth do #deletes bin folder before build
-	FileUtils.rm_rf 'temp/HabaneroCommunity/SmoothHabanero/trunk/bin'
+	FileUtils.rm_rf 'temp/SmoothHabanero/trunk/bin'
 end
 
 exec :checkout_smooth do |cmd| #command to check out smooth source using SVN
 	cmd.path_to_command = "../../../Utilities/BuildServer/Subversion/bin/svn.exe"
-	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/HabaneroCommunity/SmoothHabanero/trunk/" "temp/HabaneroCommunity/SmoothHabanero/trunk/" --username chilli --password chilli --non-interactive)
+	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/HabaneroCommunity/SmoothHabanero/trunk/" "temp/SmoothHabanero/trunk/" --username chilli --password chilli --non-interactive)
 end
 
 msbuild :msdo_smooth do |msb| #builds smooth with msbuild
     msb.targets :Build
 	msb.path_to_command = "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/MSBuild.exe"
 	msb.verbosity = "quiet"
-    msb.solution = "temp/HabaneroCommunity/SmoothHabanero/trunk/source/SmoothHabanero_2010.sln"
+    msb.solution = "temp/SmoothHabanero/trunk/source/SmoothHabanero_2010.sln"
   end
   
 #do_testability tasks
   task :copy_dlls_to_testability_lib  do #copies habanero and smooth DLLs to testability lib
-	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero*.dll'), 'temp/HabaneroCommunity/Habanero.Testability/Trunk/lib'
-	FileUtils.cp Dir.glob('temp/HabaneroCommunity/SmoothHabanero/trunk/bin/Habanero.Smooth*.dll'), 'temp/HabaneroCommunity/Habanero.Testability/Trunk/lib'
+	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero*.dll'), 'temp/Habanero.Testability/Trunk/lib'
+	FileUtils.cp Dir.glob('temp/SmoothHabanero/trunk/bin/Habanero.Smooth*.dll'), 'temp/Habanero.Testability/Trunk/lib'
 end
   
     task :clean_testability do #deletes bin folder before build
-	FileUtils.rm_rf 'temp/HabaneroCommunity/Habanero.Testability/Trunk/bin'
+	FileUtils.rm_rf 'temp/Habanero.Testability/Trunk/bin'
 end
 
 exec :checkout_testability do |cmd| #command to check out testability source using SVN
 	cmd.path_to_command = "../../../Utilities/BuildServer/Subversion/bin/svn.exe"
-	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Testability/Trunk/" "temp/HabaneroCommunity/Habanero.Testability/Trunk/" --username chilli --password chilli --non-interactive)
+	cmd.parameters %q(checkout "http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Testability/Trunk/" "temp/Habanero.Testability/Trunk/" --username chilli --password chilli --non-interactive)
 end
 
 msbuild :msdo_testability do |msb| #builds testability with msbuild
     msb.targets :Build
 	msb.path_to_command = "C:/Windows/Microsoft.NET/Framework64/v4.0.30319/MSBuild.exe"
 	msb.verbosity = "quiet"
-  msb.solution = "temp/HabaneroCommunity/Habanero.Testability/Trunk/source/Habanero.Testability - 2010.sln"
+  msb.solution = "temp/Habanero.Testability/Trunk/source/Habanero.Testability - 2010.sln"
   end
   
   
-
-task :copy_dlls_to_binding_lib  do #copies habanero, smooth, faces and testability DLLs to faces lib
-	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero*.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/HabaneroCommunity/SmoothHabanero/trunk/bin/Habanero.Smooth*.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/HabaneroCommunity/SmoothHabanero/trunk/bin/Habanero.Naked*.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/HabaneroCommunity/Habanero.Testability/Trunk/bin/Habanero.Testability*.dll'), 'lib'
+#copies habanero, smooth, faces and testability DLLs to faces lib
+task :copy_dlls_to_binding_lib  do 
+	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero.Base.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero.BO.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero.Console.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero/trunk/bin/Habanero.DB.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/SmoothHabanero/trunk/bin/Habanero.Smooth.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/SmoothHabanero/trunk/bin/Habanero.Naked.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.xml'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.Helpers.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.Helpers.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.Helpers.xml'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.Testers.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.Testers.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/Habanero.Testability/Trunk/bin/Habanero.Testability.Testers.xml'), 'lib'
 end 
 
 task :clean_binding do #deletes bin folder before build

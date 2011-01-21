@@ -7,10 +7,12 @@ using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Smooth;
 using Habanero.Testability;
+using Habanero.Testability.Helpers;
 using Habanero.Util;
 using NUnit.Framework;
 using Rhino.Mocks;
 
+// ReSharper disable InconsistentNaming
 namespace Habanero.Binding.Tests
 {
     [TestFixture]
@@ -46,291 +48,163 @@ namespace Habanero.Binding.Tests
         {
             return new DataAccessorInMemory();
         }
-
+        /// <summary>
+        /// Unfortunately I cannot avoid this null reference error since
+        /// the PropertyDescriptor does not have a constructor that can take
+        /// a null string etc for propertyName and does not implement an interface.
+        /// </summary>
         [Test]
-        public void Test_Construct_WithNullColumn_ShouldRaiseError()
+        public void Test_Construct_WithNullPropDef_ShouldRaiseError()
         {
-            //Unfortunately I cannot avoid this null reference error since
-            // the PropertyDescriptor does not have a constructor that can take
-            // a null string etc for propertyName and does not implement an interface.
+
             //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = null;
+            PropertyInfo propertyInfo = null;
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             try
             {
-                new PropertyDescriptorPropInfo(gridColumn);
+                new PropertyDescriptorPropInfo(propertyInfo);
                 Assert.Fail("expected ArgumentNullException");
             }
             //---------------Test Result -----------------------
-            catch (NullReferenceException)
+            catch (NullReferenceException ex)
             {
-                Assert.IsTrue(true, "IF raised this error then OK");
+                Assert.IsTrue(true, "IF raised this error then OK. I cannot raise more meaningfull error");
             }
         }
 
         [Test]
-        public void Test_Construct_WithNotHasClassDef_ShouldRaiseError()
-        {
-            //This is a PropDescriptor that wraps a 
-            //UIGridColumn that wraps a PropDef and if the 
-            //PropDef is null this should therefore raise and error.
-            //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = MockRepository.GenerateStub<IUIGridColumn>();
-            gridColumn.PropertyName = RandomValueGen.GetRandomString();
-            //---------------Assert Precondition----------------
-            //Assert.IsFalse(gridColumn.HasPropDef);
-            //---------------Execute Test ----------------------
-            try
-            {
-                new PropertyDescriptorPropInfo(gridColumn);
-                Assert.Fail("expected ArgumentNullException");
-            }
-            //---------------Test Result -----------------------
-            catch (HabaneroArgumentException ex)
-            {
-                Assert.AreEqual("gridColumn.ClassDef", ex.ParameterName);
-            }
-        }
-        [Test]
-        public void Test_Construct_WithNoReflectiveProperty_ShouldRaiseError()
-        {
-            //This is a PropDescriptor that wraps a 
-            //UIGridColumn that wraps a PropDef and if the 
-            //PropDef is null this should therefore raise and error.
-            //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            //---------------Assert Precondition----------------
-            Assert.IsNotNull(gridColumn.ClassDef);
-            Assert.IsNull(ReflectionUtilities.GetPropertyInfo(gridColumn.ClassDef.ClassType, gridColumn.PropertyName));
-            //---------------Execute Test ----------------------
-            try
-            {
-                new PropertyDescriptorPropInfo(gridColumn);
-                Assert.Fail("expected HabaneroArgumentException");
-            }
-            //---------------Test Result -----------------------
-            catch (HabaneroArgumentException ex)
-            {
-                var expectedErrMessage 
-                        = string.Format("The GridColumn for reflective property '{0}' " 
-                        + "is invalid since this reflective property does not exist on the class of type '{1}' "
-                        , gridColumn.PropertyName, gridColumn.ClassDef.ClassName);
-                StringAssert.Contains(expectedErrMessage, ex.Message);
-                Assert.AreEqual("gridColumn", ex.ParameterName);
-            }
-        }
-
-        [Test]
-        public void Test_Construct_ShouldConstruct()
+        public void Test_Construct_WithPropInfor_ShouldSetPropInfo()
         {
             //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
+            PropertyInfo propertyInfo = new FakePropertyInfo();
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            PropertyDescriptor propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            var propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Test Result -----------------------
             Assert.IsNotNull(propDescriptor);
+            Assert.AreSame(propertyInfo, propDescriptor.GetPropertyInfo());
         }
-
         [Test]
-        public void Test_Name_WhenHasHabaneroReflectionIndicators_ShouldBeGridColumnPropertyName()
+        public void Test_Construct_WithPropInfo_ShouldSetName()
         {
             //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            string expectedName = "-" + RandomValueGen.GetRandomString() + "-";
-            gridColumn.PropertyName = expectedName;
-            PropertyDescriptor propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            var propName = GetRandomString();
+            PropertyInfo propertyInfo = new FakePropertyInfo(propName);
             //---------------Assert Precondition----------------
-            Assert.AreEqual(expectedName, gridColumn.PropertyName);
+            Assert.AreEqual(propName, propertyInfo.Name);
             //---------------Execute Test ----------------------
-            var actualPropDescriptorName = propDescriptor.Name;
-            //propDescriptor.DisplayName
+            var propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Test Result -----------------------
-            Assert.AreEqual(expectedName, actualPropDescriptorName);
-        }
-        [Test]
-        public void Test_Name_ShouldBeGridColumnPropertyName()
-        {
-            //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            string expectedName = RandomValueGen.GetRandomString();
-            gridColumn.PropertyName = expectedName;
-            PropertyDescriptor propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
-            //---------------Assert Precondition----------------
-
-            //---------------Execute Test ----------------------
-            var actualPropDescriptorName = propDescriptor.Name;
-            //propDescriptor.DisplayName
-            //---------------Test Result -----------------------
-            Assert.AreEqual(expectedName, actualPropDescriptorName);
+            Assert.AreEqual(propName, propDescriptor.Name);
         }
 
+
         [Test]
-        public void Test_DisplayName_ShouldBeGridColumnDisplayName()
+        public void Test_DisplayName_ShouldBePropertyName_CamelCaseDelimited()
         {
             //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            var expectedDispalyName = RandomValueGen.GetRandomString();
-            gridColumn.Stub(column => column.GetHeading()).Return(expectedDispalyName);
-            PropertyDescriptor propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            const string propName = "ThisIsCamelCased";
+            var propertyInfo = new FakePropertyInfo(propName);
+            PropertyDescriptor propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Assert Precondition----------------
-            Assert.AreEqual(expectedDispalyName, gridColumn.GetHeading());
+            Assert.AreEqual(propName, propertyInfo.Name);
             //---------------Execute Test ----------------------
             var actualPropDescriptorDisplayName = propDescriptor.DisplayName;
             //---------------Test Result -----------------------
-            Assert.AreEqual(expectedDispalyName, actualPropDescriptorDisplayName);
+            Assert.AreEqual("This Is Camel Cased", actualPropDescriptorDisplayName);
         }
 
         [Test]
-        public void Test_LookupList_WhenNotSet_ShouldBeNull()
+        public void Test_PropertyType_ShouldReturnPropertyTypePropInfo()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof (FakeBO);
-            IUIGridColumn gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "FakeObjectNotABo";
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
+            var expectedPropType = typeof(int);
+            var propertyInfo = new FakePropertyInfo(GetRandomString(), expectedPropType);
+
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Assert Precondition----------------
-            Assert.IsNull(classDef.GetLookupList(gridColumn.PropertyName));
-            //---------------Execute Test ----------------------
-            ILookupList lookupList = propDescriptor.LookupList;
-            //---------------Test Result -----------------------
-            Assert.IsNull(lookupList);
-        }
-
-        private IUIGridColumn GetGridColumnStub(IClassDef classDef)
-        {
-            IUIGridColumn gridColumn = MockRepository.GenerateStub<IUIGridColumn>();
-            gridColumn.PropertyName = RandomValueGen.GetRandomString();
-            gridColumn.Stub(column => column.ClassDef).Return(classDef);
-            return gridColumn;
-        }
-
-        [Test]
-        public void Test_LookupList_WhenSetOnProp_ShouldReturnList()
-        {
-            //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            ILookupList expectedLookupList = MockRepository.GenerateStub<ILookupList>();
-            gridColumn.Stub(column => column.LookupList).Return(expectedLookupList);
-
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
-            //---------------Assert Precondition----------------
-            Assert.IsNotNull(gridColumn.LookupList);
-            //---------------Execute Test ----------------------
-            ILookupList lookupList = propDescriptor.LookupList;
-            //---------------Test Result -----------------------
-            Assert.AreSame(expectedLookupList, lookupList);
-        }
-
-        [Test]
-        public void Test_Width_ShouldReturnWidthFromColumn()
-        {
-            //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            var expectedWidth = RandomValueGen.GetRandomInt(0, 33);
-            gridColumn.Width = expectedWidth;
-
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
-            //---------------Assert Precondition----------------
-            Assert.AreEqual(expectedWidth, gridColumn.Width);
-            //---------------Execute Test ----------------------
-            var width = propDescriptor.Width;
-            //---------------Test Result -----------------------
-            Assert.AreEqual(expectedWidth, width);
-        }
-
-        [Test]
-        public void Test_Alignment_ShouldReturnAlignmentFromColumn()
-        {
-            //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            var expectedAlignment = RandomValueGen.GetRandomEnum<PropAlignment>(); ;
-            gridColumn.Alignment = expectedAlignment;
-
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
-            //---------------Assert Precondition----------------
-            Assert.AreEqual(expectedAlignment, gridColumn.Alignment);
-            //---------------Execute Test ----------------------
-            var alignment = propDescriptor.Alignment;
-            //---------------Test Result -----------------------
-            Assert.AreEqual(expectedAlignment, alignment);
-        }
-
-        [Test]
-        public void Test_PropertyType_ShouldReturnPropertyTypeFromColumn()
-        {
-            //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            Type expectedPropType = typeof(DateTime);
-            gridColumn.Stub(column => column.GetPropertyType()).Return(expectedPropType);
-
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
-            //---------------Assert Precondition----------------
-            Assert.AreEqual(expectedPropType, gridColumn.GetPropertyType());
+            Assert.AreEqual(expectedPropType, propertyInfo.PropertyType);
             //---------------Execute Test ----------------------
             var propertyType = propDescriptor.PropertyType;
             //---------------Test Result -----------------------
             Assert.AreEqual(expectedPropType, propertyType);
         }
-
+        
         [Test]
-        public void Test_IsReadOnly_WhenIsEditable_ShouldReturnFalse()
+        public void Test_IsReadOnly_WhenHasSetMethod_AndReadOnlyAttributeTrue_ShouldReturnTrue()
         {
             //---------------Set up test pack-------------------
-            var gridColumn = GetGridColumnStub();
-            gridColumn.Editable = true;
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            FakePropertyInfo propertyInfo = GetMockPropertyInfo();
+            propertyInfo.Stub(info => info.GetCustomAttributes(typeof(ReadOnlyAttribute), true)).Return(new object[]{new ReadOnlyAttribute(true)});
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Assert Precondition----------------
-            Assert.IsTrue(gridColumn.Editable);
+            Assert.IsNotNull(propertyInfo.GetSetMethod());
+            Assert.IsTrue(propertyInfo.GetAttribute<ReadOnlyAttribute>().IsReadOnly);
             //---------------Execute Test ----------------------
             var isReadOnly = propDescriptor.IsReadOnly;
             //---------------Test Result -----------------------
-            Assert.IsFalse(isReadOnly, "If grid Columnis editable PropDescriptor.ReadOnly should be false.");
+            Assert.IsTrue(isReadOnly, "If has setter but ReadOnlyAttribute is true should be ReadOnly.");
         }
+
+
         [Test]
-        public void Test_IsReadOnly_WhenNotIsEditable_ShouldReturnTrue()
+        public void Test_IsReadOnly_WhenHasSetMethod_AndReadOnlyAttributeFalse_ShouldReturnTrue()
         {
             //---------------Set up test pack-------------------
-            var gridColumn = GetGridColumnStub();
-
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            var propertyInfo = GetMockPropertyInfo();
+            propertyInfo.Stub(info => info.GetCustomAttributes(typeof(ReadOnlyAttribute), true)).Return(new object[]{new ReadOnlyAttribute(false)});
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Assert Precondition----------------
-            Assert.IsFalse(gridColumn.Editable);
+            Assert.IsNotNull(propertyInfo.GetSetMethod());
+            Assert.IsFalse(propertyInfo.GetAttribute<ReadOnlyAttribute>().IsReadOnly);
             //---------------Execute Test ----------------------
             var isReadOnly = propDescriptor.IsReadOnly;
             //---------------Test Result -----------------------
-            Assert.IsTrue(isReadOnly, "If gridColumn is not editable propDescriptor.ReadOnly should be true.");
+            Assert.IsFalse(isReadOnly, "If has setter and ReadOnlyAttribute false so should not be ReadOnly.");
+        }        
+        [Test]
+        public void Test_IsReadOnly_WhenNotHasSetMethod_ShouldReturnFalse()
+        {
+            //---------------Set up test pack-------------------
+            var propertyInfo = MockRepository.GenerateStub<FakePropertyInfo>();
+            propertyInfo.Stub(info => info.Name).Return(GetRandomString());
+            propertyInfo.Stub(info => info.GetSetMethod(false)).Return(null);
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
+            //---------------Assert Precondition----------------
+            Assert.IsNull(propertyInfo.GetSetMethod());
+            //---------------Execute Test ----------------------
+            var isReadOnly = propDescriptor.IsReadOnly;
+            //---------------Test Result -----------------------
+            Assert.IsTrue(isReadOnly, "If has NO setter should be ReadOnly.");
         }
-
         [Test]
         public void Test_ComponentType_ShouldReturnGridColumnsClassDefsClassType()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            IUIGridColumn gridColumn = GetGridColumnStub(classDef);
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            var propertyInfo = new FakePropertyInfo();
+            var expectedComponentType = typeof (FakeBO);
+            propertyInfo.SetReflectedType(expectedComponentType);
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Assert Precondition----------------
-            Assert.IsNotNull(gridColumn.ClassDef);
-            Assert.IsNotNull(gridColumn.ClassDef.ClassType);
+            Assert.IsNotNull(propertyInfo.ReflectedType);
             //---------------Execute Test ----------------------
             var componentType = propDescriptor.ComponentType;
             //---------------Test Result -----------------------
-            Assert.AreSame(typeof(FakeBO), componentType);
+            Assert.AreSame(expectedComponentType, componentType);
         }
+
 
         [Test]
         public void Test_ShouldSerializeValue_WhenReadOnly_ShouldRetFalse()
         {
             //---------------Set up test pack-------------------
-            IUIGridColumn gridColumn = GetGridColumnStub();
-            gridColumn.ClassDef.ClassType = typeof(FakeBO);
-            gridColumn.Editable = false;
-            gridColumn.PropertyName = "FakeBOName";
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
+            var propertyInfo = MockRepository.GenerateStub<FakePropertyInfo>();
+            propertyInfo.Stub(info => info.Name).Return(GetRandomString());
+            propertyInfo.Stub(info => info.GetSetMethod(false)).Return(null);
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfo(propertyInfo);
             //---------------Assert Precondition----------------
+            Assert.IsNull(propertyInfo.GetSetMethod(false));
             Assert.IsTrue(propDescriptor.IsReadOnly);
             //---------------Execute Test ----------------------
             var shouldSerializeValue = propDescriptor.ShouldSerializeValue(new FakeBO());
@@ -342,68 +216,25 @@ namespace Habanero.Binding.Tests
         public void Test_GetValue_ShouldGetValueFromBO()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "FakeBOName";
-            var propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
-            FakeBO fakeBO = new FakeBO { FakeBOName = RandomValueGen.GetRandomString() };
+            var propertyInfo = typeof (FakeBO).GetProperty("FakeBOName");
+            var expectedPropValue = RandomValueGen.GetRandomString();
+            var fakeBO = new FakeBO { FakeBOName = expectedPropValue };
+            var propDescriptor = new PropertyDescriptorPropInfo(propertyInfo);
             //---------------Assert Precondition----------------
-            Assert.AreSame(classDef, gridColumn.ClassDef);
-            Assert.AreSame(typeof(FakeBO), gridColumn.ClassDef.ClassType);
-            Assert.IsNotNullOrEmpty(fakeBO.FakeBOName);
+            Assert.AreEqual(expectedPropValue,  propertyInfo.GetValue(fakeBO, null));
+            Assert.AreEqual(expectedPropValue, fakeBO.FakeBOName);
             //---------------Execute Test ----------------------
             var actualValue = propDescriptor.GetValue(fakeBO);
             //---------------Test Result -----------------------
-            Assert.AreEqual(fakeBO.FakeBOName, actualValue);
-        }
-        [Test]
-        public void Test_GetValue_WhenPropInfoNull_ShouldReturnNull()
-        {
-            //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "FakeBOName";
-            var propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn, null);
-            FakeBO fakeBO = new FakeBO { FakeBOName = RandomValueGen.GetRandomString() };
-            //---------------Assert Precondition----------------
-            Assert.AreSame(classDef, gridColumn.ClassDef);
-            Assert.AreSame(typeof(FakeBO), gridColumn.ClassDef.ClassType);
-            Assert.IsNotNullOrEmpty(fakeBO.FakeBOName);
-            //---------------Execute Test ----------------------
-            var actualValue = propDescriptor.GetValue(fakeBO);
-            //---------------Test Result -----------------------
-            Assert.IsNull(actualValue);
+            Assert.AreEqual(expectedPropValue, actualValue);
         }
 
-        [Test]
-        public void Test_GetValue_WhenUseReflectionIndicators_ShouldGetValueFromBO()
-        {
-            //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "-FakeBOName-";
-            var propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
-            FakeBO fakeBO = new FakeBO { FakeBOName = RandomValueGen.GetRandomString() };
-            //---------------Assert Precondition----------------
-            Assert.AreSame(classDef, gridColumn.ClassDef);
-            Assert.AreSame(typeof(FakeBO), gridColumn.ClassDef.ClassType);
-            Assert.IsNotNullOrEmpty(fakeBO.FakeBOName);
-            //---------------Execute Test ----------------------
-            var actualValue = propDescriptor.GetValue(fakeBO);
-            //---------------Test Result -----------------------
-            Assert.AreEqual(fakeBO.FakeBOName, actualValue);
-        }
         [Test]
         public void Test_GetValue_WhenComponentNotCorrectType_ShouldRaiseError()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            var propertyInfo = typeof(FakeBO).GetProperty("FakeBOName");
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
@@ -418,14 +249,13 @@ namespace Habanero.Binding.Tests
                 StringAssert.Contains("You cannot GetValue since the component is not of type ", ex.Message);
             }
         }
+        // ReSharper disable AssignNullToNotNullAttribute
         [Test]
         public void Test_GetValue_WhenComponentNull_ShouldRaiseError()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn);
+            var propertyInfo = new FakePropertyInfo();
+            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);
             object x = null;
             //---------------Assert Precondition----------------
 
@@ -442,56 +272,39 @@ namespace Habanero.Binding.Tests
                 StringAssert.Contains("Value cannot be null.", ex.Message);
             }
         }
+        // ReSharper restore AssignNullToNotNullAttribute
+
+
+
 
         [Test]
         public void Test_SetValue_ShouldSetValueOnBO()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "-FakeBOName-";
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
-            FakeBO fakeBO = new FakeBO { FakeBOName = RandomValueGen.GetRandomString() };
+
+            var propertyInfo = typeof(FakeBO).GetProperty("FakeBOName");
+            var initialPropValue = GetRandomString();
+            var fakeBO = new FakeBO { FakeBOName = initialPropValue };
+            var propDescriptor = new PropertyDescriptorPropInfo(propertyInfo);
+
+            
             //---------------Assert Precondition----------------
-            Assert.AreSame(classDef, gridColumn.ClassDef);
-            Assert.AreSame(typeof(FakeBO), gridColumn.ClassDef.ClassType);
-            Assert.IsNotNullOrEmpty(fakeBO.FakeBOName);
+            Assert.AreEqual(initialPropValue, propertyInfo.GetValue(fakeBO, null));
+            Assert.AreEqual(initialPropValue, fakeBO.FakeBOName);
             //---------------Execute Test ----------------------
-            var expectedValue = RandomValueGen.GetRandomString();
-            propDescriptor.SetValue(fakeBO, expectedValue);
+            var expectedNewPropValue = GetRandomString();
+            propDescriptor.SetValue(fakeBO, expectedNewPropValue);
             //---------------Test Result -----------------------
-            Assert.AreEqual(expectedValue, fakeBO.FakeBOName);
+            Assert.AreEqual(expectedNewPropValue, fakeBO.FakeBOName);
         }
-        [Test]
-        public void Test_SetValue_WhenPropInfoNull_ShouldDoNothing()
-        {
-            //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "-FakeBOName-";
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfoSpy(gridColumn, null);
-            FakeBO fakeBO = new FakeBO { FakeBOName = RandomValueGen.GetRandomString() };
-            //---------------Assert Precondition----------------
-            Assert.AreSame(classDef, gridColumn.ClassDef);
-            Assert.AreSame(typeof(FakeBO), gridColumn.ClassDef.ClassType);
-            Assert.IsNotNullOrEmpty(fakeBO.FakeBOName);
-            //---------------Execute Test ----------------------
-            propDescriptor.SetValue(fakeBO, RandomValueGen.GetRandomString());
-            //---------------Test Result -----------------------
-            Assert.IsTrue(true, "If got here all is good");
-        }
+
 
         [Test]
         public void Test_SetValue_WhenComponentNotCorrectType_ShouldRaiseError()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "FakeBOName";
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
+            var propertyInfo = typeof(FakeBO).GetProperty("FakeBOName");
+            var propDescriptor = new PropertyDescriptorPropInfo(propertyInfo);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             try
@@ -505,15 +318,13 @@ namespace Habanero.Binding.Tests
                 StringAssert.Contains("You cannot GetValue since the component is not of type ", ex.Message);
             }
         }
+        // ReSharper disable AssignNullToNotNullAttribute
         [Test]
         public void Test_SetValue_WhenComponentNull_ShouldRaiseError()
         {
             //---------------Set up test pack-------------------
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            var gridColumn = GetGridColumnStub(classDef);
-            gridColumn.PropertyName = "FakeBOName";
-            PropertyDescriptorPropInfo propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
+            var propertyInfo = typeof(FakeBO).GetProperty("FakeBOName");
+            var propDescriptor = new PropertyDescriptorPropInfo(propertyInfo);
             object x = null;
             //---------------Assert Precondition----------------
 
@@ -530,14 +341,15 @@ namespace Habanero.Binding.Tests
                 StringAssert.Contains("Value cannot be null.", ex.Message);
             }
         }
+        // ReSharper restore AssignNullToNotNullAttribute
+
 
         [Test]
         public void Test_CanResetValue_WhenNotDirty_ShouldReturnFalse()
         {
             //---------------Set up test pack-------------------
-            var gridColumn = GetGridColumnStub();
-            gridColumn.PropertyName = "FakeBOName";
-            var propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
+            var propertyInfo = typeof(FakeBO).GetProperty("FakeBOName");
+            var propDescriptor = new PropertyDescriptorPropInfo(propertyInfo);
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
@@ -549,51 +361,40 @@ namespace Habanero.Binding.Tests
         public void Test_CanResetValue_When_ShouldReturnTrue()
         {
             //---------------Set up test pack-------------------
-            var gridColumn = GetGridColumnStub();
-            gridColumn.PropertyName = "FakeBOName";
-            var propDescriptor = new PropertyDescriptorPropInfo(gridColumn);
+            var propertyInfo = typeof(FakeBO).GetProperty("FakeBOName");
+            var propDescriptor = new PropertyDescriptorPropInfo(propertyInfo);
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
-            FakeBO fakeBO = new FakeBO();
-            fakeBO.FakeBOName = RandomValueGen.GetRandomString();
+            var fakeBO = new FakeBO { FakeBOName = RandomValueGen.GetRandomString() };
             var canResetValue = propDescriptor.CanResetValue(fakeBO);
             //---------------Test Result -----------------------
             Assert.IsFalse(canResetValue);
         }
 
-
-
-        private IUIGridColumn GetGridColumnStub()
+        private static string GetRandomString()
         {
-            IUIGridColumn gridColumn = MockRepository.GenerateStub<IUIGridColumn>();
-            gridColumn.PropertyName = RandomValueGen.GetRandomString();
-            IClassDef classDef = MockRepository.GenerateStub<IClassDef>();
-            classDef.ClassType = typeof(FakeBO);
-            gridColumn.Stub(column => column.ClassDef).Return(classDef);
-            return gridColumn;
+            return RandomValueGen.GetRandomString();
         }
 
-        private class PropertyDescriptorPropInfoSpy : PropertyDescriptorPropInfo
+        private static FakePropertyInfo GetMockPropertyInfo()
         {
-
-
-            internal PropertyDescriptorPropInfoSpy(IUIGridColumn gridColumn, PropertyInfo propInfo)
-                : base(gridColumn)
-            {
-                PropInfo = propInfo;
-            }
-
-
-            internal PropertyDescriptorPropInfoSpy(IUIGridColumn gridColumn)
-                : base(gridColumn)
-            {
-            }
-
-            protected override void CheckPropInfo(IUIGridColumn gridColumn)
-            {
-            }
+            var propertyInfo = MockRepository.GenerateStub<FakePropertyInfo>();
+            propertyInfo.Stub(info => info.GetSetMethod()).Return(new FakeMethodInfo());
+            propertyInfo.Stub(info => info.Name).Return(GetRandomString());
+            return propertyInfo;
         }
     }
 
+    public class PropertyDescriptorPropInfoSpy : PropertyDescriptorPropInfo
+    {
+        public PropertyDescriptorPropInfoSpy(PropertyInfo propertyInfo): base(propertyInfo)
+        {
+            
+        }
+        public PropertyInfo GetPropertyInfo()
+        {
+            return this.PropInfo;
+        }
+    }
 }
