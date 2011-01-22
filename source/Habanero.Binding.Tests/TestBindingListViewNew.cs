@@ -879,7 +879,7 @@ namespace Habanero.Binding.Tests
             var propertyDescriptor = descriptorCollection[propDescriptorIndex];
             var key = propertyDescriptor.GetValue(collection[1]);
             //---------------Assert Precondition----------------
-            Assert.AreEqual(9, descriptorCollection.Count);
+            Assert.AreEqual("FakeBOName", propertyDescriptor.Name);
             //---------------Execute Test ----------------------
             var index = bindingListView.Find(propertyDescriptor, key);
             //---------------Test Result -----------------------
@@ -898,7 +898,7 @@ namespace Habanero.Binding.Tests
             var propertyDescriptor = descriptorCollection[propDescriptorIndex];
             var key = propertyDescriptor.GetValue(boNotFound);
             //---------------Assert Precondition----------------
-            Assert.AreEqual(9, descriptorCollection.Count);
+            Assert.AreEqual("FakeBOName", propertyDescriptor.Name);
             //---------------Execute Test ----------------------
             var index = bindingListView.Find(propertyDescriptor, key);
             //---------------Test Result -----------------------
@@ -1167,7 +1167,7 @@ namespace Habanero.Binding.Tests
         }
 
         [Test]
-        public void Test_ApplySort_WithListSortDescriptionCollection_ShouldSortByPropertyDescriptor()
+        public void Test_ApplySort_WhenListSortDirectionDescending_WithListSortDescriptionCollection_ShouldSortByPropertyDescriptors()
         {
             //---------------Set up test pack-------------------
             CreateSavedBOs(3);
@@ -1175,13 +1175,14 @@ namespace Habanero.Binding.Tests
             collection.Load("", "FakeBOName ASC");
             var bindingListView = new BindingListViewNew<FakeBO>(collection);
             var descriptorCollection = bindingListView.GetItemProperties(null);
-            var propertyDescriptor1 = descriptorCollection[1];
-            var listSortDescription = new ListSortDescription(propertyDescriptor1, ListSortDirection.Descending);
+            var sortByDescriptor = descriptorCollection[1];
+            var listSortDescription = new ListSortDescription(sortByDescriptor, ListSortDirection.Descending);
             var sortDescriptions = new ListSortDescriptionCollection(new[]{ listSortDescription});
             var fakeBo1 = collection[0];
             var fakeBo2 = collection[1];
             var fakeBo3 = collection[2];
             //---------------Assert Precondition----------------
+            Assert.AreEqual("FakeBOName", sortByDescriptor.Name);
             Assert.AreSame(fakeBo1, bindingListView[0]);
             Assert.AreSame(fakeBo2, bindingListView[1]);
             Assert.AreSame(fakeBo3, bindingListView[2]);
@@ -1194,6 +1195,46 @@ namespace Habanero.Binding.Tests
             Assert.AreSame(fakeBo1, bindingListView[2]);
         }
 
+        [Test]
+        public void Test_ApplySort_WhenListSortDirectionAscending_WithListSortDescriptionCollection_ShouldSortByPropertyDescriptors()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.Load("", "FakeBOName DESC");
+            var bindingListView = new BindingListViewNew<FakeBO>(collection) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
+            var sortByDescriptor = descriptorCollection[1];
+            var listSortDescription = new ListSortDescription(sortByDescriptor, ListSortDirection.Ascending);
+            var sortDescriptions = new ListSortDescriptionCollection(new[] { listSortDescription });
+            var fakeBo1 = collection[0];
+            var fakeBo2 = collection[1];
+            var fakeBo3 = collection[2];
+            //---------------Assert Precondition----------------
+            Assert.AreEqual("FakeBOName", sortByDescriptor.Name);
+            Assert.AreSame(fakeBo1, bindingListView[0]);
+            Assert.AreSame(fakeBo2, bindingListView[1]);
+            Assert.AreSame(fakeBo3, bindingListView[2]);
+            //---------------Execute Test ----------------------
+            bindingListView.ApplySort(sortDescriptions);
+            //---------------Test Result -----------------------
+            Assert.AreSame(fakeBo3, bindingListView[0]);
+            Assert.AreSame(fakeBo2, bindingListView[1]);
+            Assert.AreSame(fakeBo1, bindingListView[2]);
+            Assert.Fail("Test Not Yet Implemented");
+        }
+        [Test]
+        public void Test_ApplySort_WithListSortDescriptionCollection_ShouldRaiseListChangedEvent()
+        {
+            //---------------Set up test pack-------------------
+            
+            //---------------Assert Precondition----------------
+
+            //---------------Execute Test ----------------------
+
+            //---------------Test Result -----------------------
+            Assert.Fail("Test Not Yet Implemented");
+        }
         [Test]
         public void Test_ApplySort_ShouldNotSortUnderlyingCollection()
         {
