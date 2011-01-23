@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
@@ -18,14 +19,17 @@ namespace Habanero.Binding
     {
         private IViewBuilder _viewBuilder;
 
-        private IHabaneroLogger _logger =
+        private static readonly IHabaneroLogger _logger =
             GlobalRegistry.LoggerFactory.GetLogger("Habanero.Binding.BindingListViewLogger");
 
+        //private readonly IDictionary<int,T> _addedBOsCancelled = new Dictionary<int, T>();
+        private readonly IDictionary<int,T> _addedBOs = new Dictionary<int, T>();
 
         /// <summary>
         /// 
         /// </summary>
         public event ListChangedEventHandler ListChanged;
+
         #region Constructors
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace Habanero.Binding
         /// <summary>
         /// 
         /// </summary>
-        private IViewBuilder ViewBuilder
+        public IViewBuilder ViewBuilder
         {
             get
             {
@@ -133,7 +137,7 @@ namespace Habanero.Binding
                //TODO brett 19 Jan 2011: get { return _filterIndices == null ? BusinessObjectCollection.Count : _filterIndices.Length; }
             get
             {
-                _logger.Log("Get Count "); 
+               // _logger.Log("Get Count "); This gets ht hundreds of times
                 return ViewOfBusinessObjectCollection.Count; }
         }
 
@@ -153,14 +157,22 @@ namespace Habanero.Binding
         {
             get
             {
-                _logger.Log("Get this ");
+                //_logger.Log("Get this ", LogCategory.Info); this fires many many times.
                 //TODO brett 19 Jan 2011: This needs to return the item from the filtered list
 
-                return ViewOfBusinessObjectCollection[index];
+                try
+                {
+                    return ViewOfBusinessObjectCollection[index];
+                }
+                catch (Exception e)
+                {
+                    _logger.Log("Get this. Fired Exception " + e.Message, LogCategory.Exception);
+                    throw;
+                }
             }
             set
             {
-                _logger.Log("Set this ");
+                _logger.Log("Set this ", LogCategory.Info);
                 ViewOfBusinessObjectCollection[index] = (T)value;
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
@@ -172,7 +184,7 @@ namespace Habanero.Binding
         public void Clear()
         {
 
-            _logger.Log("Clear ");
+            _logger.Log("Clear ", LogCategory.Info);
             ViewOfBusinessObjectCollection.Clear();
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
         }
@@ -185,7 +197,7 @@ namespace Habanero.Binding
         /// <returns>True if the object is found in the collection; otherwise, false.</returns>
         public bool Contains(object value)
         {
-            _logger.Log("Contains : " + value + " ");
+            _logger.Log("Contains : " + value + " ", LogCategory.Info);
             T bo = (T)value;
             return ViewOfBusinessObjectCollection.Contains(bo);
         }
@@ -197,7 +209,7 @@ namespace Habanero.Binding
         /// <returns>The index of value if found in the list; otherwise, -1.</returns>
         public int IndexOf(object value)
         {
-            _logger.Log("IndexOf : " + value + " ");
+            _logger.Log("IndexOf : " + value + " ", LogCategory.Info);
             return ViewOfBusinessObjectCollection.IndexOf((T)value);
         }
         /// <summary>
@@ -206,7 +218,7 @@ namespace Habanero.Binding
         /// <param name="value">The object to remove from the <see cref="IBusinessObjectCollection"/>.</param>
         public void Remove(object value)
         {
-            _logger.Log("Remove : " + value + " ");
+            _logger.Log("Remove : " + value + " ", LogCategory.Info);
             var index = IndexOf(value);
             ViewOfBusinessObjectCollection.Remove((T)value);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
@@ -219,7 +231,7 @@ namespace Habanero.Binding
         public void RemoveAt(int index)
         {
 
-            _logger.Log("RemoveAt : " + index + " ");
+            _logger.Log("RemoveAt : " + index + " ", LogCategory.Info);
             ViewOfBusinessObjectCollection.RemoveAt(index);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }
@@ -234,7 +246,7 @@ namespace Habanero.Binding
             if (value != null && !typeof(T).IsAssignableFrom(value.GetType()))
                 throw new HabaneroArgumentException("Given instance doesn't match needed type.");
 
-            _logger.Log("Insert Index : " + index + " value : " + value);
+            _logger.Log("Insert Index : " + index + " value : " + value, LogCategory.Info);
             ViewOfBusinessObjectCollection.Insert(index, (T)value);
             BusinessObjectCollection.Insert(index, (T) value);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
@@ -262,7 +274,7 @@ namespace Habanero.Binding
             if (property == null) throw new ArgumentNullException("property");
             if (key == null) throw new ArgumentNullException("key");
 
-            _logger.Log("Find : " + property.Name + " value : " + key);
+            _logger.Log("Find : " + property.Name + " value : " + key, LogCategory.Info);
             var foundBO = ViewOfBusinessObjectCollection.Find(obj => obj.GetPropertyValue(property.Name) == key);
             if (foundBO == null) return -1;
             return ViewOfBusinessObjectCollection.IndexOf(foundBO);
@@ -370,7 +382,7 @@ namespace Habanero.Binding
         {
             get
             {
-                _logger.Log("SortDirection Get");
+                _logger.Log("SortDirection Get", LogCategory.Info);
                 if (SortDescriptions != null)
                     if (SortDescriptions.Count == 1) return SortDescriptions[0].SortDirection;
                 return ListSortDirection.Ascending;
@@ -384,7 +396,7 @@ namespace Habanero.Binding
         {
             get
             {
-                _logger.Log("Sort Property Get");
+                _logger.Log("Sort Property Get", LogCategory.Info);
                 if (SortDescriptions != null)
                     if (SortDescriptions.Count == 1) return SortDescriptions[0].PropertyDescriptor;
                 return null;
@@ -398,7 +410,7 @@ namespace Habanero.Binding
         {
             get
             {
-                _logger.Log("IsSorted");
+                _logger.Log("IsSorted", LogCategory.Info);
                 if (SortDescriptions == null) return false;
                 return SortDescriptions.Count > 0;
             }
@@ -415,7 +427,7 @@ namespace Habanero.Binding
         {
             try
             {
-                _logger.Log("ApplySort - PropertyDescriptor : " + property.Name + " Direction : " + direction);
+                _logger.Log("ApplySort - PropertyDescriptor : " + property.Name + " Direction : " + direction, LogCategory.Info);
 
                 if (property is PropertyDescriptorPropDef)
                 {
@@ -439,7 +451,7 @@ namespace Habanero.Binding
         /// <param name="descriptionCollection"></param>
         public void ApplySort(ListSortDescriptionCollection descriptionCollection)
         {
-            _logger.Log("ApplySort - ListSortDescriptionCollection ");
+            _logger.Log("ApplySort - ListSortDescriptionCollection ", LogCategory.Info);
             SortDescriptions = descriptionCollection;
             ViewOfBusinessObjectCollection.Sort(new GenericComparer<T>(SortDescriptions));
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
@@ -463,14 +475,14 @@ namespace Habanero.Binding
             if (index < 0) throw new ArgumentOutOfRangeException("index");
             if (index >= array.Length) throw new ArgumentException("index");
             if (ViewOfBusinessObjectCollection != null) ViewOfBusinessObjectCollection.CopyTo(array, index);
-            _logger.Log("CopyTo ");
+            _logger.Log("CopyTo ", LogCategory.Info);
         }
 
         #region IEmunerable
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            _logger.Log("AddIndex ");
+            _logger.Log("AddIndex ", LogCategory.Info);
             return this.ViewOfBusinessObjectCollection.GetEnumerator();
         }
 
@@ -480,7 +492,7 @@ namespace Habanero.Binding
 
         int IList.Add(object value)
         {
-            _logger.Log("Add (" + value + ")");
+            _logger.Log("Add (" + value + ")", LogCategory.Info);
             this.Insert(this.Count, value);
             return this.Count;
         }
@@ -489,25 +501,19 @@ namespace Habanero.Binding
 
         #region IBindingList
 
-        public object AddNew()
-        {
-            _logger.Log("AddIndex ");
-            return default(T);
-        }
-
         public void AddIndex(PropertyDescriptor property)
         {
-            _logger.Log("AddIndex ");
+            _logger.Log("AddIndex ", LogCategory.Info);
         }
 
         public void RemoveIndex(PropertyDescriptor property)
         {
-            _logger.Log("RemoveIndex ");
+            _logger.Log("RemoveIndex ", LogCategory.Info);
         }
 
         public void RemoveSort()
         {
-            _logger.Log("RemoveSort ");
+            _logger.Log("RemoveSort ", LogCategory.Info);
         }
 
         #endregion
@@ -516,7 +522,7 @@ namespace Habanero.Binding
 
         public void RemoveFilter()
         {
-            _logger.Log("RemoveFilter ");
+            _logger.Log("RemoveFilter ", LogCategory.Info);
         }
 
         private string _filter;
@@ -524,12 +530,12 @@ namespace Habanero.Binding
         {
             get
             {
-                _logger.Log("Get Filter ");
+                _logger.Log("Get Filter ", LogCategory.Info);
                 return _filter;
             }
             set
             {
-                _logger.Log("Set Filter ");
+                _logger.Log("Set Filter ", LogCategory.Info);
                 _filter = value;
             }
         }
@@ -538,23 +544,87 @@ namespace Habanero.Binding
 
         #region Implementation of ICancelAddNew
 
-        public void CancelNew(int itemIndex)
+        /// <summary>
+        /// Adds a new item to the list. This method works very closely with the
+        /// <see cref="ICancelAddNew"/> interface in the way it interacts with the 
+        /// grid to manage permanent add (EndNew) and the Cancelling of the Add (CancelNew)
+        /// </summary>
+        /// <returns>
+        /// The item added to the list.
+        /// </returns>
+        /// <exception cref="T:System.NotSupportedException"><see cref="P:System.ComponentModel.IBindingList.AllowNew"/> is false. </exception>
+        public object AddNew()
         {
-            _logger.Log("CancelNew (" + itemIndex + ")");
+            _logger.Log("AddNew ", LogCategory.Info);
+            var addedBO = this.ViewOfBusinessObjectCollection.CreateBusinessObject();
+            _addedBOs.Add(this.Count - 1, addedBO);
+            return addedBO;
         }
 
+        /// <summary>
+        /// Discards a pending new item from the collection.
+        /// </summary>
+        /// <param name="itemIndex">The index of the item that was previously added to the collection. </param>
+        public void CancelNew(int itemIndex)
+        {
+            _logger.Log("Start CancelNew (" + itemIndex + ")", LogCategory.Info);
+            var addedBO = this.ViewOfBusinessObjectCollection[itemIndex];
+
+            if (_addedBOs.ContainsKey(itemIndex) && addedBO != null)
+            {
+                _addedBOs.Remove(itemIndex);
+                _logger.Log("In CancelNew CancelEdits (" + addedBO + ")", LogCategory.Info);
+                addedBO.CancelEdits();
+                this.ViewOfBusinessObjectCollection.Remove(addedBO);
+
+
+                _logger.Log("In CancelNew B4 ListChanged (" + itemIndex + ")", LogCategory.Info);
+                OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+                _logger.Log("In CancelNew AF ListChanged (" + itemIndex + ")", LogCategory.Info);
+            }
+            //OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+            _logger.Log("End CancelNew (" + itemIndex + ")", LogCategory.Info);
+        }
+
+        //TODO brett 23 Jan 2011:  This should update the underlying collection for added bos
+        /// <summary>
+        /// Commits a pending new item to the collection.
+        /// </summary>
+        /// <param name="itemIndex">The index of the item that was previously added to the collection. </param>
         public void EndNew(int itemIndex)
         {
-            _logger.Log("EndNew (" + itemIndex + ")");
+            _logger.Log("Start EndNew (" + itemIndex + ")", LogCategory.Info);
+/*            //this did not solve the error revert this to the simple code of doing this in the CancelNew?
+            if (_addedBOsCancelled.ContainsKey(itemIndex))
+            {
+                var bo = _addedBOsCancelled[itemIndex];
+                _logger.Log("In EndNew CancelEdits (" + bo + ")", LogCategory.Info);
+                bo.CancelEdits();
+                this.ViewOfBusinessObjectCollection.Remove(bo);
+                _addedBOsCancelled.Remove(itemIndex);
+
+                _logger.Log("EndNew B4 ListChanged (" + itemIndex + ")", LogCategory.Info);
+                OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+                _logger.Log("EndNew AF ListChanged (" + itemIndex + ")", LogCategory.Info);
+            }*/
+
+            _logger.Log("End EndNew (" + itemIndex + ")", LogCategory.Info);
         }
 
         #endregion
 
         #region Implementation of IRaiseItemChangedEvents
 
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events when one of its property values changes; otherwise, false.
+        /// </returns>
         public bool RaisesItemChangedEvents
         {
-            get { throw new NotImplementedException(); }
+            //TODO brett 19 Jan 2011: What I am assuming this does is that when your BO.Prop changes this event is raised resulting in the DataGrid Updating?
+            get { return true; }
         }
 
         #endregion

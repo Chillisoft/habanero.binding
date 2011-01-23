@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
@@ -8,6 +9,7 @@ using Habanero.Smooth;
 using Habanero.Testability;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Habanero.Testability.Helpers;
 
 // ReSharper disable InconsistentNaming
 
@@ -22,6 +24,7 @@ namespace Habanero.Binding.Tests
             //Runs every time that any testmethod is executed
             BORegistry.DataAccessor = GetDataAccessorInMemory();
             BORegistry.BusinessObjectManager = new BusinessObjectManagerFake();
+            GlobalRegistry.LoggerFactory = new HabaneroLoggerFactoryStub();
         }
 
         [TestFixtureSetUp]
@@ -455,7 +458,7 @@ namespace Habanero.Binding.Tests
             Assert.IsFalse(contains);
         }
 
-        [Ignore("What triggers this. Should it only appy to BOCol on like an EndEdit or somthing")] //TODO Brett 23 Jan 2011: Ignored Test - What triggers this. Should it only appy to BOCol on like an EndEdit or somthing
+        [Ignore("What triggers this. Should it only appy to BOCol on like an EndEdit or somthing")] //TODO Brett 23 Jan 2011: Ignored Test - What triggers this. Should it only appy to BOCol on like an EndEdit or somthing. This is triggered by a user hitting the delete key.
         [Test]
         public void Test_Remove_WhenColHas1_ShouldRemoveBusinessObject()
         {
@@ -1266,6 +1269,310 @@ namespace Habanero.Binding.Tests
         #endregion
 
 
+        #region ICancelAddNew and Adding Objects In General
+        /// <summary>
+        /// This is a very tricky interface since it 
+        /// </summary>
+        [Test]
+        public void Test_AddNew_ShouldCreateNewBo()
+        {
+            //---------------Set up test pack-------------------
+
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            var newBO = bindingListView.AddNew();
+            //---------------Test Result -----------------------
+            Assert.IsNotNull(newBO);
+            Assert.IsInstanceOf<FakeBO>(newBO);
+        }
+        [Test]
+        public void Test_AddNew_ShouldAddNewBusinessObjectToList()
+        {
+            //---------------Set up test pack-------------------
+
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            var newBO = bindingListView.AddNew();
+            //---------------Test Result -----------------------
+            Assert.AreSame(newBO, bindingListView[3]);
+        }
+        /// <summary>
+        /// I think this is correct. I am creating the New BO from the
+        /// ViewOfBusinessObjectCollection and it is therefore being created and added to the
+        /// list.
+        /// The AddNew however is called based on the grid event raised as a result of the user selecting a new row.
+        /// The grid therefore appears to add the blank row automatically.
+        /// </summary>
+        [Test]
+        public void Test_AddNew_ShouldNotRaiseListChangedEvent()
+        {
+            //---------------Set up test pack-------------------
+
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+                        var listChangedFired = false;
+            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            Assert.IsFalse(listChangedFired);
+            //---------------Execute Test ----------------------
+            bindingListView.AddNew();
+            //---------------Test Result -----------------------
+            Assert.IsFalse(listChangedFired);
+        }
+
+
+        [Test]
+        public void Test_EndNew_WhenNewItemAtIndex_ShouldAddNewItemTotheViewBusinessObjectCollection()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew();
+            //---------------Assert Precondition----------------
+            Assert.AreSame(newBO, bindingListView[3]);
+
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.AreEqual(3, boCol.Count);
+            boCol.ShouldNotContain(newBO);
+            //---------------Execute Test ----------------------
+            bindingListView.EndNew(3);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.AreEqual(4, boCol.Count);
+            boCol.ShouldContain(newBO);
+        }
+        /// <summary>
+        /// NNB ICancelAddnew Notes from msdn:
+        /// In some scenarios, such as Windows Forms complex data binding, 
+        /// the collection may receive CancelNew or EndNew calls for items other than the newly added item. 
+        /// (Each item is typically a row in a data view.) Ignore these calls; cancel or 
+        /// commit the new item only when that item's index is specified.
+        /// </summary>
+        [Test]
+        public void Test_EndNew_WhenNoNewItemAtThatIndex_ShouldDoNothing()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew();
+            //---------------Assert Precondition----------------
+            Assert.AreSame(newBO, bindingListView[3]);
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.AreEqual(3, boCol.Count);
+            boCol.ShouldNotContain(newBO);
+            //---------------Execute Test ----------------------
+            bindingListView.EndNew(0);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.AreEqual(3, boCol.Count);
+            boCol.ShouldNotContain(newBO);
+        }
+
+        [Test]
+        public void Test_EndNew_WhenNewItemAtIndex_ShouldSaveNewItem()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew() as FakeBO;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(newBO);
+            Assert.AreSame(newBO, bindingListView[3]);
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.IsTrue(newBO.Status.IsNew);
+            //---------------Execute Test ----------------------
+            bindingListView.EndNew(3);
+            //---------------Test Result -----------------------
+            Assert.IsFalse(newBO.Status.IsNew);
+        }
+        /// <summary>
+        /// see <see cref="Test_EndNew_WhenNoNewItemAtThatIndex_ShouldDoNothing"/> for details of 
+        /// why this test is needed.
+        /// </summary>
+        [Test]
+        public void Test_EndNew_WhenNewItemNotAtIndex_ShouldNotSaveNewItem()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew() as FakeBO;
+            const int endNewItemIndex = 2;
+            var itemAtIndex = (FakeBO)bindingListView[endNewItemIndex];
+            itemAtIndex.FakeBOName = GetRandomString();
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(itemAtIndex);
+            Assert.AreNotSame(newBO, itemAtIndex);
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.IsTrue(itemAtIndex.Status.IsDirty);
+            //---------------Execute Test ----------------------
+            bindingListView.EndNew(endNewItemIndex);
+            //---------------Test Result -----------------------
+            Assert.IsTrue(itemAtIndex.Status.IsDirty);
+        }
+
+        [Test]
+        public void Test_CancelNew_WhenNewItemAtIndex_ShouldMarkForDeleteBo()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew() as FakeBO;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(newBO);
+            Assert.AreSame(newBO, bindingListView[3]);
+            Assert.IsTrue(newBO.Status.IsNew);
+            Assert.IsFalse(newBO.Status.IsDeleted);
+            //---------------Execute Test ----------------------
+            bindingListView.CancelNew(3);
+            //---------------Test Result -----------------------
+            Assert.IsTrue(newBO.Status.IsNew);
+            Assert.IsTrue(newBO.Status.IsDeleted, "Should be deleted");
+        }
+
+        [Test]
+        public void Test_CancelNew_WhenNewItemAtIndex_ShouldRemoveFromBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew() as FakeBO;
+            const int newItemIndex = 3;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(newBO);
+            Assert.IsTrue(newBO.Status.IsNew);
+            Assert.IsFalse(newBO.Status.IsDeleted);
+            Assert.AreEqual(4, bindingListView.Count);
+
+            Assert.AreSame(newBO, bindingListView[newItemIndex]);
+            //---------------Execute Test ----------------------
+            bindingListView.CancelNew(newItemIndex);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(3, bindingListView.Count);
+            Assert.IsFalse(bindingListView.Contains(newBO), "Binding List view hsould not contain BO");
+        }
+        [Test]
+        public void Test_CancelNew_WhenNewItemAtIndex_ShouldRaiseListChangedEvent()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            const int newItemIndex = 3;
+            var newBO = bindingListView.AddNew() as FakeBO;
+                        var listChangedFired = false;
+            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(newBO, bindingListView[newItemIndex]);
+            Assert.IsFalse(listChangedFired);
+            //---------------Execute Test ----------------------
+            bindingListView.CancelNew(newItemIndex);
+            //---------------Test Result -----------------------
+            Assert.IsTrue(listChangedFired);
+        }
+
+        /// <summary>
+        /// See Test_EndNew_WhenNoNewItemAtThatIndex_ShouldDoNothing for an explanation 
+        /// of why this needs to be explicitely implemented and tested.
+        /// </summary>
+        [Test]
+        public void Test_CancelNew_WhenNewItemNotAtIndex_ShouldNotMarkForDeleteBo()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew() as FakeBO;
+            const int cancelNewIndex = 2;
+            var itemAtIndex = bindingListView[cancelNewIndex] as FakeBO;
+            //---------------Assert Precondition----------------
+            Assert.AreNotSame(newBO, itemAtIndex);
+            Assert.IsNotNull(itemAtIndex);
+            Assert.IsFalse(itemAtIndex.Status.IsDeleted);
+            //---------------Execute Test ----------------------
+            bindingListView.CancelNew(cancelNewIndex);
+            //---------------Test Result -----------------------
+            Assert.IsFalse(itemAtIndex.Status.IsDeleted, "Should not be deleted");
+        }
+
+        /// <summary>
+        /// See Test_EndNew_WhenNoNewItemAtThatIndex_ShouldDoNothing for an explanation 
+        /// of why this needs to be explicitely implemented and tested.
+        /// </summary>
+        [Test]
+        public void Test_CancelNew_WhenNewItemNotAtIndex_ShouldNotRemoveFromBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew() as FakeBO;
+            const int cancelNewIndex = 2;
+            var itemAtIndex = bindingListView[cancelNewIndex] as FakeBO;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(itemAtIndex);
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.AreNotSame(newBO, itemAtIndex);
+            Assert.IsTrue(bindingListView.Contains(itemAtIndex), "Binding List view hsould not contain BO");
+            //---------------Execute Test ----------------------
+            bindingListView.CancelNew(cancelNewIndex);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(itemAtIndex), "Binding List view hsould not contain BO");
+        }
+        /// <summary>
+        /// See <see cref="Test_EndNew_WhenNoNewItemAtThatIndex_ShouldDoNothing"/> for an explanation 
+        /// of why this needs to be explicitely implemented and tested.
+        /// </summary>
+        [Test]
+        public void Test_CancelNew_WhenNewItemNotAtIndex_ShouldNotRaiseListChangedEvent()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            const int cancelNewIndex = 2;
+            var newBO = bindingListView.AddNew() as FakeBO;
+            var listChangedFired = false;
+            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            //---------------Assert Precondition----------------
+            Assert.AreNotSame(newBO, bindingListView[cancelNewIndex]);
+            Assert.IsFalse(listChangedFired);
+            //---------------Execute Test ----------------------
+            bindingListView.CancelNew(cancelNewIndex);
+            //---------------Test Result -----------------------
+            Assert.IsFalse(listChangedFired, "Should not raise event");
+        }
+        /// <summary>
+        /// The End New has already accepted the change on this New BO. If Cancel is now called
+        /// it should not Cancel.
+        /// See <see cref="Test_EndNew_WhenNoNewItemAtThatIndex_ShouldDoNothing"/> for an explanation 
+        /// </summary>
+        [Test]
+        public void Test_CancelNew_WhenNewItemWasEndNewed_ShouldNotMarkFromDelete()
+        {
+            var boCol = GetCollectionWith3Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var newBO = bindingListView.AddNew() as FakeBO;
+
+            const int newItemIndex = 3;
+            const int cancelNewItemIndex = newItemIndex;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(newBO);
+            Assert.AreSame(newBO, bindingListView[cancelNewItemIndex]);
+            Assert.IsTrue(newBO.Status.IsNew);
+            Assert.IsFalse(newBO.Status.IsDeleted);
+            Assert.AreEqual(4, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.EndNew(cancelNewItemIndex);
+            bindingListView.CancelNew(cancelNewItemIndex);
+            //---------------Test Result -----------------------
+            Assert.IsFalse(newBO.Status.IsDeleted, "Should not be deleted");
+            Assert.AreEqual(4, bindingListView.Count);
+        }
+        #endregion
 
 
 
@@ -1343,6 +1650,18 @@ namespace Habanero.Binding.Tests
     {
         public PropertyDescriptorCollectionStub() : base(new PropertyDescriptor[0])
         {
+        }
+    }
+    internal static class BLVTestingExtensions
+    {
+
+        public static void ShouldNotContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
+        {
+            ((IEnumerable<FakeBO>)boCol).ShouldNotContain(newBO);
+        }
+        public static void ShouldContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
+        {
+            ((IEnumerable<FakeBO>)boCol).ShouldContain(newBO);
         }
     }
 }

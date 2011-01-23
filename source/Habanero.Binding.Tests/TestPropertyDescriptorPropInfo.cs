@@ -77,7 +77,7 @@ namespace Habanero.Binding.Tests
         public void Test_Construct_WithPropInfor_ShouldSetPropInfo()
         {
             //---------------Set up test pack-------------------
-            PropertyInfo propertyInfo = new FakePropertyInfo();
+            PropertyInfo propertyInfo = new Habanero.Testability.Helpers.FakePropertyInfo();
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             var propDescriptor = new PropertyDescriptorPropInfoSpy(propertyInfo);

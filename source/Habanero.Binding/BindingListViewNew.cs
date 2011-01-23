@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Text;
@@ -27,11 +28,13 @@ namespace Habanero.Binding
     /// underlying Business Object Collection.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BindingListViewNew<T> : ITypedList//, IBindingListView//, ICancelAddNew, IRaiseItemChangedEvents
+    public class BindingListViewNew<T> : ITypedList, ICancelAddNew//, IBindingListView//, IRaiseItemChangedEvents
         where T : class, IBusinessObject, new()
     {
         private IViewBuilder _viewBuilder;
-
+        private readonly IDictionary<int, T> _addedBOs = new Dictionary<int, T>();
+        private static readonly IHabaneroLogger _logger =
+    GlobalRegistry.LoggerFactory.GetLogger("Habanero.Binding.BindingListViewNew");
         /// <summary>
         /// 
         /// </summary>
@@ -172,7 +175,6 @@ namespace Habanero.Binding
         /// </summary>
         public void Clear()
         {
-
             ViewOfBusinessObjectCollection.Clear();
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
         }
@@ -444,6 +446,77 @@ namespace Habanero.Binding
             if (index >= array.Length) throw new ArgumentException("index");
             if (ViewOfBusinessObjectCollection != null) ViewOfBusinessObjectCollection.CopyTo(array, index);
         }
+/*
+        #region Implementation of IRaiseItemChangedEvents
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events when one of its property values changes; otherwise, false.
+        /// </returns>
+        public bool RaisesItemChangedEvents
+        {
+            //TODO brett 19 Jan 2011: What I am assuming this does is that when your BO.Prop changes this event is raised resulting in the DataGrid Updating?
+            get { return true; }
+        }
+
+        #endregion*/
+
+        #region ICancelAddNew
+        /// <summary>
+        /// Adds a new item to the list.
+        /// </summary>
+        /// <returns>
+        /// The item added to the list.
+        /// </returns>
+        /// <exception cref="T:System.NotSupportedException"><see cref="P:System.ComponentModel.IBindingList.AllowNew"/> is false. </exception>
+        public object AddNew()
+        {
+            _logger.Log("AddNew ", LogCategory.Info);
+            var addedBO = this.ViewOfBusinessObjectCollection.CreateBusinessObject();
+            _addedBOs.Add(this.Count - 1, addedBO);
+            return addedBO;
+        }
+        /// <summary>
+        /// Discards a pending new item from the collection.
+        /// </summary>
+        /// <param name="itemIndex">The index of the item that was previously added to the collection. </param>
+        public void CancelNew(int itemIndex)
+        {
+            _logger.Log("Start CancelNew (" + itemIndex + ")", LogCategory.Info);
+            var addedBO = this.ViewOfBusinessObjectCollection[itemIndex];
+            if (_addedBOs.ContainsKey(itemIndex) && addedBO != null)
+            {
+                _addedBOs.Remove(itemIndex);
+                if (addedBO.Status.IsNew)
+                {
+                    addedBO.MarkForDelete();
+                    _logger.Log("In CancelNew B4 OnListChanged (" + itemIndex + ")", LogCategory.Info);
+                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+                }
+            }
+            _logger.Log("End CancelNew (" + itemIndex + ")", LogCategory.Info);
+        }
+
+        /// <summary>
+        /// Commits a pending new item to the collection.
+        /// </summary>
+        /// <param name="itemIndex">The index of the item that was previously added to the collection. </param>
+        public void EndNew(int itemIndex)
+        {
+            _logger.Log("Start EndNew (" + itemIndex + ")", LogCategory.Info);
+            var addedBO = this.ViewOfBusinessObjectCollection[itemIndex];
+            if (_addedBOs.ContainsKey(itemIndex) && addedBO != null)
+            {
+                this.BusinessObjectCollection.Add(addedBO);
+                addedBO.Save();
+                _addedBOs.Remove(itemIndex);
+            }
+            _logger.Log("End EndNew (" + itemIndex + ")", LogCategory.Info);
+        }
+        #endregion
+
     }
 
 }

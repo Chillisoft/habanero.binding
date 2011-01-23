@@ -7993,6 +7993,12 @@
              This object must be constructed as a Fake BO i.e. no ClassDefs
             </summary>
         </member>
+        <member name="T:Habanero.BO.TypeDescriptorIgnoreAttribute">
+            <summary>
+            This is an attribute that is placed on properties such as <see cref="T:Habanero.BO.Relationship"/>
+            which should not be part of the TypeDescriptor.GetProperties when binding.
+            </summary>
+        </member>
         <member name="T:Habanero.BO.BusinessObject`1">
             <summary>
             A Generic version of BusinessObject.
