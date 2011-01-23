@@ -58,6 +58,7 @@
     </Compile>
     <Compile Include="BindingListRequest.cs" />
     <Compile Include="BindingListView.cs" />
+    <Compile Include="BindingListViewLogger.cs" />
     <Compile Include="BindingListViewNew.cs" />
     <Compile Include="DataFilter.cs" />
     <Compile Include="FilterOperator.cs" />

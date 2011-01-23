@@ -303,6 +303,11 @@ namespace Habanero.Binding.Tests
     public class FakeObjectNotABo{}
 
     public class PropertyDescriptorStub: PropertyDescriptor{
+
+        public PropertyDescriptorStub(string name)
+            : base(name, null)
+        {
+        }
         public PropertyDescriptorStub(string name, Attribute[] attrs) : base(name, attrs)
         {
         }

@@ -29,13 +29,6 @@
              The current value being used by the Number Gen
             </summary>
         </member>
-        <member name="T:Habanero.Testability.Helpers.DummyPropertyInfo">
-            <summary>
-            This class is used by Reflection you cannot construct an instance of Property Info directly.
-            This class only implementes the .Name and .Type interface of the PropertyInfo.
-            This class is copied as is from FluentNHibernate.
-            </summary>
-        </member>
         <member name="T:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1">
             <summary>
             This is a Fake BO which is used for testing.
@@ -119,57 +112,6 @@
              Marks the business object as MarkedForDeletion and places the object
             </summary>
             <param name="businessObject"></param>
-        </member>
-        <member name="T:Habanero.Testability.Helpers.FakePropertyInfo">
-            <summary>
-            Fake PropertyInfo for testing reflection code e.g. binding, Smooth, testability.
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.String,System.Type,System.Type)">
-            <summary>
-            
-            </summary>
-            <param name="propName"></param>
-            <param name="propType"></param>
-            <param name="declaringType"></param>
-        </member>
-        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.String,System.Type)">
-            <summary>
-            
-            </summary>
-            <param name="propName"></param>
-            <param name="propType"></param>
-        </member>
-        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.Type)">
-            <summary>
-            /
-            </summary>
-            <param name="declaringType"></param>
-        </member>
-        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="propName"></param>
-        </member>
-        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.SetReflectedType(System.Type)">
-            <summary>
-            
-            </summary>
-            <param name="reflectedType"></param>
-        </member>
-        <member name="P:Habanero.Testability.Helpers.FakePropertyInfo.DeclaringType">
-            <summary>
-            Gets the class that declares this member.
-            </summary>
-            <returns>
-            The Type object for the class that declares this member.
-            </returns>
         </member>
     </members>
 </doc>
