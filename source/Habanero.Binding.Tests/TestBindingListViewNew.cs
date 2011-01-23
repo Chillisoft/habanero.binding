@@ -1652,6 +1652,7 @@ namespace Habanero.Binding.Tests
         {
         }
     }
+    // ReSharper disable ParameterTypeCanBeEnumerable.Global
     internal static class BLVTestingExtensions
     {
 
@@ -1660,8 +1661,9 @@ namespace Habanero.Binding.Tests
             ((IEnumerable<FakeBO>)boCol).ShouldNotContain(newBO);
         }
         public static void ShouldContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
+
         {
             ((IEnumerable<FakeBO>)boCol).ShouldContain(newBO);
         }
-    }
+    }// ReSharper restore ParameterTypeCanBeEnumerable.Global
 }
