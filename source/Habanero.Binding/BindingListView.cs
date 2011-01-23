@@ -308,9 +308,11 @@ namespace Habanero.Binding
             throw new NotImplementedException();
         }
 
+
         /// <summary>
-        /// Remove all current sorts.
+        /// Removes any sort applied using <see cref="M:System.ComponentModel.IBindingList.ApplySort(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)"/>.
         /// </summary>
+        /// <exception cref="T:System.NotSupportedException"><see cref="P:System.ComponentModel.IBindingList.SupportsSorting"/> is false. </exception>
         public void RemoveSort()
         {
             this.BusinessObjectCollection.Sort();

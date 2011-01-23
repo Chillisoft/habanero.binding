@@ -669,6 +669,273 @@ namespace Habanero.Binding.Tests
             Assert.AreEqual(index, -1);
         }
 
+        #region BindingList.Sort
+
+        [Test]
+        public void Test_SortDirection_WhenListSortDescriptionCollectionHasZero_ShouldSetSortDirectionAscending()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            //---------------Assert Precondition----------------
+            Assert.IsNull(bindingListView.SortDescriptions);
+            //---------------Execute Test ----------------------
+            var listSortDirection = bindingListView.SortDirection;
+            //---------------Test Result -----------------------
+            Assert.AreEqual(listSortDirection, ListSortDirection.Ascending);
+        }
+
+        [Test]
+        public void Test_SortDirection_WhenListSortDescriptionCollectionHas1_ShouldSetSortDirection()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            BusinessObjectCollection<FakeBO> collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            PropertyDescriptor descriptor = null;
+            var listSortDescription = new ListSortDescription(descriptor, ListSortDirection.Descending);
+            ListSortDescription[] descriptions = new[] { listSortDescription };
+            ListSortDescriptionCollection descriptionCollection = new ListSortDescriptionCollection(descriptions);
+            bindingListView.SortDescriptions = descriptionCollection;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(bindingListView.SortDescriptions);
+            Assert.AreEqual(1, descriptionCollection.Count);
+            //---------------Execute Test ----------------------
+            var listSortDirection = bindingListView.SortDirection;
+            //---------------Test Result -----------------------
+            Assert.AreEqual(descriptionCollection[0].SortDirection, listSortDirection);
+        }
+
+        [Test]
+        public void Test_SortDirection_WhenListSortDescriptionCollectionHas2_ShouldSetSortDirectionAscending()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            BusinessObjectCollection<FakeBO> collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            PropertyDescriptor descriptor = null;
+            var listSortDescription1 = new ListSortDescription(descriptor, ListSortDirection.Descending);
+            var listSortDescription2 = new ListSortDescription(descriptor, ListSortDirection.Descending);
+            var descriptions = new[] { listSortDescription1, listSortDescription2 };
+            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
+            bindingListView.SortDescriptions = descriptionCollection;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(bindingListView.SortDescriptions);
+            Assert.AreEqual(2, descriptionCollection.Count);
+            //---------------Execute Test ----------------------
+            var listSortDirection = bindingListView.SortDirection;
+            //---------------Test Result -----------------------
+            Assert.AreEqual(listSortDirection, ListSortDirection.Ascending);
+        }
+
+        [Test]
+        public void Test_SortProperty_WhenListSortDescriptionCollectionHasZero_ShouldReturnNull()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            BusinessObjectCollection<FakeBO> collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            //---------------Assert Precondition----------------
+            Assert.IsNull(bindingListView.SortDescriptions);
+            //---------------Execute Test ----------------------
+            var sortProperty = bindingListView.SortProperty;
+            //---------------Test Result -----------------------
+            Assert.IsNull(sortProperty);
+        }
+
+        [Test]
+        public void Test_SortProperty_WhenListSortDescriptionCollectionHas1_ShouldReturnSortProperty()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
+            var listSortDescription = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
+            var descriptions = new[] { listSortDescription };
+            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
+            bindingListView.SortDescriptions = descriptionCollection;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(bindingListView.SortDescriptions);
+            Assert.AreEqual(1, descriptionCollection.Count);
+            //---------------Execute Test ----------------------
+            var sortProperty = bindingListView.SortProperty;
+            //---------------Test Result -----------------------
+            Assert.IsNotNull(sortProperty);
+            Assert.AreSame(descriptorCollection[0], sortProperty);
+        }
+
+        [Test]
+        public void Test_SortProperty_WhenListSortDescriptionCollectionHas2_ShouldReturnNull()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
+            var listSortDescription1 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
+            var listSortDescription2 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
+            var descriptions = new[] { listSortDescription1, listSortDescription2 };
+            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
+            bindingListView.SortDescriptions = descriptionCollection;
+            //---------------Assert Precondition----------------
+            Assert.IsNotNull(bindingListView.SortDescriptions);
+            Assert.AreEqual(2, descriptionCollection.Count);
+            //---------------Execute Test ----------------------
+            var sortProperty = bindingListView.SortProperty;
+            //---------------Test Result -----------------------
+            Assert.IsNull(sortProperty);
+        }
+
+        [Test]
+        public void Test_IsSorted_WhenSortDescriptionsAreGreaterThanZero_ShouldReturnTrue()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
+            var listSortDescription1 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
+            var listSortDescription2 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
+            var descriptions = new[] { listSortDescription1, listSortDescription2 };
+            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
+            bindingListView.SortDescriptions = descriptionCollection;
+            //---------------Assert Precondition----------------
+            Assert.AreNotEqual(9, bindingListView.SortDescriptions.Count);
+            //---------------Execute Test ----------------------
+            bool isSorted = bindingListView.IsSorted;
+            //---------------Test Result -----------------------
+            Assert.True(isSorted);
+        }
+        [Test]
+        public void Test_IsSorted_WhenSortDescriptionsNull_ShouldReturnFalse()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            bindingListView.SortDescriptions = null;
+            //---------------Assert Precondition----------------
+            Assert.IsNull(bindingListView.SortDescriptions);
+            //---------------Execute Test ----------------------
+            bool isSorted = bindingListView.IsSorted;
+            //---------------Test Result -----------------------
+            Assert.False(isSorted);
+        }
+
+        [Test]
+        public void Test_IsSorted_WhenSortDescriptionsAreLessThanOrEqualToZero_ShouldReturnFalse()
+        {
+            //---------------Set up test pack-------------------
+            var collection = new BusinessObjectCollection<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            var descriptionCollection = new ListSortDescriptionCollection(null);
+            bindingListView.SortDescriptions = descriptionCollection;
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(0, bindingListView.SortDescriptions.Count);
+            //---------------Execute Test ----------------------
+            bool isSorted = bindingListView.IsSorted;
+            //---------------Test Result -----------------------
+            Assert.False(isSorted);
+        }
+
+
+        [Test]
+        public void Test_ApplySort_WhenListSortDirectionAscending_WithPropertyDescriptor_ShouldSortByPropertyDescriptor()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.Load("", "FakeBOName DESC");
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
+            PropertyDescriptor propertyDescriptor1 = descriptorCollection[1];
+            string fakeBo1 = collection[0].FakeBOName;
+            string fakeBo2 = collection[1].FakeBOName;
+            string fakeBo3 = collection[2].FakeBOName;
+            //---------------Assert Precondition----------------
+            Assert.AreSame(fakeBo1, collection[0].FakeBOName);
+            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
+            Assert.AreSame(fakeBo3, collection[2].FakeBOName);
+            Assert.AreEqual(9, descriptorCollection.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.ApplySort(propertyDescriptor1, ListSortDirection.Ascending);
+            //---------------Test Result -----------------------
+            Assert.AreSame(fakeBo3, collection[0].FakeBOName);
+            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
+            Assert.AreSame(fakeBo1, collection[2].FakeBOName);
+        }
+
+        [Test]
+        public void Test_ApplySort_WhenListSortDirectionDescscending_WithPropertyDescriptor_ShouldSortByPropertyDescriptor()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.Load("", "FakeBOName ASC");
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            var descriptorCollection = bindingListView.GetItemProperties(null);
+            PropertyDescriptor propertyDescriptor1 = descriptorCollection[1];
+            string fakeBo1 = collection[0].FakeBOName;
+            string fakeBo2 = collection[1].FakeBOName;
+            string fakeBo3 = collection[2].FakeBOName;
+            //---------------Assert Precondition----------------
+            Assert.AreSame(fakeBo1, collection[0].FakeBOName);
+            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
+            Assert.AreSame(fakeBo3, collection[2].FakeBOName);
+            Assert.AreEqual(9, descriptorCollection.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.ApplySort(propertyDescriptor1, ListSortDirection.Descending);
+            //---------------Test Result -----------------------
+            Assert.AreSame(fakeBo3, collection[0].FakeBOName);
+            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
+            Assert.AreSame(fakeBo1, collection[2].FakeBOName);
+        }
+        #endregion
+
+/*
+        [Test]
+        public void Test_AddNew_ShouldAddNewObjectToCollection()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, collection.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.AddNew();
+            //---------------Test Result -----------------------
+            Assert.AreEqual(4, collection.Count);
+        }
+
+        [Test]
+        public void Test_AddNew_ShouldReturnNewBusinessObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(3);
+            var collection = new BusinessObjectCollection<FakeBO>();
+            collection.LoadAll();
+            var bindingListView = new BindingListView<FakeBO>(collection);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, collection.Count);
+            //---------------Execute Test ----------------------
+            object bo = bindingListView.AddNew();
+            //---------------Test Result -----------------------
+            Assert.AreEqual(4, collection.Count);
+            Assert.IsTrue(((BusinessObject)bo).Status.IsNew);
+        }*/
+
 
         #region Filtering
 
@@ -1124,273 +1391,6 @@ namespace Habanero.Binding.Tests
         }
 
         #endregion
-
-        #region BindingList.Sort
-
-        [Test]
-        public void Test_SortDirection_WhenListSortDescriptionCollectionHasZero_ShouldSetSortDirectionAscending()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            //---------------Assert Precondition----------------
-            Assert.IsNull(bindingListView.SortDescriptions);
-            //---------------Execute Test ----------------------
-            var listSortDirection = bindingListView.SortDirection;
-            //---------------Test Result -----------------------
-            Assert.AreEqual(listSortDirection, ListSortDirection.Ascending);
-        }
-
-        [Test]
-        public void Test_SortDirection_WhenListSortDescriptionCollectionHas1_ShouldSetSortDirection()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            BusinessObjectCollection<FakeBO> collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            PropertyDescriptor descriptor = null;
-            var listSortDescription = new ListSortDescription(descriptor, ListSortDirection.Descending);
-            ListSortDescription[] descriptions = new[] { listSortDescription };
-            ListSortDescriptionCollection descriptionCollection = new ListSortDescriptionCollection(descriptions);
-            bindingListView.SortDescriptions = descriptionCollection;
-            //---------------Assert Precondition----------------
-            Assert.IsNotNull(bindingListView.SortDescriptions);
-            Assert.AreEqual(1, descriptionCollection.Count);
-            //---------------Execute Test ----------------------
-            var listSortDirection = bindingListView.SortDirection;
-            //---------------Test Result -----------------------
-            Assert.AreEqual(descriptionCollection[0].SortDirection, listSortDirection);
-        }
-
-        [Test]
-        public void Test_SortDirection_WhenListSortDescriptionCollectionHas2_ShouldSetSortDirectionAscending()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            BusinessObjectCollection<FakeBO> collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            PropertyDescriptor descriptor = null;
-            var listSortDescription1 = new ListSortDescription(descriptor, ListSortDirection.Descending);
-            var listSortDescription2 = new ListSortDescription(descriptor, ListSortDirection.Descending);
-            var descriptions = new[] { listSortDescription1, listSortDescription2 };
-            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
-            bindingListView.SortDescriptions = descriptionCollection;
-            //---------------Assert Precondition----------------
-            Assert.IsNotNull(bindingListView.SortDescriptions);
-            Assert.AreEqual(2, descriptionCollection.Count);
-            //---------------Execute Test ----------------------
-            var listSortDirection = bindingListView.SortDirection;
-            //---------------Test Result -----------------------
-            Assert.AreEqual(listSortDirection, ListSortDirection.Ascending);
-        }
-
-        [Test]
-        public void Test_SortProperty_WhenListSortDescriptionCollectionHasZero_ShouldReturnNull()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            BusinessObjectCollection<FakeBO> collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            //---------------Assert Precondition----------------
-            Assert.IsNull(bindingListView.SortDescriptions);
-            //---------------Execute Test ----------------------
-            var sortProperty = bindingListView.SortProperty;
-            //---------------Test Result -----------------------
-            Assert.IsNull(sortProperty);
-        }
-
-        [Test]
-        public void Test_SortProperty_WhenListSortDescriptionCollectionHas1_ShouldReturnSortProperty()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
-            var listSortDescription = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
-            var descriptions = new[] { listSortDescription };
-            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
-            bindingListView.SortDescriptions = descriptionCollection;
-            //---------------Assert Precondition----------------
-            Assert.IsNotNull(bindingListView.SortDescriptions);
-            Assert.AreEqual(1, descriptionCollection.Count);
-            //---------------Execute Test ----------------------
-            var sortProperty = bindingListView.SortProperty;
-            //---------------Test Result -----------------------
-            Assert.IsNotNull(sortProperty);
-            Assert.AreSame(descriptorCollection[0], sortProperty);
-        }
-
-        [Test]
-        public void Test_SortProperty_WhenListSortDescriptionCollectionHas2_ShouldReturnNull()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
-            var listSortDescription1 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
-            var listSortDescription2 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
-            var descriptions = new[] { listSortDescription1, listSortDescription2 };
-            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
-            bindingListView.SortDescriptions = descriptionCollection;
-            //---------------Assert Precondition----------------
-            Assert.IsNotNull(bindingListView.SortDescriptions);
-            Assert.AreEqual(2, descriptionCollection.Count);
-            //---------------Execute Test ----------------------
-            var sortProperty = bindingListView.SortProperty;
-            //---------------Test Result -----------------------
-            Assert.IsNull(sortProperty);
-        }
-
-        [Test]
-        public void Test_IsSorted_WhenSortDescriptionsAreGreaterThanZero_ShouldReturnTrue()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
-            var listSortDescription1 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
-            var listSortDescription2 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
-            var descriptions = new[] { listSortDescription1, listSortDescription2 };
-            var descriptionCollection = new ListSortDescriptionCollection(descriptions);
-            bindingListView.SortDescriptions = descriptionCollection;
-            //---------------Assert Precondition----------------
-            Assert.AreNotEqual(9, bindingListView.SortDescriptions.Count);
-            //---------------Execute Test ----------------------
-            bool isSorted = bindingListView.IsSorted;
-            //---------------Test Result -----------------------
-            Assert.True(isSorted);
-        }
-        [Test]
-        public void Test_IsSorted_WhenSortDescriptionsNull_ShouldReturnFalse()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            bindingListView.SortDescriptions = null;
-            //---------------Assert Precondition----------------
-            Assert.IsNull(bindingListView.SortDescriptions);
-            //---------------Execute Test ----------------------
-            bool isSorted = bindingListView.IsSorted;
-            //---------------Test Result -----------------------
-            Assert.False(isSorted);
-        }
-
-        [Test]
-        public void Test_IsSorted_WhenSortDescriptionsAreLessThanOrEqualToZero_ShouldReturnFalse()
-        {
-            //---------------Set up test pack-------------------
-            var collection = new BusinessObjectCollection<FakeBO>();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            var descriptionCollection = new ListSortDescriptionCollection(null);
-            bindingListView.SortDescriptions = descriptionCollection;
-            //---------------Assert Precondition----------------
-            Assert.AreEqual(0, bindingListView.SortDescriptions.Count);
-            //---------------Execute Test ----------------------
-            bool isSorted = bindingListView.IsSorted;
-            //---------------Test Result -----------------------
-            Assert.False(isSorted);
-        }
-
-
-        [Test]
-        public void Test_ApplySort_WhenListSortDirectionAscending_WithPropertyDescriptor_ShouldSortByPropertyDescriptor()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.Load("", "FakeBOName DESC");
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
-            PropertyDescriptor propertyDescriptor1 = descriptorCollection[1];
-            string fakeBo1 = collection[0].FakeBOName;
-            string fakeBo2 = collection[1].FakeBOName;
-            string fakeBo3 = collection[2].FakeBOName;
-            //---------------Assert Precondition----------------
-            Assert.AreSame(fakeBo1, collection[0].FakeBOName);
-            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
-            Assert.AreSame(fakeBo3, collection[2].FakeBOName);
-            Assert.AreEqual(9, descriptorCollection.Count);
-            //---------------Execute Test ----------------------
-            bindingListView.ApplySort(propertyDescriptor1, ListSortDirection.Ascending);
-            //---------------Test Result -----------------------
-            Assert.AreSame(fakeBo3, collection[0].FakeBOName);
-            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
-            Assert.AreSame(fakeBo1, collection[2].FakeBOName);
-        }
-
-        [Test]
-        public void Test_ApplySort_WhenListSortDirectionDescscending_WithPropertyDescriptor_ShouldSortByPropertyDescriptor()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.Load("", "FakeBOName ASC");
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            var descriptorCollection = bindingListView.GetItemProperties(null);
-            PropertyDescriptor propertyDescriptor1 = descriptorCollection[1];
-            string fakeBo1 = collection[0].FakeBOName;
-            string fakeBo2 = collection[1].FakeBOName;
-            string fakeBo3 = collection[2].FakeBOName;
-            //---------------Assert Precondition----------------
-            Assert.AreSame(fakeBo1, collection[0].FakeBOName);
-            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
-            Assert.AreSame(fakeBo3, collection[2].FakeBOName);
-            Assert.AreEqual(9, descriptorCollection.Count);
-            //---------------Execute Test ----------------------
-            bindingListView.ApplySort(propertyDescriptor1, ListSortDirection.Descending);
-            //---------------Test Result -----------------------
-            Assert.AreSame(fakeBo3, collection[0].FakeBOName);
-            Assert.AreSame(fakeBo2, collection[1].FakeBOName);
-            Assert.AreSame(fakeBo1, collection[2].FakeBOName);
-        }
-        #endregion
-
-/*
-        [Test]
-        public void Test_AddNew_ShouldAddNewObjectToCollection()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            //---------------Assert Precondition----------------
-            Assert.AreEqual(3, collection.Count);
-            //---------------Execute Test ----------------------
-            bindingListView.AddNew();
-            //---------------Test Result -----------------------
-            Assert.AreEqual(4, collection.Count);
-        }
-
-        [Test]
-        public void Test_AddNew_ShouldReturnNewBusinessObject()
-        {
-            //---------------Set up test pack-------------------
-            CreateSavedBOs(3);
-            var collection = new BusinessObjectCollection<FakeBO>();
-            collection.LoadAll();
-            var bindingListView = new BindingListView<FakeBO>(collection);
-            //---------------Assert Precondition----------------
-            Assert.AreEqual(3, collection.Count);
-            //---------------Execute Test ----------------------
-            object bo = bindingListView.AddNew();
-            //---------------Test Result -----------------------
-            Assert.AreEqual(4, collection.Count);
-            Assert.IsTrue(((BusinessObject)bo).Status.IsNew);
-        }*/
 
 
         private static void CreateSavedBOs(int numberToCreate)

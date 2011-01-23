@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO;
+using Habanero.BO.ClassDefinition;
 
 namespace Habanero.Binding
 {
@@ -28,7 +30,7 @@ namespace Habanero.Binding
     /// underlying Business Object Collection.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BindingListViewNew<T> : ITypedList, ICancelAddNew//, IBindingListView//, IRaiseItemChangedEvents
+    public class BindingListViewNew<T> : ITypedList, ICancelAddNew, IBindingListView, IRaiseItemChangedEvents
         where T : class, IBusinessObject, new()
     {
         private IViewBuilder _viewBuilder;
@@ -175,8 +177,16 @@ namespace Habanero.Binding
         /// </summary>
         public void Clear()
         {
-            ViewOfBusinessObjectCollection.Clear();
+            this.ViewOfBusinessObjectCollection.Clear();
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
+        }
+
+        public int Add(object value)
+        {
+            var bo = value as T;
+            this.ViewOfBusinessObjectCollection.Add(bo);
+            this.BusinessObjectCollection.Add(bo);
+            return ViewOfBusinessObjectCollection.Count -1;
         }
 
         /// <summary>
@@ -260,6 +270,23 @@ namespace Habanero.Binding
             return ViewOfBusinessObjectCollection.IndexOf(foundBO);
         }
 
+        /// <summary>
+        /// Removes the <see cref="T:System.ComponentModel.PropertyDescriptor"/> from the indexes used for searching.
+        /// </summary>
+        /// <param name="property">The <see cref="T:System.ComponentModel.PropertyDescriptor"/> to remove from the indexes used for searching. </param>
+        public void RemoveIndex(PropertyDescriptor property)
+        {
+            //Do Nothing
+        }
+
+        /// <summary>
+        /// Adds the <see cref="T:System.ComponentModel.PropertyDescriptor"/> to the indexes used for searching.
+        /// </summary>
+        /// <param name="property">The <see cref="T:System.ComponentModel.PropertyDescriptor"/> to add to the indexes used for searching. </param>
+        public void AddIndex(PropertyDescriptor property)
+        {
+            //Do Nothing
+        }
         #endregion
 
         #region Basic Binding List Props
@@ -394,6 +421,17 @@ namespace Habanero.Binding
 
 
         /// <summary>
+        /// Removes any sort applied using <see cref="M:System.ComponentModel.IBindingList.ApplySort(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)"/>.
+        /// </summary>
+        /// <exception cref="T:System.NotSupportedException"><see cref="P:System.ComponentModel.IBindingList.SupportsSorting"/> is false. </exception>
+        public void RemoveSort()
+        {
+            this.ViewOfBusinessObjectCollection = this.BusinessObjectCollection.Clone();
+        }
+
+
+
+        /// <summary>
         /// Sorts the collection based on a PropertyDescriptor and a ListSortDirection.
         /// </summary>
         /// <param name="property">The <see cref="PropertyDescriptor"/> to sort by.</param>
@@ -517,6 +555,75 @@ namespace Habanero.Binding
         }
         #endregion
 
+        #region IBindingListView.Filter
+
+        private string _filter;
+
+        /// <summary>
+        /// Gets or sets the filter to be used to exclude items from the list of items returned by the data source
+        /// </summary>
+        /// <returns>
+        /// The string used to filter items out in the item list returned by the data source. 
+        /// </returns>
+        public string Filter
+        {
+            get { return _filter; }
+            set
+            {
+                _filter = value;
+
+                var col = new BusinessObjectCollection<T>();
+                var criteria = GetCriteriaObject(ClassDef.ClassDefs[typeof (T)], _filter);
+
+                foreach (var bo in this.ViewOfBusinessObjectCollection)
+                {
+                    if (criteria.IsCriteriaMatch(bo)) col.Add(bo);
+                }
+                col.SelectQuery.Criteria = criteria;
+                this.ViewOfBusinessObjectCollection = col;
+            }
+        }
+
+        private static Criteria GetCriteriaObject(IClassDef classDef, string criteriaString)
+        {
+            var criteria = CriteriaParser.CreateCriteria(criteriaString);
+            QueryBuilder.PrepareCriteria(classDef, criteria);
+            return criteria;
+        }
+        /// <summary>
+        /// Removes the current filter applied to the List.
+        /// </summary>
+        public void RemoveFilter()
+        {
+            this.Filter = string.Empty;
+        }
+        #endregion
+
+        #region Implementation of IEnumerable
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.ViewOfBusinessObjectCollection.GetEnumerator();
+        }
+
+        #endregion
+
+        #region Implementation of IRaiseItemChangedEvents
+
+        public bool RaisesItemChangedEvents
+        {
+            get { return true; }
+        }
+
+        #endregion
     }
 
+    internal static class CriteriaExtensions
+    {
+
+        internal static bool IsCriteriaMatch(this Criteria criteria, IBusinessObject bo)
+        {
+            return criteria == null || criteria.IsMatch(bo, false);
+        }
+    }
 }

@@ -56,7 +56,7 @@
     <Compile Include="..\Common\AssemblyInfoShared.cs">
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
-    <Compile Include="BindingListRequest.cs" />
+    <Compile Include="VirtualisedBindingList\BindingListRequest.cs" />
     <Compile Include="BindingListView.cs" />
     <Compile Include="BindingListViewLogger.cs" />
     <Compile Include="BindingListViewNew.cs" />
