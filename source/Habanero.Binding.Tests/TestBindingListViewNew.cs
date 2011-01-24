@@ -1204,6 +1204,27 @@ namespace Habanero.Binding.Tests
             Assert.IsTrue(listChangedFired);
         }
 
+        //TODO brett 24 Jan 2011: 
+        [Test]
+        public void Test_ApplySort_WithPropertyDescriptor_Should_SetSortDescriptions()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
+            //---------------Assert Precondition----------------
+            Assert.AreEqual("FakeBOName", sortByPropertyDescriptor.Name);
+            Assert.IsNull(bindingListView.SortDescriptions);
+            //---------------Execute Test ----------------------
+            bindingListView.ApplySort(sortByPropertyDescriptor, ListSortDirection.Ascending);
+            //---------------Test Result -----------------------
+            Assert.IsNotNull(bindingListView.SortDescriptions);
+            Assert.AreEqual(1, bindingListView.SortDescriptions.Count);
+            var listSortDescription = bindingListView.SortDescriptions[0];
+            Assert.AreSame(sortByPropertyDescriptor, listSortDescription.PropertyDescriptor);
+            Assert.AreEqual(ListSortDirection.Ascending, listSortDescription.SortDirection);
+            Assert.Fail("Test Not Yet Implemented");
+        }
         [Test]
         public void Test_ApplySort_WithSortDescriptionCollection_ShouldRaiseListChangedEvent()
         {
@@ -1271,6 +1292,23 @@ namespace Habanero.Binding.Tests
             Assert.AreSame(fakeBo1, bindingListView[2]);
             Assert.AreSame(fakeBo2, bindingListView[1]);
             Assert.AreSame(fakeBo3, bindingListView[0]);
+        }
+        [Test]
+        public void Test_ApplySort_WithListSortDescriptionCollection_Should_SetSortDescriptions()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
+            var listSortDescription = new ListSortDescription(sortByPropertyDescriptor, ListSortDirection.Ascending);
+            var sortDescriptions = new ListSortDescriptionCollection(new[] { listSortDescription });
+            //---------------Assert Precondition----------------
+            Assert.AreEqual("FakeBOName", sortByPropertyDescriptor.Name);
+            Assert.IsNull(bindingListView.SortDescriptions);
+            //---------------Execute Test ----------------------
+            bindingListView.ApplySort(sortDescriptions);
+            //---------------Test Result -----------------------
+            Assert.AreSame(sortDescriptions, bindingListView.SortDescriptions);
         }
 
         [Test]

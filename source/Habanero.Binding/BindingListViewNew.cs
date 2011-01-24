@@ -142,7 +142,7 @@ namespace Habanero.Binding
         /// Gets the number of objects contained in the <see cref="IBusinessObjectCollection"/>. 
         /// </summary>
         public int Count
-        { //TODO brett 19 Jan 2011: get { return _filterIndices == null ? BusinessObjectCollection.Count : _filterIndices.Length; }
+        { 
             get { return ViewOfBusinessObjectCollection.Count; }
         }
 
@@ -162,11 +162,11 @@ namespace Habanero.Binding
         {
             get
             {
-                //TODO brett 19 Jan 2011: This needs to return the item from the filtered list
                 return ViewOfBusinessObjectCollection[index];
             }
             set
             {
+                //TODO brett 24 Jan 2011: Should this update the BOCol as well?
                 ViewOfBusinessObjectCollection[index] = (T)value;
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
@@ -181,6 +181,13 @@ namespace Habanero.Binding
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
         }
 
+        /// <summary>
+        /// Adds an item to the <see cref="T:System.Collections.IList"/>.
+        /// </summary>
+        /// <returns>
+        /// The position into which the new element was inserted, or -1 to indicate that the item was not inserted into the collection,
+        /// </returns>
+        /// <param name="value">The object to add to the <see cref="T:System.Collections.IList"/>. </param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IList"/> is read-only.-or- The <see cref="T:System.Collections.IList"/> has a fixed size. </exception><filterpriority>2</filterpriority>
         public int Add(object value)
         {
             var bo = value as T;
@@ -215,6 +222,7 @@ namespace Habanero.Binding
         /// <param name="value">The object to remove from the <see cref="IBusinessObjectCollection"/>.</param>
         public void Remove(object value)
         {
+            //TODO brett 24 Jan 2011: This is h
             var index = IndexOf(value);
             ViewOfBusinessObjectCollection.Remove((T)value);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
@@ -226,6 +234,8 @@ namespace Habanero.Binding
         /// <param name="index">The zero-based index of the item to remove.</param>
         public void RemoveAt(int index)
         {
+            //TODO brett 24 Jan 2011: This is is what is called when the Delete key is hit.
+            // this should therefore delete the BO.
             ViewOfBusinessObjectCollection.RemoveAt(index);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }
@@ -276,7 +286,7 @@ namespace Habanero.Binding
         /// <param name="property">The <see cref="T:System.ComponentModel.PropertyDescriptor"/> to remove from the indexes used for searching. </param>
         public void RemoveIndex(PropertyDescriptor property)
         {
-            //Do Nothing
+            //Do Nothing See tests for full explanation of why
         }
 
         /// <summary>
@@ -285,7 +295,7 @@ namespace Habanero.Binding
         /// <param name="property">The <see cref="T:System.ComponentModel.PropertyDescriptor"/> to add to the indexes used for searching. </param>
         public void AddIndex(PropertyDescriptor property)
         {
-            //Do Nothing
+            //Do Nothing See tests for full explanation of why
         }
         #endregion
 
@@ -440,6 +450,7 @@ namespace Habanero.Binding
         {
             try
             {
+                //TODO brett 24 Jan 2011: Should set SortDescriptions
                 if (property is PropertyDescriptorPropDef)
                 {
                     this.ViewOfBusinessObjectCollection.Sort(property.Name, true, direction == ListSortDirection.Ascending);
@@ -484,22 +495,6 @@ namespace Habanero.Binding
             if (index >= array.Length) throw new ArgumentException("index");
             if (ViewOfBusinessObjectCollection != null) ViewOfBusinessObjectCollection.CopyTo(array, index);
         }
-/*
-        #region Implementation of IRaiseItemChangedEvents
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events.
-        /// </summary>
-        /// <returns>
-        /// true if the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events when one of its property values changes; otherwise, false.
-        /// </returns>
-        public bool RaisesItemChangedEvents
-        {
-            //TODO brett 19 Jan 2011: What I am assuming this does is that when your BO.Prop changes this event is raised resulting in the DataGrid Updating?
-            get { return true; }
-        }
-
-        #endregion*/
 
         #region ICancelAddNew
         /// <summary>
@@ -590,6 +585,7 @@ namespace Habanero.Binding
             QueryBuilder.PrepareCriteria(classDef, criteria);
             return criteria;
         }
+
         /// <summary>
         /// Removes the current filter applied to the List.
         /// </summary>
