@@ -53,12 +53,22 @@ namespace Habanero.Binding
         /// <summary>
         /// This constructs a new BindingListView with a business object collection
         /// </summary>
-        /// <param name="collection"></param>
-        public BindingListView(BusinessObjectCollection<T> collection)
+        /// <param name="boCol"></param>
+        public BindingListView(BusinessObjectCollection<T> boCol)
         {
-            if (collection == null) throw new ArgumentNullException("collection");
-            this.BusinessObjectCollection = collection;
-            this.ViewOfBusinessObjectCollection = collection.Clone();
+            if (boCol == null) throw new ArgumentNullException("collection");
+            this.BusinessObjectCollection = boCol;
+            this.ViewOfBusinessObjectCollection = boCol.Clone();
+        }
+
+        /// <summary>
+        /// This constructs a new BindingListView with a business object collection
+        /// </summary>
+        /// <param name="boCol"></param>
+        /// <param name="viewBuilder"></param>
+        public BindingListView(BusinessObjectCollection<T> boCol, IViewBuilder viewBuilder): this(boCol)
+        {
+            this.ViewBuilder = viewBuilder;
         }
         /// <summary>
         /// Returns the undelying <see cref="IBusinessObjectCollection"/>.
@@ -586,6 +596,7 @@ namespace Habanero.Binding
         #region IBindingListView.Filter
 
         private string _filter;
+
 
         /// <summary>
         /// Gets or sets the filter to be used to exclude items from the list of items returned by the data source

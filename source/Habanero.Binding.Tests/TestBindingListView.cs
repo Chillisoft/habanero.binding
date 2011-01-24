@@ -79,7 +79,7 @@ namespace Habanero.Binding.Tests
         public void Test_Construct_WithCollection_ShouldConstructWithCollection()
         {
             //---------------Set up test pack-------------------
-            var boCol = MockRepository.GenerateStub<BusinessObjectCollection<FakeBO>>();
+            var boCol = GenerateStub<BusinessObjectCollection<FakeBO>>();
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             var bindingListView = new BindingListView<FakeBO>(boCol);
@@ -88,6 +88,20 @@ namespace Habanero.Binding.Tests
             Assert.AreSame(boCol, bindingListView.BusinessObjectCollection);
         }
 
+        [Test]
+        public void Test_Construct_WithViewBuilder_ShouldSetViewBuilder()
+        {
+            //---------------Set up test pack-------------------
+
+            var boCol = GenerateStub<BusinessObjectCollection<FakeBO>>();
+            var viewBuilder = GenerateStub<IViewBuilder>();
+            //---------------Assert Precondition----------------
+
+            //---------------Execute Test ----------------------
+            var bindingListView = new BindingListView<FakeBO>(boCol, viewBuilder);
+            //---------------Test Result -----------------------
+            Assert.AreSame(viewBuilder, bindingListView.ViewBuilder);
+        }
         [Test]
         public void Test_Construct_WhenBusinessObjectCollectionIsNull_ShouldRaiseError()
         {
@@ -2427,6 +2441,12 @@ namespace Habanero.Binding.Tests
             businessObject.Save();
             return businessObject;
         }
+
+        private static T GenerateStub<T>() where T : class
+        {
+            return MockRepository.GenerateStub<T>();
+        }
+
     }
     internal class BindingListViewSpy<T> : BindingListView<T> where T : class, IBusinessObject, new()
     {
