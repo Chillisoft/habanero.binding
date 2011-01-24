@@ -78,7 +78,6 @@
     <Compile Include="TestBindingListRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBindingListView.cs" />
-    <Compile Include="TestBindingListViewNew.cs" />
     <Compile Include="TestDefaultViewBuilder.cs" />
     <Compile Include="TestObservableBO.cs" />
     <Compile Include="TestPropertyDescriptorID.cs" />

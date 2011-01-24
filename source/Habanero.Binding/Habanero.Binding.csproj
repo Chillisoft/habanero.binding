@@ -57,9 +57,8 @@
       <Link>Properties\AssemblyInfoShared.cs</Link>
     </Compile>
     <Compile Include="VirtualisedBindingList\BindingListRequest.cs" />
-    <Compile Include="BindingListView.cs" />
     <Compile Include="BindingListViewLogger.cs" />
-    <Compile Include="BindingListViewNew.cs" />
+    <Compile Include="BindingListView.cs" />
     <Compile Include="DataFilter.cs" />
     <Compile Include="FilterOperator.cs" />
     <Compile Include="ObservableBusinessObject.cs" />

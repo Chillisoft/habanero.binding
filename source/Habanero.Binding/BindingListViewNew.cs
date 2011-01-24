@@ -30,7 +30,7 @@ namespace Habanero.Binding
     /// underlying Business Object Collection.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BindingListViewNew<T> : ITypedList, ICancelAddNew, IBindingListView, IRaiseItemChangedEvents
+    public class BindingListView<T> : ITypedList, ICancelAddNew, IBindingListView, IRaiseItemChangedEvents
         where T : class, IBusinessObject, new()
     {
         private IViewBuilder _viewBuilder;
@@ -46,7 +46,7 @@ namespace Habanero.Binding
         /// <summary>
         /// New object constructs a default BindingListView
         /// </summary>
-        public BindingListViewNew() : this(new BusinessObjectCollection<T>())
+        public BindingListView() : this(new BusinessObjectCollection<T>())
         {
         }
 
@@ -54,7 +54,7 @@ namespace Habanero.Binding
         /// This constructs a new BindingListView with a business object collection
         /// </summary>
         /// <param name="collection"></param>
-        public BindingListViewNew(BusinessObjectCollection<T> collection)
+        public BindingListView(BusinessObjectCollection<T> collection)
         {
             if (collection == null) throw new ArgumentNullException("collection");
             this.BusinessObjectCollection = collection;
@@ -672,6 +672,66 @@ namespace Habanero.Binding
         #endregion
     }
 
+    /// <summary>
+    /// A generic comparer for List&lt;T&gt;.Sort(IComparer).
+    /// For strings, use <see cref="System.StringComparer"/>
+    /// </summary>
+    public class GenericComparer<T> : IComparer<T>
+    {
+        private readonly ListSortDescriptionCollection _sortDescriptions;
+
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="sortDescriptions">
+        /// The <see cref="ListSortDescriptionCollection"/> which should be
+        /// used as the bassi for comparison.
+        /// </param>
+        public GenericComparer(ListSortDescriptionCollection sortDescriptions)
+        {
+            _sortDescriptions = sortDescriptions;
+        }
+
+        #region IComparer<T> Members
+
+        /// <summary>
+        /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+        /// </summary>
+        public int Compare(T x, T y)
+        {
+            for (int i = 0; i < _sortDescriptions.Count; i++)
+            {
+                var propertyDescriptor = _sortDescriptions[i].PropertyDescriptor;
+                object valueX = propertyDescriptor.GetValue(x);
+                object valueY = propertyDescriptor.GetValue(y);
+
+                bool xIsNull = valueX == DBNull.Value || valueX == null;
+                bool yIsNull = valueY == DBNull.Value || valueY == null;
+
+                int result;
+                if (xIsNull)
+                {
+                    if (yIsNull) result = 0;
+                    else result = -1;
+                }
+                else
+                {
+                    if (yIsNull) result = 1;
+                    else
+                    {
+                        IComparable comparableX = valueX as IComparable;
+                        IComparable comparableY = valueY as IComparable;
+                        result = comparableX.CompareTo(comparableY);
+                    }
+                }
+                if (result != 0)
+                    return _sortDescriptions[i].SortDirection == ListSortDirection.Ascending ? result : -result;
+            }
+            return 0;
+        }
+
+        #endregion
+    }
     internal static class CriteriaExtensions
     {
 

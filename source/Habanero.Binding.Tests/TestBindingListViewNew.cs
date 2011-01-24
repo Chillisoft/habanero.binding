@@ -15,42 +15,8 @@ using Habanero.Testability.Helpers;
 
 namespace Habanero.Binding.Tests
 {
-    internal class BindingListViewNewSpy<T> : BindingListViewNew<T> where T : class, IBusinessObject, new()
-    {
-        public BindingListViewNewSpy(BusinessObjectCollection<T> boCol): base(boCol)
-        {
-        }
-
-        public BusinessObjectCollection<T> GetViewOfBusinessObjectCollection()
-        {
-            return base.ViewOfBusinessObjectCollection;
-        }
-    }
-
-    internal class PropertyDescriptorCollectionStub : PropertyDescriptorCollection
-    {
-        public PropertyDescriptorCollectionStub() : base(new PropertyDescriptor[0])
-        {
-        }
-    }
-
-    // ReSharper disable ParameterTypeCanBeEnumerable.Global
-    internal static class BLVTestingExtensions
-    {
-
-        public static void ShouldNotContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
-        {
-            ((IEnumerable<FakeBO>)boCol).ShouldNotContain(newBO);
-        }
-        public static void ShouldContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
-
-        {
-            ((IEnumerable<FakeBO>)boCol).ShouldContain(newBO);
-        }
-    }
-
-    [TestFixture, System.Runtime.InteropServices.GuidAttribute("A6134987-3E6A-4AAC-87CB-FF60CC588454")]
-    public class TestBindingListViewNew
+    [TestFixture]
+    public class TestBindingListView
     {
         [SetUp]
         public void SetupTest()
@@ -83,7 +49,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var bindingListView = new BindingListViewNew<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>();
             //---------------Test Result -----------------------
             Assert.IsNotNull(bindingListView);
         }
@@ -94,7 +60,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var bindingListView = new BindingListViewNew<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>();
             //---------------Test Result -----------------------
             Assert.IsNotNull(bindingListView);
             Assert.IsTrue(bindingListView.AllowEdit);
@@ -116,7 +82,7 @@ namespace Habanero.Binding.Tests
             var boCol = MockRepository.GenerateStub<BusinessObjectCollection<FakeBO>>();
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Test Result -----------------------
             Assert.IsNotNull(bindingListView);
             Assert.AreSame(boCol, bindingListView.BusinessObjectCollection);
@@ -130,7 +96,7 @@ namespace Habanero.Binding.Tests
             //---------------Execute Test ----------------------
             try
             {
-                new BindingListViewNew<FakeBO>(null);
+                new BindingListView<FakeBO>(null);
                 Assert.Fail("Expected to throw an ArgumentNullException");
             }
                 //---------------Test Result -----------------------
@@ -152,7 +118,7 @@ namespace Habanero.Binding.Tests
         public void Test_GetListName_ShouldReturnBindingListName()
         {
             //---------------Set up test pack-------------------
-            var bindingListView = new BindingListViewNew<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>();
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
@@ -165,7 +131,7 @@ namespace Habanero.Binding.Tests
         public void Test_GetItemProperties_WhenNoViewBulderSet_ShouldReturnPropertiesFromTheDefaultViewBuilder()
         {
             //---------------Set up test pack-------------------
-            var bindingListView = new BindingListViewNew<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>();
             var viewBuilder = MockRepository.GenerateStub<IViewBuilder>();
             var expectedPropDescriptors = new PropertyDescriptorCollectionStub();
             viewBuilder.Stub(builder => builder.GetPropertyDescriptors()).Return(expectedPropDescriptors);
@@ -189,7 +155,7 @@ namespace Habanero.Binding.Tests
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
-            var bindingListView = new BindingListViewNew<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>();
             //---------------Test Result -----------------------
             Assert.IsInstanceOf<UIDefViewBuilder<FakeBO>>(bindingListView.ViewBuilder);
         }
@@ -198,7 +164,7 @@ namespace Habanero.Binding.Tests
         public void Test_ViewBuilder_WhenViewBulderSetToNull_ShouldReturnUIDefViewBuilder()
         {
             //---------------Set up test pack-------------------
-            var bindingListView = new BindingListViewNew<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>();
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
@@ -211,7 +177,7 @@ namespace Habanero.Binding.Tests
         public void Test_SetViewBuilder_ShouldSetBuilder()
         {
             //---------------Set up test pack-------------------
-            var bindingListView = new BindingListViewNew<FakeBO>();
+            var bindingListView = new BindingListView<FakeBO>();
             var expectedViewBuilder = MockRepository.GenerateStub<IViewBuilder>();
             //---------------Assert Precondition----------------
             Assert.AreNotSame(expectedViewBuilder, bindingListView.ViewBuilder);
@@ -277,7 +243,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = MockRepository.GenerateStub<BusinessObjectCollection<FakeBO>>();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
             var isSynchronized = bindingListView.IsSynchronized;
@@ -290,7 +256,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = MockRepository.GenerateStub<BusinessObjectCollection<FakeBO>>();
-            BindingListViewNewSpy<FakeBO> bindingListView = new BindingListViewNewSpy<FakeBO>(boCol);
+            BindingListViewSpy<FakeBO> bindingListView = new BindingListViewSpy<FakeBO>(boCol);
             var expectedSyncRoot = ((IBusinessObjectCollection)bindingListView.GetViewOfBusinessObjectCollection()).SyncRoot;
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
@@ -308,7 +274,7 @@ namespace Habanero.Binding.Tests
             CreateSavedBOs(5);
             var boCol = new BusinessObjectCollection<FakeBO>();
             boCol.LoadAll();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -326,7 +292,7 @@ namespace Habanero.Binding.Tests
             var boCol = new BusinessObjectCollection<FakeBO>();
             int noOfRecords;
             boCol.LoadWithLimit("", "", 0, 3, out noOfRecords);
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, boCol.Count);
             Assert.AreEqual(5, noOfRecords);
@@ -347,7 +313,7 @@ namespace Habanero.Binding.Tests
             var boCol = new BusinessObjectCollection<FakeBO>();
             int noOfRecords;
             boCol.LoadWithLimit("", "", 0, 3, out noOfRecords);
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, boCol.Count);
             Assert.AreEqual(5, noOfRecords);
@@ -373,7 +339,7 @@ namespace Habanero.Binding.Tests
             CreateSavedBOs(5);
             var boCol = new BusinessObjectCollection<FakeBO>();
             boCol.LoadAll();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, boCol.Count);
             Assert.AreEqual(5, bindingListView.Count);
@@ -396,7 +362,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -410,7 +376,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptor = GetDescriptor(bindingListView, "FakeBOName");
             bindingListView.ApplySort(descriptor, ListSortDirection.Ascending);
             const int index = 2;
@@ -429,7 +395,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
@@ -450,7 +416,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, boCol.Count);
             Assert.AreEqual(5, bindingListView.Count);
@@ -466,7 +432,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
@@ -482,7 +448,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var fakeBO = new FakeBO();
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, bindingListView.Count);
@@ -498,7 +464,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var fakeBO = new FakeBO();
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, boCol.Count);
@@ -516,7 +482,7 @@ namespace Habanero.Binding.Tests
             CreateSavedBOs(5);
             BusinessObjectCollection<FakeBO> boCol = new BusinessObjectCollection<FakeBO>();
             boCol.LoadAll();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, boCol.Count);
             //---------------Execute Test ----------------------
@@ -532,7 +498,7 @@ namespace Habanero.Binding.Tests
             CreateSavedBOs(5);
             var boCol = new BusinessObjectCollection<FakeBO>();
             boCol.LoadAll();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, boCol.Count);
             //---------------Execute Test ----------------------
@@ -549,7 +515,7 @@ namespace Habanero.Binding.Tests
             CreateSavedBOs(1);
             var boCol = new BusinessObjectCollection<FakeBO>();
             boCol.LoadAll();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(1, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -569,7 +535,7 @@ namespace Habanero.Binding.Tests
             CreateSavedBOs(1);
             var boCol = new BusinessObjectCollection<FakeBO>();
             boCol.LoadAll();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(1, boCol.Count);
             //---------------Execute Test ----------------------
@@ -585,7 +551,7 @@ namespace Habanero.Binding.Tests
             CreateSavedBOs(5);
             var boCol = new BusinessObjectCollection<FakeBO>();
             boCol.LoadAll();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, boCol.Count);
             Assert.AreEqual(5, bindingListView.Count);
@@ -601,7 +567,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
@@ -618,7 +584,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var indexRemoved = -1;
             bindingListView.ListChanged += (sender, args) => indexRemoved = args.NewIndex;
             const int expectedIndex = 2;
@@ -637,7 +603,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWithOneItem();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var itemAtZeroIndex = bindingListView[0];
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
@@ -651,7 +617,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var itemAtIndex2 = bindingListView[2];
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
@@ -665,7 +631,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             CreateSavedBO();
             var boCol = GetLoadedCollection<FakeBO>();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(1, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -682,7 +648,7 @@ namespace Habanero.Binding.Tests
         {
             var boToBeRemoved = CreateSavedBO();
             var boCol = GetLoadedCollection<FakeBO>();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(1, boCol.Count);
             Assert.AreEqual(1, bindingListView.Count);
@@ -702,7 +668,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var itemToRemove = bindingListView[2];
             //---------------Assert Precondition----------------
             Assert.AreEqual(5, boCol.Count);
@@ -720,7 +686,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
@@ -738,7 +704,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
             var boToInsert = new FakeBO();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, boCol.Count);
             Assert.AreEqual(3, bindingListView.Count);
@@ -757,7 +723,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
             var boToInsert = new FakeBO();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, boCol.Count);
             Assert.AreEqual(3, bindingListView.Count);
@@ -777,7 +743,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
             var boToInsert = new FakeBO();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, boCol.Count);
             //---------------Execute Test ----------------------
@@ -793,7 +759,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
             var itemToInsert = new FakeBO();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, boCol.Count);
             Assert.AreEqual(3, bindingListView.Count);
@@ -816,7 +782,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
             var itemToInsert = new FakeBO();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
@@ -838,7 +804,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             try
             {
@@ -858,7 +824,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var array = new object[] {};
             //---------------Assert Precondition----------------
             try
@@ -878,7 +844,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var array = new object[] {};
             //---------------Assert Precondition----------------
             Assert.AreEqual(0, array.Length);
@@ -899,7 +865,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var array = new object[] {};
             //---------------Assert Precondition----------------
             Assert.AreEqual(0, array.Length);
@@ -920,7 +886,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var array = new object[4];
             const int index = 1;
             //---------------Assert Precondition----------------
@@ -943,7 +909,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             try
             {
@@ -963,7 +929,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
             var propertyDescriptor = descriptorCollection.Find("FakeBOName", true);
             //---------------Assert Precondition----------------
@@ -985,7 +951,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             const string key = "SomeFindvalue";
             PropertyDescriptor propertyDescriptor = new PropertyDescriptorStub("InvalidPropName");
             //---------------Assert Precondition----------------
@@ -1008,7 +974,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptorCollection = bindingListView.GetItemProperties(null);
             var propertyDescriptor = descriptorCollection.Find("FakeBOName", true);
             var key = propertyDescriptor.GetValue(boCol[1]);
@@ -1026,7 +992,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
             var boNotFound = new FakeBO {FakeBOName = GetRandomString()};
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptorCollection = bindingListView.GetItemProperties(null);
             var propertyDescriptor = descriptorCollection.Find("FakeBOName", true);
             var key = propertyDescriptor.GetValue(boNotFound);
@@ -1047,7 +1013,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
@@ -1063,7 +1029,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
@@ -1080,7 +1046,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.IsNull(bindingListView.SortDescriptions);
             //---------------Execute Test ----------------------
@@ -1094,7 +1060,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             PropertyDescriptor descriptor = null;
             var listSortDescription = new ListSortDescription(descriptor, ListSortDirection.Descending);
             var descriptions = new[] {listSortDescription};
@@ -1114,7 +1080,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             PropertyDescriptor descriptor = null;
             var listSortDescription1 = new ListSortDescription(descriptor, ListSortDirection.Descending);
             var listSortDescription2 = new ListSortDescription(descriptor, ListSortDirection.Descending);
@@ -1135,7 +1101,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.IsNull(bindingListView.SortDescriptions);
             //---------------Execute Test ----------------------
@@ -1149,7 +1115,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
             var listSortDescription = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
             var descriptions = new[] {listSortDescription};
@@ -1170,7 +1136,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
             var listSortDescription1 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
             var listSortDescription2 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
@@ -1191,7 +1157,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
             var listSortDescription1 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
             var listSortDescription2 = new ListSortDescription(descriptorCollection[0], ListSortDirection.Descending);
@@ -1211,7 +1177,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol) {SortDescriptions = null};
+            var bindingListView = new BindingListView<FakeBO>(boCol) {SortDescriptions = null};
             //---------------Assert Precondition----------------
             Assert.IsNull(bindingListView.SortDescriptions);
             //---------------Execute Test ----------------------
@@ -1225,7 +1191,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = new BusinessObjectCollection<FakeBO>();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var descriptionCollection = new ListSortDescriptionCollection(null);
             bindingListView.SortDescriptions = descriptionCollection;
             //---------------Assert Precondition----------------
@@ -1308,7 +1274,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var bindingListView = new BindingListView<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
             var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
             //---------------Assert Precondition----------------
             Assert.AreEqual("FakeBOName", sortByPropertyDescriptor.Name);
@@ -1346,7 +1312,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items("FakeBOName ASC");
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
 
             var listSortDescription = new ListSortDescription(sortByPropertyDescriptor, ListSortDirection.Descending);
@@ -1372,7 +1338,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var bindingListView = new BindingListView<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
             var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
             var listSortDescription = new ListSortDescription(sortByPropertyDescriptor, ListSortDirection.Ascending);
             var sortDescriptions = new ListSortDescriptionCollection(new[] { listSortDescription });
@@ -1396,7 +1362,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var bindingListView = new BindingListView<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
             var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
             var listSortDescription = new ListSortDescription(sortByPropertyDescriptor, ListSortDirection.Ascending);
             var sortDescriptions = new ListSortDescriptionCollection(new[] { listSortDescription });
@@ -1414,7 +1380,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var bindingListView = new BindingListView<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
             var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
             var listSortDescription = new ListSortDescription(sortByPropertyDescriptor, ListSortDirection.Ascending);
             var sortDescriptions = new ListSortDescriptionCollection(new[] { listSortDescription });
@@ -1430,7 +1396,7 @@ namespace Habanero.Binding.Tests
         }
 
         /// <summary>
-        /// This is fundamental to the Concept of a Bindig List View see (<see cref="BindingListViewNew{T}"/>
+        /// This is fundamental to the Concept of a Bindig List View see (<see cref="BindingListView{T}"/>
         ///  i.e. the binding list view is a View of the underlying collection.
         /// It references the same <see cref="IBusinessObject"/>s but it does so
         /// in a seperate collection. Filtering, Sorting should not affect the
@@ -1441,7 +1407,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var bindingListView = new BindingListView<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
             var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
             var listSortDescription = new ListSortDescription(sortByPropertyDescriptor, ListSortDirection.Ascending);
             var sortDescriptions = new ListSortDescriptionCollection(new[] { listSortDescription });
@@ -1475,7 +1441,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            var bindingListView = new BindingListView<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
             var sortByPropertyDescriptor = GetDescriptor(bindingListView, "FakeBOName");
             var listSortDescription = new ListSortDescription(sortByPropertyDescriptor, ListSortDirection.Ascending);
             var sortDescriptions = new ListSortDescriptionCollection(new[] { listSortDescription });
@@ -1512,7 +1478,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
 
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -1527,7 +1493,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
 
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -1548,7 +1514,7 @@ namespace Habanero.Binding.Tests
             //---------------Set up test pack-------------------
 
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
@@ -1566,7 +1532,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew();
             //---------------Assert Precondition----------------
             Assert.AreSame(newBO, bindingListView[3]);
@@ -1593,7 +1559,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew();
             //---------------Assert Precondition----------------
             Assert.AreSame(newBO, bindingListView[3]);
@@ -1613,7 +1579,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew() as FakeBO;
             //---------------Assert Precondition----------------
             Assert.IsNotNull(newBO);
@@ -1634,7 +1600,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew() as FakeBO;
             const int endNewItemIndex = 2;
             var itemAtIndex = (FakeBO)bindingListView[endNewItemIndex];
@@ -1655,7 +1621,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew() as FakeBO;
             //---------------Assert Precondition----------------
             Assert.IsNotNull(newBO);
@@ -1674,7 +1640,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew() as FakeBO;
             const int newItemIndex = 3;
             //---------------Assert Precondition----------------
@@ -1695,7 +1661,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             const int newItemIndex = 3;
             var newBO = bindingListView.AddNew() as FakeBO;
             var listChangedFired = false;
@@ -1718,7 +1684,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew() as FakeBO;
             const int cancelNewIndex = 2;
             var itemAtIndex = bindingListView[cancelNewIndex] as FakeBO;
@@ -1741,7 +1707,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew() as FakeBO;
             const int cancelNewIndex = 2;
             var itemAtIndex = bindingListView[cancelNewIndex] as FakeBO;
@@ -1765,7 +1731,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             const int cancelNewIndex = 2;
             var newBO = bindingListView.AddNew() as FakeBO;
             var listChangedFired = false;
@@ -1787,7 +1753,7 @@ namespace Habanero.Binding.Tests
         public void Test_CancelNew_WhenNewItemWasEndNewed_ShouldNotMarkFromDelete()
         {
             var boCol = GetCollectionWith3Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var bindingListView = new BindingListView<FakeBO>(boCol);
             var newBO = bindingListView.AddNew() as FakeBO;
 
             const int newItemIndex = 3;
@@ -1817,7 +1783,7 @@ namespace Habanero.Binding.Tests
             const string expectedFilter = "FakeBOName = 1";
             //---------------Assert Precondition----------------
             //---------------Execute Test ----------------------
-            var list = new BindingListViewNew<FakeBO> { Filter = expectedFilter };
+            var list = new BindingListView<FakeBO> { Filter = expectedFilter };
             var actualFilter = list.Filter;
             //---------------Test Result -----------------------
             Assert.AreEqual(expectedFilter, actualFilter);
@@ -1830,7 +1796,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO {FakeBOName = "1"};
             var fakeBO2 = new FakeBO {FakeBOName = "2"};
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol);
+            var bindingList = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -1849,7 +1815,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO {FakeBOName = "1"};
             var fakeBO2 = new FakeBO {FakeBOName = "2"};
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol);
+            var bindingList = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -1869,7 +1835,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO {FakeBOName = "1"};
             var fakeBO2 = new FakeBO {FakeBOName = "2"};
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol);
+            var bindingList = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -1888,7 +1854,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO { FakeBOName = "1" };
             var fakeBO2 = new FakeBO { FakeBOName = "2" };
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol) {Filter = filter};
+            var bindingList = new BindingListView<FakeBO>(boCol) {Filter = filter};
             //---------------Assert Precondition----------------
             Assert.AreEqual(filter, bindingList.Filter);
             Assert.AreEqual(1, bindingList.Count);
@@ -1907,7 +1873,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO { FakeBOName = "1" };
             var fakeBO2 = new FakeBO { FakeBOName = "2" };
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol) {Filter = filter};
+            var bindingList = new BindingListView<FakeBO>(boCol) {Filter = filter};
             //---------------Assert Precondition----------------
             Assert.AreEqual(filter, bindingList.Filter);
             Assert.AreEqual(1, bindingList.Count);
@@ -1928,7 +1894,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO { FakeBOName = "1" };
             var fakeBO2 = new FakeBO { FakeBOName = "2" };
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol) { Filter = filter1 };
+            var bindingList = new BindingListView<FakeBO>(boCol) { Filter = filter1 };
             //---------------Assert Precondition----------------
             Assert.AreEqual(filter1, bindingList.Filter);
             Assert.AreEqual(1, bindingList.Count);
@@ -1950,7 +1916,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO { FakeBOName = "SomeFakeBO" };
             var fakeBO2 = new FakeBO { FakeBOName = "AnotherFakeBO" };
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol);
+            var bindingList = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -1968,7 +1934,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBOW5Props { FakeBONumber = 11 };
             var fakeBO2 = new FakeBOW5Props { FakeBONumber = 22 };
             var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingList = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -1986,7 +1952,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBOW5Props { FakeBODate = new DateTime(2000,1,1) };
             var fakeBO2 = new FakeBOW5Props { FakeBODate = new DateTime(2000,1,2) };
             var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingList = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -2004,7 +1970,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBOW5Props { FakeBODecimal = new decimal(10.00) };
             var fakeBO2 = new FakeBOW5Props { FakeBODecimal = new decimal(10.50) };
             var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingList = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -2022,7 +1988,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO { FakeBOName = "SomeFakeBO" };
             var fakeBO2 = new FakeBO { FakeBOName = "AnotherFakeBO" };
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var bindingList = new BindingListViewNew<FakeBO>(boCol);
+            var bindingList = new BindingListView<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(2, bindingList.Count);
             Assert.AreEqual(2, boCol.Count);
@@ -2042,7 +2008,7 @@ namespace Habanero.Binding.Tests
             var fakeBO2 = new FakeBOW5Props { FakeBONumber = 1 };
             var fakeBO3 = new FakeBOW5Props { FakeBONumber = 22 };
             var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2, fakeBO3 };
-            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingList = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingList.Count);
             Assert.AreEqual(3, boCol.Count);
@@ -2063,7 +2029,7 @@ namespace Habanero.Binding.Tests
             var fakeBOId = new Guid("7AD655A7-DF06-451B-848A-25CBEBDBBC8A");
             var boToFind = CreateSavedFakeBOW5Prop(fakeBOId);
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(4, bindingListView.Count);
             Assert.AreEqual(fakeBOId, boToFind.FakeBOID);
@@ -2084,7 +2050,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop("BBB");
             CreateSavedFakeBOW5Prop("CCC");
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2103,7 +2069,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop(new DateTime(2010, 1, 2));
             CreateSavedFakeBOW5Prop(new DateTime(2010, 1, 3));
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2121,7 +2087,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop(2);
             CreateSavedFakeBOW5Prop(3);
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2139,7 +2105,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop(new Guid("8AD655A7-DF06-451B-848A-25CBEBDBBC8A"));
             CreateSavedFakeBOW5Prop(new Guid("9AD655A7-DF06-451B-848A-25CBEBDBBC8A"));
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2157,7 +2123,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop("BBB");
             var boToFind = CreateSavedFakeBOW5Prop("CCC");
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2175,7 +2141,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop("BBB", new DateTime(2010, 1, 2), GetRandomGuid(), 1);
             var boToFind = CreateSavedFakeBOW5Prop("CCC", new DateTime(2010, 1, 3), GetRandomGuid(), 1);
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2193,7 +2159,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop(2);
             var boToFind = CreateSavedFakeBOW5Prop(3);
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2211,7 +2177,7 @@ namespace Habanero.Binding.Tests
             var boToFind = CreateSavedFakeBOW5Prop("ABB");
             CreateSavedFakeBOW5Prop("CCC");
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             StringAssert.Contains("B", boToFind.FakeBOName);
@@ -2248,7 +2214,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop("AAA", new DateTime(2010, 1, 2), GetRandomGuid(), 2);
             CreateSavedFakeBOW5Prop("CCC", new DateTime(2010, 1, 3), GetRandomGuid(), 3);
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2266,7 +2232,7 @@ namespace Habanero.Binding.Tests
             CreateSavedFakeBOW5Prop("AAA", new DateTime(2010, 1, 2), GetRandomGuid(), 2);
             CreateSavedFakeBOW5Prop("CCC", new DateTime(2010, 1, 3), GetRandomGuid(), 3);
             var boCol = GetLoadedCollection<FakeBOW5Props>();
-            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            var bindingListView = new BindingListView<FakeBOW5Props>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             //---------------Execute Test ----------------------
@@ -2281,7 +2247,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             const string initialFilter = "FakeBOName = 1";
-            var list = new BindingListViewNew<FakeBO> { Filter = initialFilter };
+            var list = new BindingListView<FakeBO> { Filter = initialFilter };
             //---------------Assert Precondition----------------
             Assert.AreEqual(initialFilter, list.Filter);
             //---------------Execute Test ----------------------
@@ -2298,7 +2264,7 @@ namespace Habanero.Binding.Tests
             var fakeBO1 = new FakeBO { FakeBOName = "1" };
             var fakeBO2 = new FakeBO { FakeBOName = "2" };
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
-            var list = new BindingListViewNew<FakeBO>(boCol) { Filter = initialFilter };
+            var list = new BindingListView<FakeBO>(boCol) { Filter = initialFilter };
             //---------------Assert Precondition----------------
             Assert.AreEqual(initialFilter, list.Filter);
             Assert.AreEqual(1, list.Count);
@@ -2318,7 +2284,7 @@ namespace Habanero.Binding.Tests
         public void Test_RaisesItemChangedEvents_ShouldReturnTrue()
         {
             //---------------Set up test pack-------------------
-            var list = new BindingListViewNew<FakeBO>();
+            var list = new BindingListView<FakeBO>();
             //---------------Assert Precondition----------------
 
             //---------------Execute Test ----------------------
@@ -2411,9 +2377,9 @@ namespace Habanero.Binding.Tests
             return descriptorCollection.Find(propName, true);
         }
 
-        private static BindingListViewNew<FakeBO> CreateBindingListView(BusinessObjectCollection<FakeBO> boCol)
+        private static BindingListView<FakeBO> CreateBindingListView(BusinessObjectCollection<FakeBO> boCol)
         {
-            return new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
+            return new BindingListView<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
         }
         private static string GetRandomString()
         {
@@ -2462,6 +2428,39 @@ namespace Habanero.Binding.Tests
             return businessObject;
         }
     }
+    internal class BindingListViewSpy<T> : BindingListView<T> where T : class, IBusinessObject, new()
+    {
+        public BindingListViewSpy(BusinessObjectCollection<T> boCol)
+            : base(boCol)
+        {
+        }
 
+        public BusinessObjectCollection<T> GetViewOfBusinessObjectCollection()
+        {
+            return base.ViewOfBusinessObjectCollection;
+        }
+    }
+
+    internal class PropertyDescriptorCollectionStub : PropertyDescriptorCollection
+    {
+        public PropertyDescriptorCollectionStub()
+            : base(new PropertyDescriptor[0])
+        {
+        }
+    }
+
+    // ReSharper disable ParameterTypeCanBeEnumerable.Global
+    internal static class BLVTestingExtensions
+    {
+
+        public static void ShouldNotContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
+        {
+            ((IEnumerable<FakeBO>)boCol).ShouldNotContain(newBO);
+        }
+        public static void ShouldContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
+        {
+            ((IEnumerable<FakeBO>)boCol).ShouldContain(newBO);
+        }
+    }
 // ReSharper restore ParameterTypeCanBeEnumerable.Global
 }
