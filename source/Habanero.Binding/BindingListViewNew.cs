@@ -167,7 +167,9 @@ namespace Habanero.Binding
             set
             {
                 //TODO brett 24 Jan 2011: Should this update the BOCol as well?
-                ViewOfBusinessObjectCollection[index] = (T)value;
+                var indexInUnderlyingCollection = this.BusinessObjectCollection.IndexOf(this.ViewOfBusinessObjectCollection[index]);
+                this.ViewOfBusinessObjectCollection[index] = (T)value;
+                this.BusinessObjectCollection[indexInUnderlyingCollection] = (T) value;
                 OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
         }
@@ -222,7 +224,6 @@ namespace Habanero.Binding
         /// <param name="value">The object to remove from the <see cref="IBusinessObjectCollection"/>.</param>
         public void Remove(object value)
         {
-            //TODO brett 24 Jan 2011: This is h
             var index = IndexOf(value);
             ViewOfBusinessObjectCollection.Remove((T)value);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
@@ -230,13 +231,14 @@ namespace Habanero.Binding
 
         /// <summary>
         /// Removes the <see cref="IBusinessObjectCollection"/> item at the specified index.
+        /// This is the code that is actually hit when the Delete Key is pressed from a Data Grid View.
         /// </summary>
         /// <param name="index">The zero-based index of the item to remove.</param>
         public void RemoveAt(int index)
         {
-            //TODO brett 24 Jan 2011: This is is what is called when the Delete key is hit.
-            // this should therefore delete the BO.
-            ViewOfBusinessObjectCollection.RemoveAt(index);
+            var boToDelete = ViewOfBusinessObjectCollection[index];
+            boToDelete.MarkForDelete();
+            boToDelete.Save();
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }
 
@@ -450,7 +452,7 @@ namespace Habanero.Binding
         {
             try
             {
-                //TODO brett 24 Jan 2011: Should set SortDescriptions
+                this.SortDescriptions = CreateSortDescriptions(property, direction);
                 if (property is PropertyDescriptorPropDef)
                 {
                     this.ViewOfBusinessObjectCollection.Sort(property.Name, true, direction == ListSortDirection.Ascending);
@@ -465,6 +467,12 @@ namespace Habanero.Binding
             {
                 GlobalRegistry.UIExceptionNotifier.Notify(ex, "Error", "Error");
             }
+        }
+
+        private static ListSortDescriptionCollection CreateSortDescriptions(PropertyDescriptor property, ListSortDirection direction)
+        {
+            var listSortDescription = new ListSortDescription(property, direction);
+            return new ListSortDescriptionCollection(new[] { listSortDescription });
         }
 
         /// <summary>
@@ -566,17 +574,28 @@ namespace Habanero.Binding
             set
             {
                 _filter = value;
-
-                var col = new BusinessObjectCollection<T>();
-                var criteria = GetCriteriaObject(ClassDef.ClassDefs[typeof (T)], _filter);
-
-                foreach (var bo in this.ViewOfBusinessObjectCollection)
+                if (!String.IsNullOrEmpty(value))
                 {
-                    if (criteria.IsCriteriaMatch(bo)) col.Add(bo);
+                    var col = new BusinessObjectCollection<T>();
+                    var criteria = GetCriteriaObject(ClassDef.ClassDefs[typeof(T)], _filter);
+
+                    foreach (var bo in this.BusinessObjectCollection)
+                    {
+                        if (criteria.IsCriteriaMatch(bo)) col.Add(bo);
+                    }
+                    col.SelectQuery.Criteria = criteria;
+                    this.ViewOfBusinessObjectCollection = col;
                 }
-                col.SelectQuery.Criteria = criteria;
-                this.ViewOfBusinessObjectCollection = col;
+                else
+                {
+                    ResetViewCollection();   
+                }
             }
+        }
+
+        private void ResetViewCollection()
+        {
+            this.ViewOfBusinessObjectCollection = this.BusinessObjectCollection.Clone();
         }
 
         private static Criteria GetCriteriaObject(IClassDef classDef, string criteriaString)

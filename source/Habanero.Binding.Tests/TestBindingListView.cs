@@ -191,6 +191,7 @@ namespace Habanero.Binding.Tests
             Assert.IsNotNull(fakeBO);
         }
 
+#pragma warning disable 168
         [Test]
         public void Test_GetFourthBO_WhenCollectioHas5And3Loaded_ShouldThrowError()
         {
@@ -216,7 +217,7 @@ namespace Habanero.Binding.Tests
                 StringAssert.Contains("Index was out of range. Must be non-negative and less than the size of the collection.", ex.Message);
             }
         }
-
+#pragma warning restore 168
         [Test]
         public void Test_GetSixthBO_WhenCollectioHas5_ShouldThrowError()
         {

@@ -229,10 +229,19 @@ namespace Habanero.Binding.Tests
             get { return GetPropertyValue<int>("FakeBONumber"); }
             set { SetPropertyValue("FakeBONumber", value); }
         }
+        public string FakeBONumberAsString
+        {
+            get { return this.FakeBONumber.ToString(); }
+        }
         public DateTime FakeBODate
         {
             get { return GetPropertyValue<DateTime>("FakeBODate"); }
             set { SetPropertyValue("FakeBODate", value); }
+        }
+        public Decimal FakeBODecimal
+        {
+            get { return GetPropertyValue<Decimal>("FakeBODecimal"); }
+            set { SetPropertyValue("FakeBODecimal", value); }
         }
         public Guid FakeBOID
         {

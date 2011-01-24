@@ -15,7 +15,41 @@ using Habanero.Testability.Helpers;
 
 namespace Habanero.Binding.Tests
 {
-    [TestFixture]
+    internal class BindingListViewNewSpy<T> : BindingListViewNew<T> where T : class, IBusinessObject, new()
+    {
+        public BindingListViewNewSpy(BusinessObjectCollection<T> boCol): base(boCol)
+        {
+        }
+
+        public BusinessObjectCollection<T> GetViewOfBusinessObjectCollection()
+        {
+            return base.ViewOfBusinessObjectCollection;
+        }
+    }
+
+    internal class PropertyDescriptorCollectionStub : PropertyDescriptorCollection
+    {
+        public PropertyDescriptorCollectionStub() : base(new PropertyDescriptor[0])
+        {
+        }
+    }
+
+    // ReSharper disable ParameterTypeCanBeEnumerable.Global
+    internal static class BLVTestingExtensions
+    {
+
+        public static void ShouldNotContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
+        {
+            ((IEnumerable<FakeBO>)boCol).ShouldNotContain(newBO);
+        }
+        public static void ShouldContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
+
+        {
+            ((IEnumerable<FakeBO>)boCol).ShouldContain(newBO);
+        }
+    }
+
+    [TestFixture, System.Runtime.InteropServices.GuidAttribute("A6134987-3E6A-4AAC-87CB-FF60CC588454")]
     public class TestBindingListViewNew
     {
         [SetUp]
@@ -357,23 +391,39 @@ namespace Habanero.Binding.Tests
             }
         }
 
-        [Ignore("What triggers this. Should it only appy to BOCol on like an EndEdit or somthing")] //TODO Brett 23 Jan 2011: Ignored Test - What triggers this. Should it only appy to BOCol on like an EndEdit or somthing
         [Test]
-        public void Test_Set_Item_ShouldSetItemInCollection()
+        public void Test_Set_Item_ShouldSetItemInBindingList()
         {
             //---------------Set up test pack-------------------
             var boCol = GetCollectionWith5Items();
             var bindingListView = new BindingListViewNew<FakeBO>(boCol);
             //---------------Assert Precondition----------------
-            Assert.AreEqual(5, boCol.Count);
+            Assert.AreEqual(5, bindingListView.Count);
             //---------------Execute Test ----------------------
             var newFakeBo = new FakeBO();
             bindingListView[2] = newFakeBo;
             //---------------Test Result -----------------------
             Assert.AreSame(newFakeBo, bindingListView[2]);
-            Assert.AreSame(newFakeBo, boCol[2]);
         }
-
+        [Test]
+        public void Test_Set_Item_ShouldSetItemInUnderlyingCollection()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith5Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var descriptor = GetDescriptor(bindingListView, "FakeBOName");
+            bindingListView.ApplySort(descriptor, ListSortDirection.Ascending);
+            const int index = 2;
+            var origItemAtIndex = bindingListView[index];
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(5, boCol.Count);
+            //---------------Execute Test ----------------------
+            var newFakeBo = new FakeBO();
+            bindingListView[index] = newFakeBo;
+            //---------------Test Result -----------------------
+            boCol.ShouldContain(newFakeBo);
+            boCol.ShouldNotContain(origItemAtIndex);
+        }
         [Test]
         public void Test_Set_Item_ShouldRaise_ListChangedEvent()
         {
@@ -491,9 +541,29 @@ namespace Habanero.Binding.Tests
             Assert.IsFalse(contains);
         }
 
-        [Ignore("What triggers this. Should it only appy to BOCol on like an EndEdit or somthing")] //TODO Brett 23 Jan 2011: Ignored Test - What triggers this. Should it only appy to BOCol on like an EndEdit or somthing. This is triggered by a user hitting the delete key.
+
         [Test]
-        public void Test_Remove_WhenColHas1_ShouldRemoveBusinessObject()
+        public void Test_Remove_WhenColHas1_ShouldRemoveBusinessObjectFromBindingList()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedBOs(1);
+            var boCol = new BusinessObjectCollection<FakeBO>();
+            boCol.LoadAll();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(1, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Remove(bindingListView[0]);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(0, bindingListView.Count);
+        }
+        /// <summary>
+        /// This does not affect the Business Object or the underlying Business Object Collection
+        /// as the Data Grid does not call this method. If you want to remove or delete the Business Obect
+        /// in the underlying collection, please use the RemoveAt instead. (See <see cref="Test_RemoveAt_ShouldDeleteBusinessObject"/>
+        /// </summary>
+        [Test]
+        public void Test_Remove_WhenColHas1_ShouldNotRemoveFromUnderlyingCollection()
         {
             //---------------Set up test pack-------------------
             CreateSavedBOs(1);
@@ -502,15 +572,12 @@ namespace Habanero.Binding.Tests
             var bindingListView = new BindingListViewNew<FakeBO>(boCol);
             //---------------Assert Precondition----------------
             Assert.AreEqual(1, boCol.Count);
-            Assert.AreEqual(1, bindingListView.Count);
             //---------------Execute Test ----------------------
             bindingListView.Remove(bindingListView[0]);
             //---------------Test Result -----------------------
-            Assert.AreEqual(0, boCol.Count);
-            Assert.AreEqual(0, bindingListView.Count);
+            Assert.AreEqual(1, boCol.Count);
         }
 
-        [Ignore("What triggers this. Should it only appy to BOCol on like an EndEdit or somthing")] //TODO Brett 23 Jan 2011: Ignored Test - What triggers this. Should it only appy to BOCol on like an EndEdit or somthing
         [Test]
         public void Test_Remove_WhenColHas5_ShouldRemoveOneBusinessObject()
         {
@@ -525,36 +592,8 @@ namespace Habanero.Binding.Tests
             //---------------Execute Test ----------------------
             bindingListView.Remove(bindingListView[2]);
             //---------------Test Result -----------------------
-            Assert.AreEqual(4, boCol.Count);
+            Assert.AreEqual(5, boCol.Count);
             Assert.AreEqual(4, bindingListView.Count);
-        }
-
-        [Test]
-        public void Test_IndexOf_WhenColHas1_ShouldReturnIndexOfBO()
-        {
-            //---------------Set up test pack-------------------
-            var boCol = GetCollectionWithOneItem();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
-            var itemAtZeroIndex = bindingListView[0];
-            //---------------Assert Precondition----------------
-            //---------------Execute Test ----------------------
-            var indexOf = bindingListView.IndexOf(itemAtZeroIndex);
-            //---------------Test Result -----------------------
-            Assert.AreEqual(0, indexOf);
-        }
-
-        [Test]
-        public void Test_IndexOf_WhenColHas5AndThirdSelected_ShouldReturnIndexTwoOfBO()
-        {
-            //---------------Set up test pack-------------------
-            var boCol = GetCollectionWith5Items();
-            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
-            var itemAtIndex2 = bindingListView[2];
-            //---------------Assert Precondition----------------
-            //---------------Execute Test ----------------------
-            var indexOf = bindingListView.IndexOf(itemAtIndex2);
-            //---------------Test Result -----------------------
-            Assert.AreEqual(2, indexOf);
         }
 
         [Test]
@@ -593,27 +632,71 @@ namespace Habanero.Binding.Tests
             Assert.AreEqual(expectedIndex, indexRemoved);
         }
 
+        [Test]
+        public void Test_IndexOf_WhenColHas1_ShouldReturnIndexOfBO()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWithOneItem();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var itemAtZeroIndex = bindingListView[0];
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var indexOf = bindingListView.IndexOf(itemAtZeroIndex);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(0, indexOf);
+        }
 
-        [Ignore("What triggers this. Should it only appy to BOCol on like an EndEdit or somthing")] //TODO Brett 23 Jan 2011: Ignored Test - What triggers this. Should it only appy to BOCol on like an EndEdit or somthing
+        [Test]
+        public void Test_IndexOf_WhenColHas5AndThirdSelected_ShouldReturnIndexTwoOfBO()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith5Items();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            var itemAtIndex2 = bindingListView[2];
+            //---------------Assert Precondition----------------
+            //---------------Execute Test ----------------------
+            var indexOf = bindingListView.IndexOf(itemAtIndex2);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(2, indexOf);
+        }
         [Test]
         public void Test_RemoveAt_WhenColHas1_ShouldRemoveBusinessObject()
         {
             //---------------Set up test pack-------------------
-            CreateSavedBOs(1);
-            var boCol = new BusinessObjectCollection<FakeBO>();
-            boCol.LoadAll();
+            CreateSavedBO();
+            var boCol = GetLoadedCollection<FakeBO>();
             var bindingListView = new BindingListViewNew<FakeBO>(boCol);
             //---------------Assert Precondition----------------
-            Assert.AreEqual(1, boCol.Count);
             Assert.AreEqual(1, bindingListView.Count);
             //---------------Execute Test ----------------------
             bindingListView.RemoveAt(0);
             //---------------Test Result -----------------------
-            Assert.AreEqual(0, boCol.Count);
             Assert.AreEqual(0, bindingListView.Count);
         }
-
-        [Ignore("What triggers this. Should it only appy to BOCol on like an EndEdit or somthing")] //TODO Brett 23 Jan 2011: Ignored Test - What triggers this. Should it only appy to BOCol on like an EndEdit or somthing
+        /// <summary>
+        /// The RemoveAt is called by the DataGridView when a BO is deleted from the 
+        /// Data Grid using the Delete Key.
+        /// </summary>
+        [Test]
+        public void Test_RemoveAt_ShouldDeleteBusinessObject()
+        {
+            var boToBeRemoved = CreateSavedBO();
+            var boCol = GetLoadedCollection<FakeBO>();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(1, boCol.Count);
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsFalse(boToBeRemoved.Status.IsDeleted);
+            Assert.IsFalse(boToBeRemoved.Status.IsNew);
+            //---------------Execute Test ----------------------
+            bindingListView.RemoveAt(0);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(0, boCol.Count);
+            Assert.IsTrue(boToBeRemoved.Status.IsDeleted, "Should be marked for delete");
+            Assert.IsTrue(boToBeRemoved.Status.IsNew, "The Delete should be persisted - New Deleted Object has been deleted to DataStore");
+            Assert.IsFalse(boToBeRemoved.Status.IsDirty, "The Delete should be persisted");
+        }
+        
         [Test]
         public void Test_RemoveAt_WhenColHas5_ShouldRemoveOneBusinessObject()
         {
@@ -668,7 +751,6 @@ namespace Habanero.Binding.Tests
             Assert.AreEqual(4, bindingListView.Count);
         }
 
-        [Ignore("Should insert item into underlying Business Object Collection???")] //TODO Brett 23 Jan 2011: Ignored Test - Should insert item into underlying Business Object Collection"
         [Test]
         public void Test_Insert_WhenColHas3_ShouldInsertObjectAtIndex1()
         {
@@ -682,11 +764,27 @@ namespace Habanero.Binding.Tests
             //---------------Execute Test ----------------------
             bindingListView.Insert(1, boToInsert);
             //---------------Test Result -----------------------
-            Assert.IsNotNull(bindingListView[1]);
-            Assert.IsNotNull(bindingListView[3]);
+            Assert.AreSame(boToInsert, bindingListView[1]);
+            Assert.IsNotNull(bindingListView[3], "The last item should be moved down");
             Assert.AreEqual(1, bindingListView.IndexOf(boToInsert));
             Assert.AreEqual(4, boCol.Count, "Should insert item into underlying Business Object Collection");
             Assert.AreEqual(4, bindingListView.Count);
+        }
+
+        [Test]
+        public void Test_Insert_WhenColHas3_ShouldAddObjectTounderlyingCollection()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items();
+            var boToInsert = new FakeBO();
+            var bindingListView = new BindingListViewNew<FakeBO>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, boCol.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Insert(1, boToInsert);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(4, boCol.Count);
+            boCol.ShouldContain(boToInsert);
         }
 
         [Test]
@@ -1223,8 +1321,8 @@ namespace Habanero.Binding.Tests
             var listSortDescription = bindingListView.SortDescriptions[0];
             Assert.AreSame(sortByPropertyDescriptor, listSortDescription.PropertyDescriptor);
             Assert.AreEqual(ListSortDirection.Ascending, listSortDescription.SortDirection);
-            Assert.Fail("Test Not Yet Implemented");
         }
+
         [Test]
         public void Test_ApplySort_WithSortDescriptionCollection_ShouldRaiseListChangedEvent()
         {
@@ -1451,7 +1549,7 @@ namespace Habanero.Binding.Tests
 
             var boCol = GetCollectionWith3Items();
             var bindingListView = new BindingListViewNew<FakeBO>(boCol);
-                        var listChangedFired = false;
+            var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
@@ -1600,7 +1698,7 @@ namespace Habanero.Binding.Tests
             var bindingListView = new BindingListViewNew<FakeBO>(boCol);
             const int newItemIndex = 3;
             var newBO = bindingListView.AddNew() as FakeBO;
-                        var listChangedFired = false;
+            var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
             //---------------Assert Precondition----------------
             Assert.AreEqual(newBO, bindingListView[newItemIndex]);
@@ -1786,26 +1884,398 @@ namespace Habanero.Binding.Tests
         public void Test_SetFilter_Null_ShouldClearFilter()
         {
             //---------------Set up test pack-------------------
-            
+            const string filter = "FakeBOName = 1";
+            var fakeBO1 = new FakeBO { FakeBOName = "1" };
+            var fakeBO2 = new FakeBO { FakeBOName = "2" };
+            var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBO>(boCol) {Filter = filter};
             //---------------Assert Precondition----------------
-
+            Assert.AreEqual(filter, bindingList.Filter);
+            Assert.AreEqual(1, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
             //---------------Execute Test ----------------------
-
+            bindingList.Filter = null;
             //---------------Test Result -----------------------
-            Assert.Fail("Test Not Yet Implemented");
+            Assert.AreEqual(2, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
         }
         [Test]
         public void Test_SetFilter_EmptyString_ShouldClearFilter()
         {
             //---------------Set up test pack-------------------
-            
+            const string filter = "FakeBOName = 1";
+            var fakeBO1 = new FakeBO { FakeBOName = "1" };
+            var fakeBO2 = new FakeBO { FakeBOName = "2" };
+            var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBO>(boCol) {Filter = filter};
             //---------------Assert Precondition----------------
-
+            Assert.AreEqual(filter, bindingList.Filter);
+            Assert.AreEqual(1, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
             //---------------Execute Test ----------------------
-
+            bindingList.Filter = "";
             //---------------Test Result -----------------------
+            Assert.AreEqual(2, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+        }
+
+        [Test]
+        public void Test_SetFilter_Again_ShouldFilterBindingListAndReturnCorrectBO()
+        {
+            //---------------Set up test pack-------------------
+            const string filter1 = "FakeBOName = 1";
+            const string filter2 = "FakeBOName = 2";
+            var fakeBO1 = new FakeBO { FakeBOName = "1" };
+            var fakeBO2 = new FakeBO { FakeBOName = "2" };
+            var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBO>(boCol) { Filter = filter1 };
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(filter1, bindingList.Filter);
+            Assert.AreEqual(1, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+            Assert.AreSame(fakeBO1, bindingList[0]);
+            //---------------Execute Test ----------------------
+            bindingList.Filter = filter2;
+            //---------------Test Result -----------------------
+            Assert.AreEqual(filter2, bindingList.Filter);
+            Assert.AreEqual(1, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+            Assert.AreSame(fakeBO2, bindingList[0]);
+        }
+
+        [Test]
+        public void Test_Setfilter_WhenExactStringMatch_ShouldFilterBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var fakeBO1 = new FakeBO { FakeBOName = "SomeFakeBO" };
+            var fakeBO2 = new FakeBO { FakeBOName = "AnotherFakeBO" };
+            var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBO>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(2, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+            //---------------Execute Test ----------------------
+            bindingList.Filter = "FakeBOName = 'SomeFakeBO'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingList.Count, "When filter expression exact string match, should return one item");
+            Assert.AreEqual(2, boCol.Count);
+        }
+
+        [Test]
+        public void Test_Setfilter_WhenExactIntegerMatch_ShouldFilterBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var fakeBO1 = new FakeBOW5Props { FakeBONumber = 11 };
+            var fakeBO2 = new FakeBOW5Props { FakeBONumber = 22 };
+            var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(2, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+            //---------------Execute Test ----------------------
+            bindingList.Filter = "FakeBONumber = '11'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingList.Count, "When filter expression exact integer match, should return one item");
+            Assert.AreEqual(2, boCol.Count);
+        }
+
+        [Test]
+        public void Test_Setfilter_WhenExactDateMatch_ShouldFilterBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var fakeBO1 = new FakeBOW5Props { FakeBODate = new DateTime(2000,1,1) };
+            var fakeBO2 = new FakeBOW5Props { FakeBODate = new DateTime(2000,1,2) };
+            var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(2, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+            //---------------Execute Test ----------------------
+            bindingList.Filter = "FakeBODate = '2000/01/01'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingList.Count, "When filter expression exact date match, should return one item");
+            Assert.AreEqual(2, boCol.Count);
+        }
+
+        [Test]
+        public void Test_Setfilter_WhenExactDeciamlMatch_ShouldFilterBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var fakeBO1 = new FakeBOW5Props { FakeBODecimal = new decimal(10.00) };
+            var fakeBO2 = new FakeBOW5Props { FakeBODecimal = new decimal(10.50) };
+            var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(2, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+            //---------------Execute Test ----------------------
+            bindingList.Filter = "FakeBODecimal = '10.50'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingList.Count, "When filter expression exact decimal match, should return one item");
+            Assert.AreEqual(2, boCol.Count);
+        }
+
+        [Test]
+        public void Test_Setfilter_WhenLikeStringMatch_ShouldFilterBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var fakeBO1 = new FakeBO { FakeBOName = "SomeFakeBO" };
+            var fakeBO2 = new FakeBO { FakeBOName = "AnotherFakeBO" };
+            var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
+            var bindingList = new BindingListViewNew<FakeBO>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(2, bindingList.Count);
+            Assert.AreEqual(2, boCol.Count);
+            //---------------Execute Test ----------------------
+            bindingList.Filter = "FakeBOName Like Some%";
+            //---------------Test Result --- --------------------
+            Assert.AreEqual(1, bindingList.Count, "When filter expression like string match, should return one item");
+            Assert.AreEqual(2, boCol.Count);
+        }
+
+        [Ignore("T")] //TODO Brett 24 Jan 2011: Ignored Test - T
+        [Test]
+        public void Test_Setfilter_WhenLikeOnReflectiveProp_ShouldFilterUnderlyinhBOCol()
+        {
+            //---------------Set up test pack-------------------
+            var fakeBO1 = new FakeBOW5Props { FakeBONumber = 11 };
+            var fakeBO2 = new FakeBOW5Props { FakeBONumber = 1 };
+            var fakeBO3 = new FakeBOW5Props { FakeBONumber = 22 };
+            var boCol = new BusinessObjectCollection<FakeBOW5Props> { fakeBO1, fakeBO2, fakeBO3 };
+            var bindingList = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingList.Count);
+            Assert.AreEqual(3, boCol.Count);
+            //---------------Execute Test ----------------------
+            bindingList.Filter = "FakeBONumberAsString LIKE 1%";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(2, bindingList.Count, "When filter expression like integer match, should return one item");
+            Assert.AreEqual(3, boCol.Count);
             Assert.Fail("Test Not Yet Implemented");
         }
+
+
+        [Test]
+        public void Test_Filter_WhenEqualToWithGuidMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedFakeBOsW5Props(3);
+            var fakeBOId = new Guid("7AD655A7-DF06-451B-848A-25CBEBDBBC8A");
+            var boToFind = CreateSavedFakeBOW5Prop(fakeBOId);
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(4, bindingListView.Count);
+            Assert.AreEqual(fakeBOId, boToFind.FakeBOID);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBOID='7AD655A7-DF06-451B-848A-25CBEBDBBC8A'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+
+        [Test]
+        public void Test_Filter_WhenLessThanWithStringMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            var boToFind = CreateSavedFakeBOW5Prop("AAA");
+            CreateSavedFakeBOW5Prop("BBB");
+            CreateSavedFakeBOW5Prop("CCC");
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBOName<'B'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+
+        [Test]
+        public void Test_Filter_WhenLessThanWithDateTimeMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            var boToFind = CreateSavedFakeBOW5Prop(new DateTime(2010, 1, 1));
+            CreateSavedFakeBOW5Prop(new DateTime(2010, 1, 2));
+            CreateSavedFakeBOW5Prop(new DateTime(2010, 1, 3));
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBODate<'2010/01/02'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+        [Test]
+        public void Test_Filter_WhenLessThanWithIntMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            var boToFind = CreateSavedFakeBOW5Prop(1);
+            CreateSavedFakeBOW5Prop(2);
+            CreateSavedFakeBOW5Prop(3);
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBONumber<'2'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+        [Test]
+        public void Test_Filter_WhenLessThanWithGuidMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            var boToFind = CreateSavedFakeBOW5Prop(new Guid("7AD655A7-DF06-451B-848A-25CBEBDBBC8A"));
+            CreateSavedFakeBOW5Prop(new Guid("8AD655A7-DF06-451B-848A-25CBEBDBBC8A"));
+            CreateSavedFakeBOW5Prop(new Guid("9AD655A7-DF06-451B-848A-25CBEBDBBC8A"));
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBOID<'8AD655A7-DF06-451B-848A-25CBEBDBBC8A'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+        [Test]
+        public void Test_Filter_WhenGreaterThanWithStringMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedFakeBOW5Prop("AAA");
+            CreateSavedFakeBOW5Prop("BBB");
+            var boToFind = CreateSavedFakeBOW5Prop("CCC");
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBOName>'BBB'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+        [Test]
+        public void Test_Filter_WhenGreaterThanWithDateTimeMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedFakeBOW5Prop("AAA", new DateTime(2010, 1, 1), GetRandomGuid(), 1);
+            CreateSavedFakeBOW5Prop("BBB", new DateTime(2010, 1, 2), GetRandomGuid(), 1);
+            var boToFind = CreateSavedFakeBOW5Prop("CCC", new DateTime(2010, 1, 3), GetRandomGuid(), 1);
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBODate>'2010/01/02'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+        [Test]
+        public void Test_Filter_WhenGreaterThanWithIntMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedFakeBOW5Prop(1);
+            CreateSavedFakeBOW5Prop(2);
+            var boToFind = CreateSavedFakeBOW5Prop(3);
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBONumber>'2'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+        [Test]
+        public void Test_Filter_WhenLikeStringMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedFakeBOW5Prop("AAA");
+            var boToFind = CreateSavedFakeBOW5Prop("ABB");
+            CreateSavedFakeBOW5Prop("CCC");
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            StringAssert.Contains("B", boToFind.FakeBOName);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBOName Like '%B%'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+/*
+        [Ignore("I cannot see any logical way for this to be applied")] //TODO Brett 24 Jan 2011: Ignored Test - I cannot see any logical way for this to be applied
+        [Test]
+        public void Test_Filter_WhenLikeIntMatch_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedFakeBOW5Prop(1);
+            CreateSavedFakeBOW5Prop(2);
+            CreateSavedFakeBOW5Prop(3);
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBONumber Like '2'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+        }*/
+
+        [Test]
+        public void Test_Filter_WhenFilterValueIncludesAND_ShouldReturnMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            var boToFind = CreateSavedFakeBOW5Prop("AAA", new DateTime(2010, 1, 1), GetRandomGuid(), 1);
+            CreateSavedFakeBOW5Prop("AAA", new DateTime(2010, 1, 2), GetRandomGuid(), 2);
+            CreateSavedFakeBOW5Prop("CCC", new DateTime(2010, 1, 3), GetRandomGuid(), 3);
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBOName='AAA' AND FakeBONumber='1'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsTrue(bindingListView.Contains(boToFind));
+        }
+
+        [Test]
+        public void Test_Filter_WhenFilterValueIncludesANDWithNoMatch_ShouldReturnNoMatchedObject()
+        {
+            //---------------Set up test pack-------------------
+            CreateSavedFakeBOW5Prop("AAA", new DateTime(2010, 1, 1), GetRandomGuid(), 1);
+            CreateSavedFakeBOW5Prop("AAA", new DateTime(2010, 1, 2), GetRandomGuid(), 2);
+            CreateSavedFakeBOW5Prop("CCC", new DateTime(2010, 1, 3), GetRandomGuid(), 3);
+            var boCol = GetLoadedCollection<FakeBOW5Props>();
+            var bindingListView = new BindingListViewNew<FakeBOW5Props>(boCol);
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            bindingListView.Filter = "FakeBOName='AAA' AND FakeBONumber='3'";
+            //---------------Test Result -----------------------
+            Assert.AreEqual(0, bindingListView.Count);
+        }
+
+
         [Test]
         public void Test_RemoveFilter_ShouldSetFilterToEmpty()
         {
@@ -1821,17 +2291,25 @@ namespace Habanero.Binding.Tests
         }
 
         [Test]
-        public void Test_RemoveFilterShould_ReturnBOColToOrinal()
+        public void Test_RemoveFilter_ShouldReturnBindingListToOriginal()
         {
             //---------------Set up test pack-------------------
-            
+            const string initialFilter = "FakeBOName = 1";
+            var fakeBO1 = new FakeBO { FakeBOName = "1" };
+            var fakeBO2 = new FakeBO { FakeBOName = "2" };
+            var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
+            var list = new BindingListViewNew<FakeBO>(boCol) { Filter = initialFilter };
             //---------------Assert Precondition----------------
-
+            Assert.AreEqual(initialFilter, list.Filter);
+            Assert.AreEqual(1, list.Count);
+            Assert.AreEqual(2, boCol.Count);
             //---------------Execute Test ----------------------
-
+            list.RemoveFilter();
             //---------------Test Result -----------------------
-            Assert.Fail("Test Not Yet Implemented");
+            Assert.AreEqual(2, list.Count);
+            Assert.AreEqual(2, boCol.Count);
         }
+
         #endregion //Filtering
 
         #region IRaiseItemChangedEvents
@@ -1848,9 +2326,78 @@ namespace Habanero.Binding.Tests
             //---------------Test Result -----------------------
             Assert.IsTrue(raisesItemChangedEvents);
         }
+
         #endregion
 
 
+        //TODO brett 24 Jan 2011: If you make an update to the Business Object or the underlying collection directly
+        // then it should cause the ListChanged Event to fire.
+
+        private static DateTime GetRandomDate()
+        {
+            return RandomValueGen.GetRandomDate();
+        }
+/*
+        private static string GetRandomString(int maxLength)
+        {
+            return RandomValueGen.GetRandomString(maxLength);
+        }*/
+
+        private static Guid GetRandomGuid()
+        {
+            return RandomValueGen.GetRandomGuid();
+        }
+        private static int GetRandomInt()
+        {
+            return RandomValueGen.GetRandomInt(100);
+        }
+        private static BusinessObjectCollection<T> GetLoadedCollection<T>() where T : class, IBusinessObject, new()
+        {
+            var collection = new BusinessObjectCollection<T>();
+            collection.LoadAll();
+            return collection;
+        }
+        private static FakeBOW5Props CreateSavedFakeBOW5Prop(int fakeBONumber)
+        {
+            return CreateSavedFakeBOW5Prop(GetRandomString(), GetRandomDate(), GetRandomGuid(), fakeBONumber);
+        }
+        private static FakeBOW5Props CreateSavedFakeBOW5Prop(Guid fakeBOID)
+        {
+            return CreateSavedFakeBOW5Prop(GetRandomString(), GetRandomDate(), fakeBOID, GetRandomInt());
+        }
+        private static FakeBOW5Props CreateSavedFakeBOW5Prop(DateTime fakeBODate)
+        {
+            return CreateSavedFakeBOW5Prop(GetRandomString(), fakeBODate, GetRandomGuid(), GetRandomInt());
+        }
+        private static FakeBOW5Props CreateSavedFakeBOW5Prop(string fakeBOString)
+        {
+            return CreateSavedFakeBOW5Prop(fakeBOString, GetRandomDate(), GetRandomGuid(), GetRandomInt());
+        }
+
+        private static FakeBOW5Props CreateSavedFakeBOW5Prop(string fakeBOName, DateTime fakeBODate, Guid fakeBOId, int fakeBONumber)
+        {
+            var fakeBO = new FakeBOW5Props
+                             {
+                                 FakeBOName = fakeBOName,
+                                 FakeBODate = fakeBODate,
+                                 FakeBOID = fakeBOId,
+                                 FakeBONumber = fakeBONumber
+                             };
+            fakeBO.Save();
+            return fakeBO;
+        }
+
+        private static void CreateSavedFakeBOsW5Props(int numberToCreate)
+        {
+            for (int i = 0; i < numberToCreate; i++)
+            {
+                string fakeBOName = "A" + RandomValueGen.GetRandomString();
+                DateTime fakeBODate = RandomValueGen.GetRandomDate();
+                Guid fakeBOId = RandomValueGen.GetRandomGuid();
+                int fakeBONumber = RandomValueGen.GetRandomInt();
+                CreateSavedFakeBOW5Prop(fakeBOName, fakeBODate, fakeBOId, fakeBONumber);
+            }
+        }
         private static BusinessObjectCollection<FakeBO> GetCollectionWith3Items(string orderByClause)
         {
             CreateSavedBOs(3);
@@ -1858,13 +2405,13 @@ namespace Habanero.Binding.Tests
             boCol.Load("", orderByClause);
             return boCol;
         }
-        private PropertyDescriptor GetDescriptor(ITypedList bindingListView, string propName)
+        private static PropertyDescriptor GetDescriptor(ITypedList bindingListView, string propName)
         {
             var descriptorCollection = bindingListView.GetItemProperties(new PropertyDescriptor[0]);
             return descriptorCollection.Find(propName, true);
         }
 
-        private BindingListViewNew<FakeBO> CreateBindingListView(BusinessObjectCollection<FakeBO> boCol)
+        private static BindingListViewNew<FakeBO> CreateBindingListView(BusinessObjectCollection<FakeBO> boCol)
         {
             return new BindingListViewNew<FakeBO>(boCol) { ViewBuilder = new DefaultViewBuilder<FakeBO>() };
         }
@@ -1901,44 +2448,20 @@ namespace Habanero.Binding.Tests
         {
             for (var i = 0; i < numberToCreate; i++)
             {
-                var businessObject = new FakeBO
-                                         {
-                                             FakeBOName = "A" + RandomValueGen.GetRandomString()
-                                         };
-                businessObject.Save();
+                CreateSavedBO();
             }
         }
+
+        private static FakeBO CreateSavedBO()
+        {
+            var businessObject = new FakeBO
+                                     {
+                                         FakeBOName = "A" + RandomValueGen.GetRandomString()
+                                     };
+            businessObject.Save();
+            return businessObject;
+        }
     }
 
-    internal class BindingListViewNewSpy<T> : BindingListViewNew<T> where T : class, IBusinessObject, new()
-    {
-        public BindingListViewNewSpy(BusinessObjectCollection<T> boCol): base(boCol)
-        {
-        }
-
-        public BusinessObjectCollection<T> GetViewOfBusinessObjectCollection()
-        {
-            return base.ViewOfBusinessObjectCollection;
-        }
-    }
-    internal class PropertyDescriptorCollectionStub : PropertyDescriptorCollection
-    {
-        public PropertyDescriptorCollectionStub() : base(new PropertyDescriptor[0])
-        {
-        }
-    }
-    // ReSharper disable ParameterTypeCanBeEnumerable.Global
-    internal static class BLVTestingExtensions
-    {
-
-        public static void ShouldNotContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
-        {
-            ((IEnumerable<FakeBO>)boCol).ShouldNotContain(newBO);
-        }
-        public static void ShouldContain(this BusinessObjectCollection<FakeBO> boCol, object newBO)
-
-        {
-            ((IEnumerable<FakeBO>)boCol).ShouldContain(newBO);
-        }
-    }// ReSharper restore ParameterTypeCanBeEnumerable.Global
+// ReSharper restore ParameterTypeCanBeEnumerable.Global
 }
