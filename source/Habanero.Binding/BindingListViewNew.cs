@@ -166,7 +166,6 @@ namespace Habanero.Binding
             }
             set
             {
-                //TODO brett 24 Jan 2011: Should this update the BOCol as well?
                 var indexInUnderlyingCollection = this.BusinessObjectCollection.IndexOf(this.ViewOfBusinessObjectCollection[index]);
                 this.ViewOfBusinessObjectCollection[index] = (T)value;
                 this.BusinessObjectCollection[indexInUnderlyingCollection] = (T) value;
@@ -257,6 +256,22 @@ namespace Habanero.Binding
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
         }
 
+        /// <summary>
+        /// Copies the objects of the <see cref="IBusinessObjectCollection"/> to an <see cref="Array"/>, 
+        /// starting at a particular <see cref="Array"/> index.
+        /// </summary>
+        /// <param name="array">
+        /// The one-dimensional <see cref="Array"/> that is the destination of the objects copied from 
+        /// <see cref="IBusinessObjectCollection"/>. The <see cref="Array"/> must have zero-based indexing.
+        /// </param>
+        /// <param name="index">The zero-based index in array at which copying begins.</param>
+        public void CopyTo(Array array, int index)
+        {
+            if (array == null) throw new ArgumentNullException("array");
+            if (index < 0) throw new ArgumentOutOfRangeException("index");
+            if (index >= array.Length) throw new ArgumentException("index");
+            if (ViewOfBusinessObjectCollection != null) ViewOfBusinessObjectCollection.CopyTo(array, index);
+        }
         /// <summary>
         ///  Called when the list changes or an item in the list changes.
         /// </summary>
@@ -487,22 +502,6 @@ namespace Habanero.Binding
         }
         #endregion
 
-        /// <summary>
-        /// Copies the objects of the <see cref="IBusinessObjectCollection"/> to an <see cref="Array"/>, 
-        /// starting at a particular <see cref="Array"/> index.
-        /// </summary>
-        /// <param name="array">
-        /// The one-dimensional <see cref="Array"/> that is the destination of the objects copied from 
-        /// <see cref="IBusinessObjectCollection"/>. The <see cref="Array"/> must have zero-based indexing.
-        /// </param>
-        /// <param name="index">The zero-based index in array at which copying begins.</param>
-        public void CopyTo(Array array, int index)
-        {
-            if (array == null) throw new ArgumentNullException("array");
-            if (index < 0) throw new ArgumentOutOfRangeException("index");
-            if (index >= array.Length) throw new ArgumentException("index");
-            if (ViewOfBusinessObjectCollection != null) ViewOfBusinessObjectCollection.CopyTo(array, index);
-        }
 
         #region ICancelAddNew
         /// <summary>
@@ -514,30 +513,48 @@ namespace Habanero.Binding
         /// <exception cref="T:System.NotSupportedException"><see cref="P:System.ComponentModel.IBindingList.AllowNew"/> is false. </exception>
         public object AddNew()
         {
-            _logger.Log("AddNew ", LogCategory.Info);
-            var addedBO = this.ViewOfBusinessObjectCollection.CreateBusinessObject();
-            _addedBOs.Add(this.Count - 1, addedBO);
-            return addedBO;
+            try
+            {
+                _logger.Log("AddNew ", LogCategory.Info);
+                var addedBO = this.ViewOfBusinessObjectCollection.CreateBusinessObject();
+                _addedBOs.Add(this.Count - 1, addedBO);
+                return addedBO;
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogCategory.Exception);
+                GlobalRegistry.UIExceptionNotifier.Notify(ex, "", "Error ");
+            }
+            return null;
         }
+
         /// <summary>
         /// Discards a pending new item from the collection.
         /// </summary>
         /// <param name="itemIndex">The index of the item that was previously added to the collection. </param>
         public void CancelNew(int itemIndex)
         {
-            _logger.Log("Start CancelNew (" + itemIndex + ")", LogCategory.Info);
-            var addedBO = this.ViewOfBusinessObjectCollection[itemIndex];
-            if (_addedBOs.ContainsKey(itemIndex) && addedBO != null)
+            try
             {
-                _addedBOs.Remove(itemIndex);
-                if (addedBO.Status.IsNew)
+                _logger.Log("Start CancelNew (" + itemIndex + ")", LogCategory.Info);
+                var addedBO = this.ViewOfBusinessObjectCollection[itemIndex];
+                if (_addedBOs.ContainsKey(itemIndex) && addedBO != null)
                 {
-                    addedBO.MarkForDelete();
-                    _logger.Log("In CancelNew B4 OnListChanged (" + itemIndex + ")", LogCategory.Info);
-                    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+                    _addedBOs.Remove(itemIndex);
+                    if (addedBO.Status.IsNew)
+                    {
+                        addedBO.MarkForDelete();
+                        _logger.Log("In CancelNew B4 OnListChanged (" + itemIndex + ")", LogCategory.Info);
+                        OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+                    }
                 }
+                _logger.Log("End CancelNew (" + itemIndex + ")", LogCategory.Info);
             }
-            _logger.Log("End CancelNew (" + itemIndex + ")", LogCategory.Info);
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogCategory.Exception);
+                GlobalRegistry.UIExceptionNotifier.Notify(ex, "", "Error ");
+            }
         }
 
         /// <summary>
@@ -546,15 +563,23 @@ namespace Habanero.Binding
         /// <param name="itemIndex">The index of the item that was previously added to the collection. </param>
         public void EndNew(int itemIndex)
         {
-            _logger.Log("Start EndNew (" + itemIndex + ")", LogCategory.Info);
-            var addedBO = this.ViewOfBusinessObjectCollection[itemIndex];
-            if (_addedBOs.ContainsKey(itemIndex) && addedBO != null)
+            try
             {
-                this.BusinessObjectCollection.Add(addedBO);
-                addedBO.Save();
-                _addedBOs.Remove(itemIndex);
+                _logger.Log("Start EndNew (" + itemIndex + ")", LogCategory.Info);
+                var addedBO = this.ViewOfBusinessObjectCollection[itemIndex];
+                if (_addedBOs.ContainsKey(itemIndex) && addedBO != null)
+                {
+                    this.BusinessObjectCollection.Add(addedBO);
+                    addedBO.Save();
+                    _addedBOs.Remove(itemIndex);
+                }
+                _logger.Log("End EndNew (" + itemIndex + ")", LogCategory.Info);
             }
-            _logger.Log("End EndNew (" + itemIndex + ")", LogCategory.Info);
+            catch (Exception ex)
+            {
+                _logger.Log(ex.Message, LogCategory.Exception);
+                GlobalRegistry.UIExceptionNotifier.Notify(ex, "", "Error ");
+            }
         }
         #endregion
 
@@ -573,22 +598,30 @@ namespace Habanero.Binding
             get { return _filter; }
             set
             {
-                _filter = value;
-                if (!String.IsNullOrEmpty(value))
+                try
                 {
-                    var col = new BusinessObjectCollection<T>();
-                    var criteria = GetCriteriaObject(ClassDef.ClassDefs[typeof(T)], _filter);
-
-                    foreach (var bo in this.BusinessObjectCollection)
+                    _filter = value;
+                    if (!String.IsNullOrEmpty(value))
                     {
-                        if (criteria.IsCriteriaMatch(bo)) col.Add(bo);
+                        var col = new BusinessObjectCollection<T>();
+                        var criteria = GetCriteriaObject(ClassDef.ClassDefs[typeof(T)], _filter);
+
+                        foreach (var bo in this.BusinessObjectCollection)
+                        {
+                            if (criteria.IsCriteriaMatch(bo)) col.Add(bo);
+                        }
+                        col.SelectQuery.Criteria = criteria;
+                        this.ViewOfBusinessObjectCollection = col;
                     }
-                    col.SelectQuery.Criteria = criteria;
-                    this.ViewOfBusinessObjectCollection = col;
+                    else
+                    {
+                        ResetViewCollection();   
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ResetViewCollection();   
+                    _logger.Log(ex.Message, LogCategory.Exception);
+                    GlobalRegistry.UIExceptionNotifier.Notify(ex, "", "Error ");
                 }
             }
         }
@@ -625,6 +658,12 @@ namespace Habanero.Binding
 
         #region Implementation of IRaiseItemChangedEvents
 
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="T:System.ComponentModel.IRaiseItemChangedEvents"/> object raises <see cref="E:System.ComponentModel.IBindingList.ListChanged"/> events when one of its property values changes; otherwise, false.
+        /// </returns>
         public bool RaisesItemChangedEvents
         {
             get { return true; }

@@ -1431,7 +1431,7 @@ namespace Habanero.Binding.Tests
 
     public class BindingListViewSpy<T> : BindingListView<T> where T : class, IBusinessObject, new()
     {
-        public BindingListViewSpy(BusinessObjectCollection<T> collection)
+        public BindingListViewSpy(BusinessObjectCollection<T> collection):base(collection)
         {
             
         }
