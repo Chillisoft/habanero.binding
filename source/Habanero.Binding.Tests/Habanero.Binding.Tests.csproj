@@ -47,7 +47,7 @@
     <Reference Include="Habanero.Testability">
       <HintPath>..\..\lib\Habanero.Testability.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Testability.Helpers, Version=9.9.9.999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Testability.Helpers">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Testability.Helpers.dll</HintPath>
     </Reference>
