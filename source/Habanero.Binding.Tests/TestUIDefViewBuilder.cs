@@ -29,8 +29,6 @@ namespace Habanero.Binding.Tests
         {
             //Code that is executed before any test is run in this class. If multiple tests
             // are executed then it will still only be called once. 
-       
-
         }
 
         [TestFixtureTearDown]
@@ -114,7 +112,7 @@ namespace Habanero.Binding.Tests
             ClassDef.ClassDefs.Remove(typeof(FakeBOWReflectiveProp));
             var classDef = typeof (FakeBOWReflectiveProp).MapClass();
             ClassDef.ClassDefs.Add(classDef);
-            Habanero.Naked.UIViewCreator viewCreator = new UIViewCreator();
+            Habanero.Naked.UIViewCreator viewCreator = CreateUIViewCreator();
             var defaultUiDef = viewCreator.GetDefaultUIDef(classDef);
             defaultUiDef.Name = RandomValueGen.GetRandomString();
             defaultUiDef.UIGrid.Add(new UIGridColumn(null, "ReflectiveProp",null, null, true, 100, PropAlignment.left, null));
@@ -137,7 +135,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var classDef = ClassDef.Get<FakeBOWReflectiveProp>();
-            Habanero.Naked.UIViewCreator viewCreator = new UIViewCreator();
+            Habanero.Naked.UIViewCreator viewCreator = CreateUIViewCreator();
             var uiDef = viewCreator.GetDefaultUIDef(classDef);
             const string noneDefaultUI = "NotDefaultUI";
             uiDef.Name = noneDefaultUI;
@@ -163,7 +161,7 @@ namespace Habanero.Binding.Tests
         {
             //---------------Set up test pack-------------------
             var classDef = ClassDef.Get<FakeBOWReflectiveProp>();
-            Habanero.Naked.UIViewCreator viewCreator = new UIViewCreator();
+            Habanero.Naked.UIViewCreator viewCreator = CreateUIViewCreator();
             var uiDef = viewCreator.GetDefaultUIDef(classDef);
             const string noneExistantView = "NoneExistantView";
             uiDef.UIGrid.Add(new UIGridColumn(null, "ReflectiveProp", null, null, true, 100, PropAlignment.left, null));
@@ -181,6 +179,11 @@ namespace Habanero.Binding.Tests
             var propertyDescriptor = descriptorCollection[0];
             Assert.IsInstanceOf<PropertyDescriptorPropInfo>(propertyDescriptor);
             Assert.AreEqual("ReflectiveProp", propertyDescriptor.Name);
+        }
+
+        private static UIViewCreator CreateUIViewCreator()
+        {
+            return new UIViewCreator(new DefClassFactory());
         }
     }
 

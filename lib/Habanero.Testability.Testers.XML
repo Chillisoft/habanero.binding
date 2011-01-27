@@ -219,10 +219,48 @@
         </member>
         <member name="M:Habanero.Testability.Testers.BOTester`1.GetSingleRelationshipTester(System.Linq.Expressions.Expression{System.Func{`0,Habanero.Base.IBusinessObject}})">
             <summary>
-            Returns a <see cref="T:Habanero.Testability.Testers.PropDefTester"/> for the property specified by <paramref name="propExpression"/>
+            Returns a <see cref="T:Habanero.Testability.Testers.SingleRelDefTester"/> for the property (Relationship) specified by <paramref name="propExpression"/>
             </summary>
             <param name="propExpression"></param>
             <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.Testers.BOTester`1.GetMultipleRelationshipTester(System.Linq.Expressions.Expression{System.Func{`0,Habanero.Base.IBusinessObjectCollection}})">
+            <summary>
+            Returns a <see cref="T:Habanero.Testability.Testers.MultipleRelDefTester"/> for the property (relationship) specified by <paramref name="propExpression"/>
+            </summary>
+            <param name="propExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Testability.Testers.MultipleRelDefTester">
+            <summary>
+            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.IRelationshipDef"/> for a multiple relationship
+            This tester provides methods for testing the basic attributes of a <see cref="T:Habanero.Base.IRelationshipDef"/>
+            such as ShouldHaveRelationshipType and ShouldHaveDeleteAction{}.
+            If any of these Asserts fail then an <see cref="T:NUnit.Framework.AssertionException"/>. is thrown.
+            Else the Assert executes without an Exception
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Testers.MultipleRelDefTester.#ctor(Habanero.Base.IRelationshipDef)">
+            <summary>
+            Constructs the tester with the relationship under test.
+            </summary>
+            <param name="relationshipDef"></param>
+        </member>
+        <member name="M:Habanero.Testability.Testers.MultipleRelDefTester.ShouldHaveDeleteParentAction(Habanero.Base.DeleteParentAction)">
+            <summary>
+            Asserts that the Delete Action (<see cref="T:Habanero.Base.DeleteParentAction"/> is set correctly for the relationship.
+            </summary>
+            <param name="expectedDeleteAction"></param>
+        </member>
+        <member name="P:Habanero.Testability.Testers.MultipleRelDefTester.RelationshipName">
+            <summary>
+            The name of the Relationship being tested
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Testers.MultipleRelDefTester.MultipleRelationshipDef">
+            <summary>
+            The Relationship that is being tested.
+            </summary>
         </member>
         <member name="T:Habanero.Testability.Testers.PropDefTester">
             <summary>
@@ -416,9 +454,9 @@
         </member>
         <member name="T:Habanero.Testability.Testers.SingleRelDefTester">
             <summary>
-            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.IRelationshipDef"/> 
-            This tester provides methods for testing the basic attributes of a <see cref="T:Habanero.Base.IRelationshipDef"/>
-            such as ShouldBeIsCompulsory.
+            This is a specialised Tester for testing Habanero.<see cref="T:Habanero.Base.ISingleRelationshipDef"/> 
+            This tester provides methods for testing the basic attributes of a <see cref="T:Habanero.Base.ISingleRelationshipDef"/>
+            such as ShouldHaveRelationshipType and ShouldBeOneToOne{}.
             If any of these Asserts fail then an <see cref="T:NUnit.Framework.AssertionException"/>. is thrown.
             Else the Assert executes without an Exception
             </summary>

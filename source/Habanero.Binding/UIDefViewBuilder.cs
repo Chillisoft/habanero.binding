@@ -90,7 +90,7 @@ namespace Habanero.Binding
             var classDef = ClassDef.Get<T>();
             var uiDef = classDef.UIDefCol.Contains(_uiName)
                                ? classDef.UIDefCol[_uiName]
-                               : new UIViewCreator().GetDefaultUIDef(classDef);
+                               : new UIViewCreator(new DefClassFactory()).GetDefaultUIDef(classDef);
             var uiGrid = uiDef.UIGrid;
             var propertyDescriptors = uiGrid.Select(GetPropertyDescriptor).ToList();
             propertyDescriptors.Add(new PropertyDescriptorID());
