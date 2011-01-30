@@ -1850,14 +1850,14 @@ namespace Habanero.Binding.Tests
             var fakeBO2 = new FakeBO {FakeBOName = "2"};
             var boCol = new BusinessObjectCollection<FakeBO> { fakeBO1, fakeBO2 };
             var bindingList = new BindingListView<FakeBO>(boCol);
+            bool _listChangedFired  = false;
+            bindingList.ListChanged += (sender, args) => _listChangedFired = true;
             //---------------Assert Precondition----------------
-            Assert.AreEqual(2, bindingList.Count);
-            Assert.AreEqual(2, boCol.Count);
+            Assert.IsFalse(_listChangedFired);
             //---------------Execute Test ----------------------
             bindingList.Filter = filter;
             //---------------Test Result -----------------------
-            Assert.AreEqual(1, bindingList.Count);
-            Assert.AreEqual(2, boCol.Count);
+            Assert.IsTrue(_listChangedFired);
         }
 
         [Test]

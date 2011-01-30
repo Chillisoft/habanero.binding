@@ -75,10 +75,20 @@ namespace Habanero.Binding
         /// </summary>
         public BusinessObjectCollection<T> BusinessObjectCollection { get; private set; }
 
+        private BusinessObjectCollection<T>  _viewOfBusinessObjectCollection;
+
         /// <summary>
         /// Returns the View (Copy) of the Underlying <see cref="IBusinessObjectCollection"/>
         /// </summary>
-        protected BusinessObjectCollection<T> ViewOfBusinessObjectCollection { get; set; }
+        protected BusinessObjectCollection<T> ViewOfBusinessObjectCollection
+        {
+            get { return _viewOfBusinessObjectCollection; }
+            set
+            {
+                _viewOfBusinessObjectCollection = value;
+                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
+        }
 
         #endregion
 
