@@ -126,7 +126,7 @@ namespace Habanero.Binding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(2, descriptorCollection.Count);
             var propertyDescriptor = descriptorCollection[0];
-            Assert.IsInstanceOf<PropertyDescriptorPropInfo>(propertyDescriptor);
+            Assert.IsInstanceOf<PropertyDescriptorReflectiveProp>(propertyDescriptor);
             Assert.AreEqual("ReflectiveProp", propertyDescriptor.Name);
         }
 
@@ -152,7 +152,7 @@ namespace Habanero.Binding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(2, descriptorCollection.Count, "Reflective column plus ID column");
             var propertyDescriptor = descriptorCollection[0];
-            Assert.IsInstanceOf<PropertyDescriptorPropInfo>(propertyDescriptor);
+            Assert.IsInstanceOf<PropertyDescriptorReflectiveProp>(propertyDescriptor);
             Assert.AreEqual("ReflectiveProp", propertyDescriptor.Name);
         }
         [Test]
@@ -177,7 +177,7 @@ namespace Habanero.Binding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(2, descriptorCollection.Count);
             var propertyDescriptor = descriptorCollection[0];
-            Assert.IsInstanceOf<PropertyDescriptorPropInfo>(propertyDescriptor);
+            Assert.IsInstanceOf<PropertyDescriptorReflectiveProp>(propertyDescriptor);
             Assert.AreEqual("ReflectiveProp", propertyDescriptor.Name);
         }
 

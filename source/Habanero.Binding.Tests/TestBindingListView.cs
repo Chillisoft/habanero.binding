@@ -138,7 +138,7 @@ namespace Habanero.Binding.Tests
             //---------------Execute Test ----------------------
             var listName = bindingListView.GetListName(new PropertyDescriptor[0]);
             //---------------Test Result -----------------------
-            Assert.AreEqual("BindingListViewNew`1", listName);
+            Assert.AreEqual("BindingListView`1", listName);
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace Habanero.Binding.Tests
             IViewBuilder viewBuilder = MockRepository.GenerateStub<IViewBuilder>();
             var list = new BindingListViewSpy<FakeBO>(boCol);
             //---------------Assert Precondition----------------
-            Assert.IsNull(list.ViewBuilder);
+            Assert.AreNotSame(viewBuilder, list.ViewBuilder);
             //---------------Execute Test ----------------------
             list.ViewBuilder = viewBuilder;
             //---------------Test Result -----------------------
@@ -232,7 +232,7 @@ namespace Habanero.Binding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(0, pds.Count);
         }
-
+/*
         [Test]
         public void Test_GetItemProperties_WhenNotHasViewBuilder_TypeDescriptorGetProperties()
         {
@@ -246,7 +246,7 @@ namespace Habanero.Binding.Tests
             //---------------Test Result -----------------------
             var propertyInfos = typeof (FakeBO).GetProperties();
             Assert.AreEqual(propertyInfos.Length, pds.Count);
-        }
+        }*/
 
         #endregion
 
@@ -1282,7 +1282,6 @@ namespace Habanero.Binding.Tests
             Assert.IsTrue(listChangedFired);
         }
 
-        //TODO brett 24 Jan 2011: 
         [Test]
         public void Test_ApplySort_WithPropertyDescriptor_Should_SetSortDescriptions()
         {
