@@ -1,13 +1,13 @@
 using System.Windows.Forms;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
-using Habanero.ProgramaticBinding.ControlAdaptors;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Smooth;
 using Habanero.Testability;
 using NUnit.Framework;
 using Rhino.Mocks;
 // ReSharper disable InconsistentNaming
-namespace Habanero.ProgramaticBinding.Tests.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.Tests.ControlAdaptors
 {
     [TestFixture]
     public class TestWinFormsReadOnlyGridAdapter

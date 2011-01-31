@@ -9,7 +9,7 @@ using Habanero.Faces.Win;
 using Habanero.Smooth;
 using Habanero.Smooth.ReflectionWrappers;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     public interface IControlMapperRegistry
     {

@@ -11,7 +11,7 @@ using Habanero.Faces.Win;
 using Habanero.Faces.Win.Grid;
 using DataGridViewSelectionMode = Habanero.Faces.Base.DataGridViewSelectionMode;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     /// <summary>
     /// This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
@@ -31,7 +31,7 @@ namespace Habanero.ProgramaticBinding.ControlAdaptors
     {
         private readonly IHabaneroLogger _logger =
             GlobalRegistry.LoggerFactory.GetLogger(
-                "Habanero.ProgramaticBinding.ControlAdaptors.WinFormsEditableGridAdapter");
+                "Habanero.ProgrammaticBinding.ControlAdaptors.WinFormsEditableGridAdapter");
         private DeleteKeyBehaviours _deleteKeyBehaviour;
         public WinFormsEditableGridAdapter(DataGridView gridView) : base(gridView)
         {

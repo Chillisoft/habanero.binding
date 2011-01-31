@@ -5,7 +5,7 @@ using Habanero.Faces.Win;
 using AutoCompleteMode = Habanero.Faces.Base.AutoCompleteMode;
 using AutoCompleteSource = Habanero.Faces.Base.AutoCompleteSource;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     /// <summary>
     /// This is a ControlWraper for Any Control that Inherits from System.Windows.Forms.Control

@@ -10,13 +10,13 @@ using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
-using Habanero.ProgramaticBinding.ControlAdaptors;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Util;
 
-namespace Habanero.ProgramaticBinding
+namespace Habanero.ProgrammaticBinding
 {
     /// <summary>
-    /// This is a convenience class that is used to programatically bind Properties of a Business Object
+    /// This is a convenience class that is used to programmatically bind Properties of a Business Object
     /// to WinForms Controls. <see cref="AddTextBoxMapper"/> etc.
     /// Note_: There is no validation that the propName is a property of the BusinessObjet.
     /// </summary>

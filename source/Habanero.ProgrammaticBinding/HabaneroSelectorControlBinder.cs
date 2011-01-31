@@ -4,9 +4,9 @@ using System.Windows.Forms;
 using Habanero.Base;
 using Habanero.BO;
 using Habanero.Faces.Base;
-using Habanero.ProgramaticBinding.ControlAdaptors;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 
-namespace Habanero.ProgramaticBinding
+namespace Habanero.ProgrammaticBinding
 {
     public interface IHabaneroSelectorControlBinder<TBo> where TBo : class, IBusinessObject, new()
     {
@@ -43,7 +43,7 @@ namespace Habanero.ProgramaticBinding
     }
 
     /// <summary>
-    /// This is a convenience class that is used to programatically bind a Business Object
+    /// This is a convenience class that is used to programmatically bind a Business Object
     /// to a WinForms Selector Controls. 
     /// A Selector control is any control that can be used to select a business Object from a list
     /// of business objects.

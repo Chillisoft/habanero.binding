@@ -3,15 +3,15 @@ using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
-using Habanero.ProgramaticBinding;
-using Habanero.ProgramaticBinding.ControlAdaptors;
+using Habanero.ProgrammaticBinding;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Smooth;
 using Habanero.Testability;
 using NUnit.Framework;
 using Rhino.Mocks;
 
 // ReSharper disable InconsistentNaming
-namespace Habanero.ProgramaticBinding.Tests
+namespace Habanero.ProgrammaticBinding.Tests
 {
     [TestFixture]
     public class TestWinFormsTextBoxAdapter

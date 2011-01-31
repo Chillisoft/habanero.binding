@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using Habanero.Base;
 using Habanero.Faces.Base;
-using Habanero.ProgramaticBinding;
+using Habanero.ProgrammaticBinding;
 using System.Windows.Forms;
 using Habanero.Util;
 using NUnit.Framework;

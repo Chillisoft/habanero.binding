@@ -8,8 +8,8 @@
     <ProjectGuid>{6B01839D-5C77-4699-ACF2-1AA076000F01}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Habanero.ProgramaticBinding</RootNamespace>
-    <AssemblyName>Habanero.ProgramaticBinding</AssemblyName>
+    <RootNamespace>Habanero.ProgrammaticBinding</RootNamespace>
+    <AssemblyName>Habanero.ProgrammaticBinding</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

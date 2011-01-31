@@ -8,8 +8,8 @@
     <ProjectGuid>{31074E85-2D4B-4D2A-B81E-F5D2920B976D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Habanero.ProgramaticBinding.Tests</RootNamespace>
-    <AssemblyName>Habanero.ProgramaticBinding.Tests</AssemblyName>
+    <RootNamespace>Habanero.ProgrammaticBinding.Tests</RootNamespace>
+    <AssemblyName>Habanero.ProgrammaticBinding.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -113,9 +113,9 @@
     <Compile Include="Mappers\TestMultipleRelationshipReadOnlyGridMapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Habanero.ProgramaticBinding\Habanero.ProgramaticBinding.csproj">
+    <ProjectReference Include="..\Habanero.ProgrammaticBinding\Habanero.ProgrammaticBinding.csproj">
       <Project>{6B01839D-5C77-4699-ACF2-1AA076000F01}</Project>
-      <Name>Habanero.ProgramaticBinding</Name>
+      <Name>Habanero.ProgrammaticBinding</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

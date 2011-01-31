@@ -2,7 +2,7 @@
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     /// <summary>
     /// This is a ControlWraper for Any Control that Inherits from System.Windows.Forms.Control

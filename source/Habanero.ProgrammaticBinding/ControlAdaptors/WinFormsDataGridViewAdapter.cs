@@ -11,7 +11,7 @@ using AutoCompleteMode = Habanero.Faces.Base.AutoCompleteMode;
 using AutoCompleteSource = Habanero.Faces.Base.AutoCompleteSource;
 using DataGridViewSelectionMode = Habanero.Faces.Base.DataGridViewSelectionMode;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     /// <summary>
     /// This is a Control Adapter for any <see cref="DataGridView"/> control.
@@ -25,7 +25,7 @@ namespace Habanero.ProgramaticBinding.ControlAdaptors
 
         private readonly IHabaneroLogger _logger =
             GlobalRegistry.LoggerFactory.GetLogger(
-                "Habanero.ProgramaticBinding.ControlAdaptors.WinFormsDataGridViewAdapter");
+                "Habanero.ProgrammaticBinding.ControlAdaptors.WinFormsDataGridViewAdapter");
         public event EventHandler SelectionChanged;
         public WinFormsDataGridViewAdapter(DataGridView gridView)
             : base(gridView)

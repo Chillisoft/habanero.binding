@@ -10,7 +10,7 @@ using Habanero.Faces.Win;
 using MessageBoxButtons = System.Windows.Forms.MessageBoxButtons;
 using MessageBoxIcon = System.Windows.Forms.MessageBoxIcon;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     /// <summary>
     /// This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 

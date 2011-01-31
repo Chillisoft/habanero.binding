@@ -57,9 +57,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Habanero.ProgramaticBinding\Habanero.ProgramaticBinding.csproj">
+    <ProjectReference Include="..\Habanero.ProgrammaticBinding\Habanero.ProgrammaticBinding.csproj">
       <Project>{6B01839D-5C77-4699-ACF2-1AA076000F01}</Project>
-      <Name>Habanero.ProgramaticBinding</Name>
+      <Name>Habanero.ProgrammaticBinding</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

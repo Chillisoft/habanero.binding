@@ -9,18 +9,18 @@ using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.Test.Win.Grid;
 using Habanero.Faces.Win;
-using Habanero.ProgramaticBinding.ControlAdaptors;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Smooth;
 using Habanero.Test;
 using Habanero.Testability;
 using Habanero.Testability.Helpers;
 using NUnit.Framework;
 using Rhino.Mocks;
-using IWinFormsGridBaseAdapter = Habanero.ProgramaticBinding.ControlAdaptors.IWinFormsGridBaseAdapter;
+using IWinFormsGridBaseAdapter = Habanero.ProgrammaticBinding.ControlAdaptors.IWinFormsGridBaseAdapter;
 
 // ReSharper disable InconsistentNaming
 
-namespace Habanero.ProgramaticBinding.Tests.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.Tests.ControlAdaptors
 {
     [TestFixture]
     public class TestWinFormsGridBaseAdapter : TestGridBaseWin

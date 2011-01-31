@@ -2,7 +2,7 @@ using Habanero.Base.Exceptions;
 using Habanero.BO;
 using Habanero.Faces.Base;
 
-namespace Habanero.ProgramaticBinding.Mappers
+namespace Habanero.ProgrammaticBinding.Mappers
 {
     public class MultipleRelationshipReadOnlyGridMapper : ControlMapper
     {

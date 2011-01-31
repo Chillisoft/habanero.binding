@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     public interface IControlAdaptorFactory
     {

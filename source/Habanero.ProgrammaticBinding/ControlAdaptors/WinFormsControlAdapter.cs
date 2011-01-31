@@ -6,7 +6,7 @@ using Habanero.Faces.Win;
 using AnchorStyles = Habanero.Faces.Base.AnchorStyles;
 using DockStyle = Habanero.Faces.Base.DockStyle;
 
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     /// <summary>
     /// This is a ControlWraper for Any Control that Inherits from System.Windows.Forms.Control

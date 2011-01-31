@@ -5,7 +5,7 @@ using Habanero.BO.ClassDefinition;
 using Habanero.BO.Loaders;
 using Habanero.Smooth;
 
-namespace Habanero.ProgramaticBinding.Tests
+namespace Habanero.ProgrammaticBinding.Tests
 {
 	public class FakeBo:BusinessObject
 	{
@@ -90,7 +90,7 @@ namespace Habanero.ProgramaticBinding.Tests
 		{
 			var itsLoader = new XmlClassLoader(new DtdLoader(), new DefClassFactory());
 			var classDef = itsLoader.LoadClass(@"
-			  <class name=""FakeBoWithLookupListProp"" assembly=""Habanero.ProgramaticBinding.Tests"">
+			  <class name=""FakeBoWithLookupListProp"" assembly=""Habanero.ProgrammaticBinding.Tests"">
 				<property name=""FakeBoWithLookupListPropID"" type=""Guid"" compulsory=""true"" />
 				<property name=""LookupListProp"" type=""Guid"">
 						<simpleLookupList>

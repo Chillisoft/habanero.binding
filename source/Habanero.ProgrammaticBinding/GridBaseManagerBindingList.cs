@@ -7,12 +7,12 @@ using Habanero.Base;
 using Habanero.Binding;
 using Habanero.Faces.Base;
 
-namespace Habanero.ProgramaticBinding
+namespace Habanero.ProgrammaticBinding
 {
     public class GridBaseManagerBindingList : GridBaseManager
     {
         private static readonly IHabaneroLogger _logger =
-            GlobalRegistry.LoggerFactory.GetLogger("Habanero.ProgramaticBinding.GridBaseManagerMapper");
+            GlobalRegistry.LoggerFactory.GetLogger("Habanero.ProgrammaticBinding.GridBaseManagerMapper");
 
         public GridBaseManagerBindingList(IGridBase gridBase) : base(gridBase)
         {

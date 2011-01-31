@@ -7,14 +7,14 @@ using Habanero.BO;
 using Habanero.Faces.Base;
 using Habanero.Util;
 
-namespace Habanero.ProgramaticBinding
+namespace Habanero.ProgrammaticBinding
 {
     public class MultipleRelationshipDataGridViewMapper : ControlMapper
     {
         private readonly IDataGridView _grid;
 
         private new static readonly IHabaneroLogger _logger =
-            GlobalRegistry.LoggerFactory.GetLogger("Habanero.ProgramaticBinding.MultipleRelationshipDataGridViewMapper");
+            GlobalRegistry.LoggerFactory.GetLogger("Habanero.ProgrammaticBinding.MultipleRelationshipDataGridViewMapper");
 
         private IBindingListView _bindingListView;
 

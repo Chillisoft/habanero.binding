@@ -7,7 +7,7 @@ using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
-using Habanero.ProgramaticBinding.ControlAdaptors;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Smooth;
 using Habanero.Testability;
 using Habanero.Testability.Helpers;
@@ -15,7 +15,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 
 // ReSharper disable InconsistentNaming
-namespace Habanero.ProgramaticBinding.Tests
+namespace Habanero.ProgrammaticBinding.Tests
 {
     [TestFixture]
     public class TestHabaneroControlBinder_ByConvention

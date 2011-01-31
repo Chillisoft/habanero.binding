@@ -10,7 +10,7 @@ using Habanero.Testability.Helpers;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
-namespace Habanero.ProgramaticBinding.Tests
+namespace Habanero.ProgrammaticBinding.Tests
 {
     [Ignore("Working on this")] //TODO Brett 24 Jan 2011: Ignored Test - Working on this
     [TestFixture]

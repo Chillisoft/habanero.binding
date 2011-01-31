@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using Habanero.BO;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
-using Habanero.ProgramaticBinding;
+using Habanero.ProgrammaticBinding;
 using Habanero.Testability;
 using NUnit.Framework;
 using Rhino.Mocks;

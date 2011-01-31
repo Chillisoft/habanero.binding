@@ -6,7 +6,7 @@ using Habanero.Faces.Base;
 
 // ReSharper disable SuggestUseVarKeywordEvident
 // ReSharper disable MemberCanBePrivate.Global
-namespace Habanero.ProgramaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     public class WinFormsBOComboBoxSelectorAdapter : WinFormsComboBoxAdapter, IBOComboBoxSelector
     {
