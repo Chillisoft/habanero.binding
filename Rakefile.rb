@@ -10,8 +10,9 @@ require 'albacore'
 bs = File.dirname(__FILE__)
 bs = File.join(bs, "..") if bs.index("branches") != nil
 bs = File.join(bs, "../../../HabaneroCommunity/BuildScripts")
-$:.unshift(File.expand_path(bs)) unless
-    $:.include?(bs) || $:.include?(File.expand_path(bs))
+$buildscriptpath = File.expand_path(bs)
+$:.unshift($buildscriptpath) unless
+    $:.include?(bs) || $:.include?($buildscriptpath)
 
 #------------------------build settings--------------------------
 require 'rake-settings.rb'
@@ -33,6 +34,9 @@ require 'rake-smooth.rb'
 $testability_version = 'trunk'
 require 'rake-testability.rb'
 
+$faces_version = 'trunk'
+require 'rake-faces.rb'
+
 #------------------------project settings------------------------
 $basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/trunk'
 $solution = "source/Habanero.Binding - 2010.sln"
@@ -43,10 +47,16 @@ $solution = "source/Habanero.Binding - 2010.sln"
 desc "Runs the build all task"
 task :default => [:build_all]
 
-desc "Rakes habanero+smooth+testability, builds Binding"
-task :build_all => [:create_temp, :rake_habanero, :rake_smooth, :rake_testability, :build, :delete_temp]
+desc "Rake Dependencies"
+task :rake_dependencies => [:rake_habanero, :rake_smooth, :rake_testability, :rake_faces]
 
-desc "Builds Binding, including tests"
+desc "Rakes dependencies, builds solution"
+task :build_all => [:create_temp, :rake_dependencies, :build, :delete_temp]
+
+desc "Rakes dependencies, updates lib only"
+task :rake_and_update_lib => [:create_temp, :rake_dependencies, :updatelib, :delete_temp]
+
+desc "Builds solution, including tests"
 task :build => [:clean, :updatelib, :msbuild, :test, :commitlib]
 
 #------------------------build Faces  --------------------
@@ -75,6 +85,8 @@ task :updatelib => :update_lib_from_svn do
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.dll'), 'lib'
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.pdb'), 'lib'
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.xml'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Test.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Test.pdb'), 'lib'
 	
 	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.dll'), 'lib'	
 	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.pdb'), 'lib'	
@@ -87,6 +99,15 @@ task :updatelib => :update_lib_from_svn do
 	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.pdb'), 'lib'	
 	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Testers.dll'), 'lib'	
 	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Testers.pdb'), 'lib'	
+	
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Test.Base.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.xml'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Test.Win.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.xml'), 'lib'
 end
 
 desc "Builds the solution with msbuild"
@@ -99,7 +120,7 @@ end
 desc "Runs the tests"
 nunit :test do |nunit|
 	puts cyan("Running tests")
-	nunit.assemblies 'bin\Habanero.Binding.Tests.dll'
+	nunit.assemblies 'bin\Habanero.Binding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tester.Tests.dll'
 end
 
 svn :commitlib do |s|

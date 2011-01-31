@@ -34,9 +34,6 @@
     <Reference Include="Habanero.Base">
       <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Binding">
-      <HintPath>..\..\lib\Habanero.Binding.dll</HintPath>
-    </Reference>
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
@@ -83,6 +80,12 @@
     <Compile Include="ControlAdaptors\WinFormsDateTimePickerAdapter.cs" />
     <Compile Include="ControlAdaptors\WinFormsListBoxAdapter.cs" />
     <Compile Include="ControlAdaptors\WinFormsTextBoxAdapter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Habanero.Binding\Habanero.Binding.csproj">
+      <Project>{B94E18F9-2504-405F-ACD9-2144E6A00B89}</Project>
+      <Name>Habanero.Binding</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

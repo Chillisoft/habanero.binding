@@ -6,7 +6,7 @@ namespace Habanero.Binding
     /// <summary>
     /// Cache class
     /// </summary>
-    /// <typeparam name="T">Object class cahce contains</typeparam>
+    /// <typeparam name="T">Object class cache contains</typeparam>
     public class Cache<T>
     {
 

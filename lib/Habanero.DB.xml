@@ -209,7 +209,7 @@
             A version number is used to check if the object has been edited. 
             To use this class effectively, the update properties method 
             must be called before the database is updated (i.e. in  
-            <see cref="M:Habanero.BO.BusinessObject.Save"/> ) 
+            <see cref="!:BusinessObject.Save"/> ) 
             <see cref="M:Habanero.DB.ConcurrencyControl.OptimisticLockingVersionNumberDB.UpdatePropertiesWithLatestConcurrencyInfoBeforePersisting"/>)
             This class implements the followign concurrency control philosophy.
             Every time a non dirty object is retrieved from the database the 

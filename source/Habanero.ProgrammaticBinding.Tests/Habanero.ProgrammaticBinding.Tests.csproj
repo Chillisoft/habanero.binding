@@ -35,9 +35,6 @@
     <Reference Include="Habanero.Base">
       <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Binding">
-      <HintPath>..\..\lib\Habanero.Binding.dll</HintPath>
-    </Reference>
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
@@ -56,7 +53,7 @@
     <Reference Include="Habanero.Smooth">
       <HintPath>..\..\lib\Habanero.Smooth.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Test, Version=9.9.9.999, Culture=neutral, PublicKeyToken=c826c4967ee16d9f, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Test">
       <HintPath>..\..\lib\Habanero.Test.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Testability">
@@ -113,6 +110,10 @@
     <Compile Include="Mappers\TestMultipleRelationshipReadOnlyGridMapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Habanero.Binding\Habanero.Binding.csproj">
+      <Project>{B94E18F9-2504-405F-ACD9-2144E6A00B89}</Project>
+      <Name>Habanero.Binding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Habanero.ProgrammaticBinding\Habanero.ProgrammaticBinding.csproj">
       <Project>{6B01839D-5C77-4699-ACF2-1AA076000F01}</Project>
       <Name>Habanero.ProgrammaticBinding</Name>

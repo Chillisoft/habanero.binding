@@ -93,7 +93,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Habanero.Binding\Habanero.Binding.csproj">
       <Project>{B94E18F9-2504-405F-ACD9-2144E6A00B89}</Project>
-      <Name>VirtualisedBindingList</Name>
+      <Name>Habanero.Binding</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
