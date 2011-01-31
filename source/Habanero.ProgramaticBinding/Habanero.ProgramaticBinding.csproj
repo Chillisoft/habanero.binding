@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6B01839D-5C77-4699-ACF2-1AA076000F01}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Habanero.ProgramaticBinding</RootNamespace>
+    <AssemblyName>Habanero.ProgramaticBinding</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Habanero.Base">
+      <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Binding">
+      <HintPath>..\..\lib\Habanero.Binding.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.BO">
+      <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Base">
+      <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Win">
+      <HintPath>..\..\lib\Habanero.Faces.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Smooth">
+      <HintPath>..\..\lib\Habanero.Smooth.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\AssemblyInfoShared.cs">
+      <Link>Properties\AssemblyInfoShared.cs</Link>
+    </Compile>
+    <Compile Include="ControlAdaptors\WinFormsBOComboBoxSelectorAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsControlAdaptorFactory.cs" />
+    <Compile Include="ControlAdaptors\WinFormsControlMapperRegistry.cs" />
+    <Compile Include="ControlAdaptors\WinFormsEditableGridAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsDataGridViewAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsGridBaseAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsListViewAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsNumericUpDownAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsReadOnlyGridAdapter.cs" />
+    <Compile Include="ControlAdaptors\GridBaseManagerBindingList.cs" />
+    <Compile Include="HabaneroControlBinder.cs" />
+    <Compile Include="HabaneroSelectorControlBinder.cs" />
+    <Compile Include="Mappers\MultipleRelationshipDataGridViewMapper.cs" />
+    <Compile Include="Mappers\MultipleRelationshipReadOnlyGridMapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ControlAdaptors\WinFormsCheckBoxAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsComboBoxAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsDateTimePickerAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsListBoxAdapter.cs" />
+    <Compile Include="ControlAdaptors\WinFormsTextBoxAdapter.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)PostBuild.cmd" "$(SolutionDir)"  "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

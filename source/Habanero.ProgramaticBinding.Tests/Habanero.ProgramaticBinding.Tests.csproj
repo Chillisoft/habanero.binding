@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{31074E85-2D4B-4D2A-B81E-F5D2920B976D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Habanero.ProgramaticBinding.Tests</RootNamespace>
+    <AssemblyName>Habanero.ProgramaticBinding.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Habanero.Base">
+      <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Binding">
+      <HintPath>..\..\lib\Habanero.Binding.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.BO">
+      <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Base">
+      <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Test.Base">
+      <HintPath>..\..\lib\Habanero.Faces.Test.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Test.Win">
+      <HintPath>..\..\lib\Habanero.Faces.Test.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Win">
+      <HintPath>..\..\lib\Habanero.Faces.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Smooth">
+      <HintPath>..\..\lib\Habanero.Smooth.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Test, Version=9.9.9.999, Culture=neutral, PublicKeyToken=c826c4967ee16d9f, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Habanero.Test.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Testability">
+      <HintPath>..\..\lib\Habanero.Testability.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Testability.Helpers">
+      <HintPath>..\..\lib\Habanero.Testability.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Testability.Testers">
+      <HintPath>..\..\lib\Habanero.Testability.Testers.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\AssemblyInfoShared.cs">
+      <Link>Properties\AssemblyInfoShared.cs</Link>
+    </Compile>
+    <Compile Include="ControlAdaptors\TestGridBaseManagerBindingList.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsBOComboBoxSelectorAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsEditableGridAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsDataGridViewAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsGridBaseAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsReadOnlyGridAdapter.cs" />
+    <Compile Include="FakeBos.cs" />
+    <Compile Include="ControlAdaptors\TestControlAdaptorFactory.cs" />
+    <Compile Include="TestDefaultControlNamingConvention.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsControlMapperRegistry.cs" />
+    <Compile Include="TestHabaneroControlBinder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHabaneroControlBinder_ByConvention.cs" />
+    <Compile Include="TestHabaneroSelectorControlBinder.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsCheckBoxAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsComboBoxAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsDateTimePickerAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsNumericUpDownAdapter.cs" />
+    <Compile Include="ControlAdaptors\TestWinFormsTextBoxAdapter.cs" />
+    <Compile Include="Mappers\TestMultipleRelationshipDataGridViewMapper.cs" />
+    <Compile Include="Mappers\TestMultipleRelationshipReadOnlyGridMapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Habanero.ProgramaticBinding\Habanero.ProgramaticBinding.csproj">
+      <Project>{6B01839D-5C77-4699-ACF2-1AA076000F01}</Project>
+      <Name>Habanero.ProgramaticBinding</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)PostBuild.cmd" "$(SolutionDir)"  "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
