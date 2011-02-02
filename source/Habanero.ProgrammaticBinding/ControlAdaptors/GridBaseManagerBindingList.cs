@@ -154,8 +154,11 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
                         var row = _gridBase.Rows[indexOf];
                         if (row != null)
                         {
-                            IDataGridViewCell cell = row.Cells[1];
-                            if (cell != null && cell.RowIndex >= 0) _gridBase.CurrentCell = cell;
+                            if (row.Cells.Count > 0)
+                            {
+                                IDataGridViewCell cell = row.Cells[0];
+                                if (cell != null && cell.RowIndex >= 0) _gridBase.CurrentCell = cell;
+                            }
                         }
                     }
                     if (_gridBase != null)
