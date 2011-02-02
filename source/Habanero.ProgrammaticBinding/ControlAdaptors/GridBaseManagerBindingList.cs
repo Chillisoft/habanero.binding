@@ -157,7 +157,7 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
 
                             if (_gridBase.ColumnCount > 0)
                             {
-                                IDataGridViewCell cell = row.Cells[0];
+                                var cell = row.Cells[0];
                                 if (cell != null && cell.RowIndex >= 0) _gridBase.CurrentCell = cell;
                             }
                         }
