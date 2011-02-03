@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO;
@@ -2312,15 +2313,121 @@ namespace Habanero.Binding.Tests
         //TODO brett 24 Jan 2011: If you make an update to the Business Object or the underlying collection directly
         // then it should cause the ListChanged Event to fire.
 
+        #region AddToUnderlyingCol
+
+        [Test]
+        public void Test_AddToBOCol_WhereBOMatchesFilter_ShouldAddToBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListView<FakeBO>(boCol);        
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            var newBO = new FakeBO();
+            boCol.Add(newBO);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(4, bindingListView.Count);
+            bindingListView.ShouldContain(newBO);
+        }
+
+        [Test]
+        public void Test_AddToBOCol_WhereNotBOMatchesFilter_ShouldNotAddToBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListView<FakeBO>(boCol) { Filter = "FakeBOName = " + boCol[1].FakeBOName};
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(1, bindingListView.Count);
+            //---------------Execute Test ----------------------
+            var newBO = new FakeBO();
+            boCol.Add(newBO);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(1, bindingListView.Count);
+            bindingListView.Cast<FakeBO>().ShouldNotContain(newBO);
+        }
+
+        [Test]
+        public void Test_AddToBOCol_WhereNotBOMatchesFilter_ShouldNotFireEvent()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListView<FakeBO>(boCol) { Filter = "FakeBOName = " + boCol[1].FakeBOName};
+            var listChangedFired = false;
+            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(1, bindingListView.Count);
+            Assert.IsFalse(listChangedFired);
+            //---------------Execute Test ----------------------
+            var newBO = new FakeBO();
+            boCol.Add(newBO);
+            //---------------Test Result -----------------------
+            Assert.IsFalse(listChangedFired);
+        }
+
+        [Test]
+        public void Test_AddToBOCol_ShouldFireEvent()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListView<FakeBO>(boCol);
+            var listChangedFired = false;
+            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            Assert.IsFalse(listChangedFired);
+            //---------------Execute Test ----------------------
+            var newBO = new FakeBO();
+            boCol.Add(newBO);
+            //---------------Test Result -----------------------
+            Assert.IsTrue(listChangedFired);
+        }
+
+        #endregion //AddToUnderlyingCol
+
+
+        #region RemoveFromUnderlyingCol
+
+        [Test]
+        public void Test_RemoveFromBOCol_ShouldRemoveFromBindingList()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListView<FakeBO>(boCol);
+            var boToBeRemoved = boCol[1];
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            //---------------Execute Test ----------------------
+
+            boCol.Remove(boToBeRemoved);
+            //---------------Test Result -----------------------
+            Assert.AreEqual(2, bindingListView.Count);
+            bindingListView.Cast<FakeBO>().ShouldNotContain(boToBeRemoved);
+        }
+
+        [Test]
+        public void Test_RemoveFromBOCol_ShouldFireEvent()
+        {
+            //---------------Set up test pack-------------------
+            var boCol = GetCollectionWith3Items("FakeBOName DESC");
+            var bindingListView = new BindingListView<FakeBO>(boCol);
+            var listChangedFired = false;
+            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            var boToBeRemoved = boCol[1];
+            //---------------Assert Precondition----------------
+            Assert.AreEqual(3, bindingListView.Count);
+            Assert.IsFalse(listChangedFired);
+            //---------------Execute Test ----------------------
+            boCol.Remove(boToBeRemoved);
+            //---------------Test Result -----------------------
+            Assert.IsTrue(listChangedFired);
+        }
+
+        #endregion //AddToUnderlyingCol
         private static DateTime GetRandomDate()
         {
             return RandomValueGen.GetRandomDate();
         }
-/*
-        private static string GetRandomString(int maxLength)
-        {
-            return RandomValueGen.GetRandomString(maxLength);
-        }*/
 
         private static Guid GetRandomGuid()
         {

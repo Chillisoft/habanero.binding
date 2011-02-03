@@ -56,9 +56,32 @@ namespace Habanero.Binding
         /// <param name="boCol"></param>
         public BindingListView(BusinessObjectCollection<T> boCol)
         {
-            if (boCol == null) throw new ArgumentNullException("collection");
+            if (boCol == null) throw new ArgumentNullException("boCol");
             this.BusinessObjectCollection = boCol;
             this.ViewOfBusinessObjectCollection = boCol.Clone();
+            this.BusinessObjectCollection.BusinessObjectAdded += OnBusinessObjectAdded;
+            this.BusinessObjectCollection.BusinessObjectRemoved += OnBusinessObjectRemoved;
+        }
+
+        private void OnBusinessObjectRemoved(object sender, BOEventArgs<T> args)
+        {
+            var boToBeRemoved = args.BusinessObject;
+            if (boToBeRemoved == null) return;
+            var removedIndex = this.ViewOfBusinessObjectCollection.IndexOf(boToBeRemoved);
+            this.ViewOfBusinessObjectCollection.Remove(boToBeRemoved);
+            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, removedIndex));        
+        }
+
+        private void OnBusinessObjectAdded(object sender, BOEventArgs<T> args)
+        {
+            var boToBeAdded = args.BusinessObject;
+            if (boToBeAdded == null) return;
+            var currentCriteria = this.ViewOfBusinessObjectCollection.SelectQuery.Criteria;
+            if (currentCriteria == null || currentCriteria.IsMatch(boToBeAdded))
+            {
+                this.ViewOfBusinessObjectCollection.Add(boToBeAdded);
+                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, this.ViewOfBusinessObjectCollection.Count));              
+            }
         }
 
         /// <summary>
@@ -83,10 +106,10 @@ namespace Habanero.Binding
         protected BusinessObjectCollection<T> ViewOfBusinessObjectCollection
         {
             get { return _viewOfBusinessObjectCollection; }
-            set
+            private set
             {
                 _viewOfBusinessObjectCollection = value;
-                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
         }
 
@@ -189,7 +212,7 @@ namespace Habanero.Binding
                 var indexInUnderlyingCollection = this.BusinessObjectCollection.IndexOf(this.ViewOfBusinessObjectCollection[index]);
                 this.ViewOfBusinessObjectCollection[index] = (T)value;
                 this.BusinessObjectCollection[indexInUnderlyingCollection] = (T) value;
-                OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
         }
 
@@ -199,7 +222,7 @@ namespace Habanero.Binding
         public void Clear()
         {
             this.ViewOfBusinessObjectCollection.Clear();
-            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
+            FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
         }
 
         /// <summary>
@@ -245,7 +268,7 @@ namespace Habanero.Binding
         {
             var index = IndexOf(value);
             ViewOfBusinessObjectCollection.Remove((T)value);
-            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
+            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
         }
 
         /// <summary>
@@ -258,7 +281,7 @@ namespace Habanero.Binding
             var boToDelete = ViewOfBusinessObjectCollection[index];
             boToDelete.MarkForDelete();
             boToDelete.Save();
-            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
+            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }
 
         /// <summary>
@@ -273,7 +296,7 @@ namespace Habanero.Binding
 
             ViewOfBusinessObjectCollection.Insert(index, (T)value);
             BusinessObjectCollection.Insert(index, (T) value);
-            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
+            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
         }
 
         /// <summary>
@@ -295,7 +318,7 @@ namespace Habanero.Binding
         /// <summary>
         ///  Called when the list changes or an item in the list changes.
         /// </summary>
-        protected void OnListChanged(ListChangedEventArgs args)
+        protected void FireListChanged(ListChangedEventArgs args)
         {
             if (ListChanged != null) ListChanged(this, args);
         }
@@ -496,7 +519,7 @@ namespace Habanero.Binding
                 {
                     this.ViewOfBusinessObjectCollection.Sort(property.Name, false, direction == ListSortDirection.Ascending);
                 }
-                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
             catch (Exception ex)
             {
@@ -518,7 +541,7 @@ namespace Habanero.Binding
         {
             SortDescriptions = descriptionCollection;
             ViewOfBusinessObjectCollection.Sort(new GenericComparer<T>(SortDescriptions));
-            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
         #endregion
 
@@ -565,7 +588,7 @@ namespace Habanero.Binding
                     {
                         addedBO.MarkForDelete();
                         _logger.Log("In CancelNew B4 OnListChanged (" + itemIndex + ")", LogCategory.Info);
-                        OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+                        FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
                     }
                 }
                 _logger.Log("End CancelNew (" + itemIndex + ")", LogCategory.Info);
@@ -627,10 +650,8 @@ namespace Habanero.Binding
                         var col = new BusinessObjectCollection<T>();
                         var criteria = GetCriteriaObject(ClassDef.ClassDefs[typeof(T)], _filter);
 
-                        foreach (var bo in this.BusinessObjectCollection)
-                        {
-                            if (criteria.IsCriteriaMatch(bo)) col.Add(bo);
-                        }
+                        var matchingBos = this.BusinessObjectCollection.Where(bo => criteria.IsCriteriaMatch(bo));
+                        col.Add(matchingBos);
                         col.SelectQuery.Criteria = criteria;
                         this.ViewOfBusinessObjectCollection = col;
                     }
