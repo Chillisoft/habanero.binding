@@ -2314,7 +2314,6 @@ namespace Habanero.Binding.Tests
         // then it should cause the ListChanged Event to fire.
 
         #region AddToUnderlyingCol
-
         [Test]
         public void Test_AddToBOCol_WhereBOMatchesFilter_ShouldAddToBindingList()
         {
@@ -2354,7 +2353,10 @@ namespace Habanero.Binding.Tests
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
             var bindingListView = new BindingListView<FakeBO>(boCol) { Filter = "FakeBOName = " + boCol[1].FakeBOName};
             var listChangedFired = false;
-            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            bindingListView.ListChanged += (sender, args) =>
+                                               {
+                                                   listChangedFired = true;
+                                               };
             //---------------Assert Precondition----------------
             Assert.AreEqual(1, bindingListView.Count);
             Assert.IsFalse(listChangedFired);
@@ -2373,21 +2375,31 @@ namespace Habanero.Binding.Tests
             var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+
+            ListChangedType listChangedType = ListChangedType.Reset;
+            int newIndex = 0;
+            bindingListView.ListChanged += (sender, args) =>
+            {
+                listChangedFired = true;
+                listChangedType = args.ListChangedType;
+                newIndex = args.NewIndex;
+            };
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             Assert.IsFalse(listChangedFired);
+            Assert.AreEqual(0, newIndex);
             //---------------Execute Test ----------------------
             var newBO = new FakeBO();
             boCol.Add(newBO);
             //---------------Test Result -----------------------
             Assert.IsTrue(listChangedFired);
+            Assert.AreEqual(3, newIndex, "Should add to end of grid i.e. position 4 index 3");
+            Assert.AreEqual(ListChangedType.ItemAdded, listChangedType);
         }
-
         #endregion //AddToUnderlyingCol
 
 
         #region RemoveFromUnderlyingCol
-
         [Test]
         public void Test_RemoveFromBOCol_ShouldRemoveFromBindingList()
         {
@@ -2412,7 +2424,14 @@ namespace Habanero.Binding.Tests
             var boCol = GetCollectionWith3Items("FakeBOName DESC");
             var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
-            bindingListView.ListChanged += (sender, args) => listChangedFired = true;
+            var listChangedType = ListChangedType.Reset;
+            var newIndex = 0;
+            bindingListView.ListChanged += (sender, args) =>
+            {
+                listChangedFired = true;
+                listChangedType = args.ListChangedType;
+                newIndex = args.NewIndex;
+            };
             var boToBeRemoved = boCol[1];
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
@@ -2421,9 +2440,11 @@ namespace Habanero.Binding.Tests
             boCol.Remove(boToBeRemoved);
             //---------------Test Result -----------------------
             Assert.IsTrue(listChangedFired);
+            Assert.AreEqual(1, newIndex, "Should add to end of grid i.e. position 4 index 3");
+            Assert.AreEqual(ListChangedType.ItemDeleted, listChangedType);
         }
-
         #endregion //AddToUnderlyingCol
+
         private static DateTime GetRandomDate()
         {
             return RandomValueGen.GetRandomDate();

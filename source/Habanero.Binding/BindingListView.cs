@@ -80,7 +80,7 @@ namespace Habanero.Binding
             if (currentCriteria == null || currentCriteria.IsMatch(boToBeAdded))
             {
                 this.ViewOfBusinessObjectCollection.Add(boToBeAdded);
-                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, this.ViewOfBusinessObjectCollection.Count));              
+                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, this.ViewOfBusinessObjectCollection.Count - 1));              
             }
         }
 
