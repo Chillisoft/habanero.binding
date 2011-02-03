@@ -281,7 +281,7 @@ namespace Habanero.Binding
             var boToDelete = ViewOfBusinessObjectCollection[index];
             boToDelete.MarkForDelete();
             boToDelete.Save();
-            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
+            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
         }
 
         /// <summary>

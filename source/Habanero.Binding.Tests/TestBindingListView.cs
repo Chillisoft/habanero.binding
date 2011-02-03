@@ -2425,14 +2425,17 @@ namespace Habanero.Binding.Tests
             var bindingListView = new BindingListView<FakeBO>(boCol);
             var listChangedFired = false;
             var listChangedType = ListChangedType.Reset;
+            var oldIndex = 0;
             var newIndex = 0;
             bindingListView.ListChanged += (sender, args) =>
             {
                 listChangedFired = true;
                 listChangedType = args.ListChangedType;
+                oldIndex = args.OldIndex;
                 newIndex = args.NewIndex;
             };
-            var boToBeRemoved = boCol[1];
+            const int expectedOldIndex = 1;
+            var boToBeRemoved = boCol[expectedOldIndex];
             //---------------Assert Precondition----------------
             Assert.AreEqual(3, bindingListView.Count);
             Assert.IsFalse(listChangedFired);
@@ -2440,8 +2443,9 @@ namespace Habanero.Binding.Tests
             boCol.Remove(boToBeRemoved);
             //---------------Test Result -----------------------
             Assert.IsTrue(listChangedFired);
-            Assert.AreEqual(1, newIndex, "Should add to end of grid i.e. position 4 index 3");
             Assert.AreEqual(ListChangedType.ItemDeleted, listChangedType);
+            Assert.AreEqual(1, newIndex, "Indicates an item was removed from the collection. Strangely, the NewIndex property of the event argument indicates the index of the item that was removed. (OldIndex would seem more appropriate for this case, but is not used.)");
+            Assert.AreEqual(-1, oldIndex, "not relevant");
         }
         #endregion //AddToUnderlyingCol
 
