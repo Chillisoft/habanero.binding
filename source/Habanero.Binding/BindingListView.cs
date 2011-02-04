@@ -69,7 +69,10 @@ namespace Habanero.Binding
             if (boToBeRemoved == null) return;
             var removedIndex = this.ViewOfBusinessObjectCollection.IndexOf(boToBeRemoved);
             this.ViewOfBusinessObjectCollection.Remove(boToBeRemoved);
-            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, removedIndex));        
+            if (removedIndex >= 0)
+            {
+                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, removedIndex));
+            }
         }
 
         private void OnBusinessObjectAdded(object sender, BOEventArgs<T> args)

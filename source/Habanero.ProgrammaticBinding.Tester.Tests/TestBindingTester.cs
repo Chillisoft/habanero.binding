@@ -108,7 +108,7 @@ namespace Habanero.ProgrammaticBinding.Tester.Tests
                 //---------------Test Result -----------------------
             catch (AssertionException ex)
             {
-                var expectedMsg = string.Format("The Property '{0}' for class '{1}' should be mapped", propName, "FakeBO");
+                var expectedMsg = string.Format("The Property '{0}' for class '{1}' should be mapped", propName, "FakeBoWithOnProp");
                 StringAssert.Contains(expectedMsg, ex.Message);
             }
         }
@@ -158,7 +158,7 @@ namespace Habanero.ProgrammaticBinding.Tester.Tests
             //---------------Test Result -----------------------
             catch (AssertionException ex)
             {
-                var expectedMsg = string.Format("The Property '{0}' for class '{1}' should be mapped to '{2}'", propName, "FakeBO", textBoxName);
+                var expectedMsg = string.Format("The Property '{0}' for class '{1}' should be mapped to '{2}'", propName, "FakeBoWithOnProp", textBoxName);
                 StringAssert.Contains(expectedMsg, ex.Message);
             }
         }
@@ -208,7 +208,7 @@ namespace Habanero.ProgrammaticBinding.Tester.Tests
             //---------------Test Result -----------------------
             catch (AssertionException ex)
             {
-                var expectedMsg = string.Format("The Property '{0}' for class '{1}' should be mapped to '{2}'", propName, "FakeBO", textBoxName);
+                var expectedMsg = string.Format("The Property '{0}' for class '{1}' should be mapped to '{2}'", propName, "FakeBoWithOnProp", textBoxName);
                 StringAssert.Contains(expectedMsg, ex.Message);
             }
         }
