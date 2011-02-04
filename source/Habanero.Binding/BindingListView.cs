@@ -71,7 +71,11 @@ namespace Habanero.Binding
             this.ViewOfBusinessObjectCollection.Remove(boToBeRemoved);
             if (removedIndex >= 0)
             {
-                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, removedIndex));
+                FireListChanged(ListChangedType.ItemDeleted, removedIndex);
+            }
+            else
+            {
+                FireListChanged(ListChangedType.Reset);
             }
         }
 
@@ -83,7 +87,8 @@ namespace Habanero.Binding
             if (currentCriteria == null || currentCriteria.IsMatch(boToBeAdded))
             {
                 this.ViewOfBusinessObjectCollection.Add(boToBeAdded);
-                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, this.ViewOfBusinessObjectCollection.Count - 1));              
+                var newIndex = this.ViewOfBusinessObjectCollection.Count - 1;
+                FireListChanged(ListChangedType.ItemAdded, newIndex);              
             }
         }
 
@@ -112,7 +117,7 @@ namespace Habanero.Binding
             private set
             {
                 _viewOfBusinessObjectCollection = value;
-                FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                FireListChanged(ListChangedType.Reset);
             }
         }
 
@@ -215,7 +220,7 @@ namespace Habanero.Binding
                 var indexInUnderlyingCollection = this.BusinessObjectCollection.IndexOf(this.ViewOfBusinessObjectCollection[index]);
                 this.ViewOfBusinessObjectCollection[index] = (T)value;
                 this.BusinessObjectCollection[indexInUnderlyingCollection] = (T) value;
-                FireListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+                FireListChanged(ListChangedType.ItemChanged, index);
             }
         }
 
@@ -225,7 +230,7 @@ namespace Habanero.Binding
         public void Clear()
         {
             this.ViewOfBusinessObjectCollection.Clear();
-            FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
+            FireListChanged(ListChangedType.Reset);
         }
 
         /// <summary>
@@ -271,7 +276,7 @@ namespace Habanero.Binding
         {
             var index = IndexOf(value);
             ViewOfBusinessObjectCollection.Remove((T)value);
-            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
+            FireListChanged(ListChangedType.ItemDeleted, index);
         }
 
         /// <summary>
@@ -284,7 +289,7 @@ namespace Habanero.Binding
             var boToDelete = ViewOfBusinessObjectCollection[index];
             boToDelete.MarkForDelete();
             boToDelete.Save();
-            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index, index));
+            FireListChanged(ListChangedType.ItemDeleted, index);
         }
 
         /// <summary>
@@ -299,7 +304,7 @@ namespace Habanero.Binding
 
             ViewOfBusinessObjectCollection.Insert(index, (T)value);
             BusinessObjectCollection.Insert(index, (T) value);
-            FireListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
+            FireListChanged(ListChangedType.ItemAdded, index);
         }
 
         /// <summary>
@@ -527,12 +532,17 @@ namespace Habanero.Binding
                 {
                     this.ViewOfBusinessObjectCollection.Sort(property.Name, false, direction == ListSortDirection.Ascending);
                 }
-                FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                FireListChanged(ListChangedType.Reset);
             }
             catch (Exception ex)
             {
                 GlobalRegistry.UIExceptionNotifier.Notify(ex, "Error", "Error");
             }
+        }
+
+        private void FireListChanged(ListChangedType listChangedType, int newIndex = -1)
+        {
+            FireListChanged(new ListChangedEventArgs(listChangedType, newIndex));
         }
 
         private static ListSortDescriptionCollection CreateSortDescriptions(PropertyDescriptor property, ListSortDirection direction)
@@ -549,7 +559,7 @@ namespace Habanero.Binding
         {
             SortDescriptions = descriptionCollection;
             ViewOfBusinessObjectCollection.Sort(new GenericComparer<T>(SortDescriptions));
-            FireListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            FireListChanged(ListChangedType.Reset);
         }
         #endregion
 
@@ -596,7 +606,7 @@ namespace Habanero.Binding
                     {
                         addedBO.MarkForDelete();
                         _logger.Log("In CancelNew B4 OnListChanged (" + itemIndex + ")", LogCategory.Info);
-                        FireListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, itemIndex, itemIndex));
+                        FireListChanged(ListChangedType.ItemDeleted, itemIndex);
                     }
                 }
                 _logger.Log("End CancelNew (" + itemIndex + ")", LogCategory.Info);

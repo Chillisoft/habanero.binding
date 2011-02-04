@@ -61,7 +61,10 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
         public override IBusinessObject GetBusinessObjectAtRow(int rowIndex)
         {
             if (_bindingListView == null) return base.GetBusinessObjectAtRow(rowIndex);
-            return _bindingListView[rowIndex] as IBusinessObject;
+            if (rowIndex >= 0 && rowIndex < _bindingListView.Count) return _bindingListView[rowIndex] as IBusinessObject;
+
+            _logger.Log("IN GetBusinessObjectAtRow No Bo not found in binding list at index '" + rowIndex + "'");
+            return null;
         }
 
         private static Type GetClassType(IBusinessObjectCollection businessObjectCollection)
