@@ -320,7 +320,12 @@ namespace Habanero.Binding
         /// </summary>
         protected void FireListChanged(ListChangedEventArgs args)
         {
-            if (ListChanged != null) ListChanged(this, args);
+            if (ListChanged != null)
+            {
+
+                _logger.Log("B4 FireListChanged : " + args.ListChangedType + " at new index " + args.NewIndex + " old index " + args.OldIndex);
+                ListChanged(this, args);
+            }
         }
 
         /// <summary>
