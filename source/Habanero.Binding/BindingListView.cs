@@ -36,7 +36,7 @@ namespace Habanero.Binding
         private IViewBuilder _viewBuilder;
         private readonly IDictionary<int, T> _addedBOs = new Dictionary<int, T>();
         private static readonly IHabaneroLogger _logger =
-            GlobalRegistry.LoggerFactory.GetLogger("Habanero.Binding.BindingListViewNew");
+            GlobalRegistry.LoggerFactory.GetLogger("Habanero.Binding.BindingListView");
         /// <summary>
         /// 
         /// </summary>
