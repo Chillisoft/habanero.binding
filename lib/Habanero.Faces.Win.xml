@@ -543,11 +543,6 @@
             Gets and sets whether this selector autoselects the first item or not when a new collection is set.
             </summary>
         </member>
-        <member name="P:Habanero.Faces.Win.CollapsiblePanelSelectorWin.ControlEnabled">
-            <summary>
-            Gets and sets whether the Control is enabled or not
-            </summary>
-        </member>
         <member name="T:Habanero.Faces.Win.CollapsiblePanelWin">
             <summary>
             Implements <see cref="T:Habanero.Faces.Base.ICollapsiblePanel"/> for Windows Forms.
@@ -721,11 +716,6 @@
             <summary>
             Returns the manager that provides logic common to all
             UI environments
-            </summary>
-        </member>
-        <member name="P:Habanero.Faces.Win.BOColTabControlWin.ControlEnabled">
-            <summary>
-            Gets and sets whether the Control is enabled or not
             </summary>
         </member>
         <member name="P:Habanero.Faces.Win.BOColTabControlWin.SelectedBusinessObject">
@@ -1069,11 +1059,6 @@
              This overrides the <see cref="!:IBOColSelectorControl.AutoSelectFirstItem">AutoSelectFirstItem</see> property.
             </summary>
         </member>
-        <member name="P:Habanero.Faces.Win.ComboBoxSelectorWin.ControlEnabled">
-            <summary>
-            Gets and sets whether the Control is enabled or not
-            </summary>
-        </member>
         <member name="T:Habanero.Faces.Win.ButtonWin">
             <summary>
             Represents a button control
@@ -1245,6 +1230,59 @@
         <member name="T:Habanero.Faces.Win.ControlHabaneroExtensions">
             <summary>
             Extension method for IControl Habanero that make it easier to work with ControlAdapters.
+            </summary>
+        </member>
+        <member name="T:Habanero.Faces.Win.IWinFormsControlAdapter">
+            <summary>
+            This is an interface used specificaly for adapting a any control that inherits for Control in 
+            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
+            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
+            or any other such required behaviour.
+            </summary>
+        </member>
+        <member name="P:Habanero.Faces.Win.IWinFormsControlAdapter.WrappedControl">
+            <summary>
+            The Control being wrapped
+            </summary>
+        </member>
+        <member name="T:Habanero.Faces.Win.IWinFormsDateTimePickerAdapter">
+            <summary>
+            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
+            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
+            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
+            or any other such required behaviour.
+            </summary>
+        </member>
+        <member name="T:Habanero.Faces.Win.IWinFormsComboBoxAdapter">
+            <summary>
+            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
+            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
+            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
+            or any other such required behaviour.
+            </summary>
+        </member>
+        <member name="T:Habanero.Faces.Win.IWinFormsTextBoxAdapter">
+            <summary>
+            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
+            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
+            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
+            or any other such required behaviour.
+            </summary>
+        </member>
+        <member name="T:Habanero.Faces.Win.IWinFormsCheckBoxAdapter">
+            <summary>
+            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
+            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
+            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
+            or any other such required behaviour.
+            </summary>
+        </member>
+        <member name="T:Habanero.Faces.Win.IWinFormsNumericUpDownAdapter">
+            <summary>
+            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
+            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
+            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
+            or any other such required behaviour.
             </summary>
         </member>
         <member name="T:Habanero.Faces.Win.ControlWin">
@@ -2278,11 +2316,6 @@
             by the FilterControl.
             </summary>
         </member>
-        <member name="P:Habanero.Faces.Win.EditableGridControlWin.ControlEnabled">
-            <summary>
-            Gets and sets whether the Control is enabled or not
-            </summary>
-        </member>
         <member name="P:Habanero.Faces.Win.EditableGridControlWin.AllowUsersToAddBO">
             <summary>
              Gets and sets whether the user can add Business objects via this control
@@ -2473,13 +2506,6 @@
             A collection of DataGridViewRow objects
             </summary>
         </member>
-        <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewRowCollectionWin.#ctor(System.Windows.Forms.DataGridViewRowCollection)">
-            <summary>
-            Constructs a Habanero.Faces DataGridViewRowCollectionWin as a adaoter around the 
-            WinForms one.
-            </summary>
-            <param name="rows"></param>
-        </member>
         <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewRowCollectionWin.Add(System.Object[])">
             <summary>Adds a new row to the collection, and populates the cells with the specified objects.</summary>
             <returns>The index of the new row.</returns>
@@ -2553,13 +2579,6 @@
             <summary>
             Represents a collection of DataGridViewColumn objects in a DataGridView control.
             </summary>
-        </member>
-        <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewColumnCollectionWin.#ctor(System.Windows.Forms.DataGridViewColumnCollection)">
-            <summary>
-            Constructs a Habanero.Faces DataGridViewColumnCollection as a wrapper around the 
-            WinForms one.
-            </summary>
-            <param name="columns"></param>
         </member>
         <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewColumnCollectionWin.Clear">
             <summary>
@@ -2692,13 +2711,6 @@
             Represents a collection of cells in a DataGridViewRow
             </summary>
         </member>
-        <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewCellCollectionWin.#ctor(System.Windows.Forms.DataGridViewCellCollection)">
-            <summary>
-            Constructs a Habanero.Faces DataGridViewCellCollectionWin as a adapter around the 
-            WinForms one.
-            </summary>
-            <param name="cells"></param>
-        </member>
         <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewCellCollectionWin.Add(Habanero.Faces.Base.IDataGridViewCell)">
             <summary>Adds a cell to the collection.</summary>
             <returns>The position in which to insert the new element.</returns>
@@ -2754,13 +2766,6 @@
             Represents a collection of DataGridViewRow objects that are selected in a DataGridView
             </summary>
         </member>
-        <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewSelectedRowCollectionWin.#ctor(System.Windows.Forms.DataGridViewSelectedRowCollection)">
-            <summary>
-            Constructs a Habanero.Faces DataGridViewSelectedRowCollectionWin as a adapter around the 
-            WinForms one.
-            </summary>
-            <param name="selectedRows"></param>
-        </member>
         <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewSelectedRowCollectionWin.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through a collection.
@@ -2785,13 +2790,6 @@
             <summary>
             Represents a collection of cells that are selected in a DataGridView
             </summary>
-        </member>
-        <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewSelectedCellCollectionWin.#ctor(System.Windows.Forms.DataGridViewSelectedCellCollection)">
-            <summary>
-            Provides a adapter around the <see cref="T:System.Windows.Forms.DataGridViewSelectedCellCollection"/>.
-            So that it can be used by Habanero.Faces generically.
-            </summary>
-            <param name="selectedCells"></param>
         </member>
         <member name="M:Habanero.Faces.Win.DataGridViewWin.DataGridViewSelectedCellCollectionWin.GetEnumerator">
             <summary>
@@ -2889,6 +2887,19 @@
             <summary>
             Clears the business object collection and the rows in the data table
             </summary>
+        </member>
+        <member name="M:Habanero.Faces.Win.GridBaseWin.SelectedBusinessObjectEdited(Habanero.BO.BusinessObject)">
+            <summary>
+            Fires an event indicating that the selected business object
+            is being edited
+            </summary>
+            <param name="bo">The business object being edited</param>
+        </member>
+        <member name="M:Habanero.Faces.Win.GridBaseWin.FireBusinessObjectEditedEvent(Habanero.BO.BusinessObject)">
+            <summary>
+            Fires the Selected Business Object Edited Event for <paramref name="bo"/>
+            </summary>
+            <param name="bo">The Business object the event is being fired for</param>
         </member>
         <member name="M:Habanero.Faces.Win.GridBaseWin.RefreshGrid">
             <summary>
@@ -3023,6 +3034,11 @@
              Else it will be "HABANERO_OBJECTID".
             </summary>
         </member>
+        <member name="E:Habanero.Faces.Win.GridBaseWin.BusinessObjectEdited">
+            <summary>
+            Occurs when a business object is being edited
+            </summary>
+        </member>
         <member name="P:Habanero.Faces.Win.GridBaseWin.Habanero#Faces#Base#IBOColSelector#NoOfItems">
             <summary>Gets the number of items displayed in the <see cref="T:Habanero.Faces.Base.IBOColSelector"></see>.</summary>
             <returns>The number of items in the <see cref="T:Habanero.Faces.Base.IBOColSelector"></see>.</returns>
@@ -3036,11 +3052,6 @@
         <member name="P:Habanero.Faces.Win.GridBaseWin.CheckUserConfirmsDeletionDelegate">
             <summary>
             Gets or sets the delegate that checks whether the user wants to delete selected rows
-            </summary>
-        </member>
-        <member name="P:Habanero.Faces.Win.GridBaseWin.Habanero#Faces#Base#IBOColSelector#ControlEnabled">
-            <summary>
-            Gets and sets whether the Control is enabled or not
             </summary>
         </member>
         <member name="M:Habanero.Faces.Win.EditableGridWin.#ctor">
@@ -4077,8 +4088,6 @@
         </member>
         <member name="M:Habanero.Faces.Win.DataGridViewCellStyleWin.#ctor(System.Windows.Forms.DataGridViewCellStyle)">
             <summary>
-            Constructs a Habanero.Faces DataGridViewCellStyleWin as a adapter around the 
-            WinForms one.
             </summary>
             <param name="dataGridViewCellStyle"></param>
         </member>
@@ -4567,11 +4576,6 @@
         <member name="P:Habanero.Faces.Win.ListBoxSelectorWin.AutoSelectFirstItem">
             <summary>
             Gets and sets whether this selector autoselects the first item or not when a new collection is set.
-            </summary>
-        </member>
-        <member name="P:Habanero.Faces.Win.ListBoxSelectorWin.Habanero#Faces#Base#IBOColSelector#ControlEnabled">
-            <summary>
-            Gets and sets whether the Control is enabled or not
             </summary>
         </member>
         <member name="T:Habanero.Faces.Win.ListComboBoxMapperStrategyWin">
@@ -5626,11 +5630,6 @@
              is used to edit the <see cref="T:Habanero.Base.IBusinessObject"/> represented by the row that was double clicked.
              If you want to implement a custom handler on double click, you should set this to false so that 
              the default handler does not interfere with your custom handler. 
-            </summary>
-        </member>
-        <member name="P:Habanero.Faces.Win.ReadOnlyGridControlWin.ControlEnabled">
-            <summary>
-            Gets and sets whether the Control is enabled or not
             </summary>
         </member>
         <member name="P:Habanero.Faces.Win.ReadOnlyGridControlWin.AllowUsersToAddBO">
@@ -7416,82 +7415,6 @@
             <param name="overwritePrompt">Should the dialog prompt the user when the file will overwrite another file?</param>
             <param name="initialDirectory">The default directory to open in</param>
             <returns>Returns a value representing whether a file was chosen or not</returns>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsControlAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits for Control in 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="P:Habanero.Faces.Win.IWinFormsControlAdapter.WrappedControl">
-            <summary>
-            The Control being wrapped
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsDateTimePickerAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsComboBoxAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsDataGridViewAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsGridBaseAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsTextBoxAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsCheckBoxAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.IWinFormsNumericUpDownAdapter">
-            <summary>
-            This is an interface used specificaly for adapting a any control that inherits from System.Windows.Control 
-            so that it can be treated as an IControlHabanero and can therefore be used by Faces for Habanero.Binding,
-            <see cref="T:Habanero.Faces.Base.PanelBuilder"/>
-            or any other such required behaviour.
-            </summary>
-        </member>
-        <member name="T:Habanero.Faces.Win.WinFormsControlAdapter">
-            <summary>
-            This is a ControlWraper for Any Control that Inherits from System.Windows.Forms.Control
-            It wraps this Control behind a standard interface that allows any Control in a Windows Environment 
-            to take advantage of the Habanero ControlMappers <see cref="T:Habanero.Faces.Base.IControlMapper"/>
-            </summary>
         </member>
         <member name="T:Habanero.Faces.Win.MessageWizardStepWin">
             <summary>

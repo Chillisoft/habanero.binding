@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows.Forms;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
+using Habanero.Base.Logging;
 using Habanero.BO;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;

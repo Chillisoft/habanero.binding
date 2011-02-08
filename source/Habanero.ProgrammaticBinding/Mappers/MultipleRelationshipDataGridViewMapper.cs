@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Habanero.Base;
+using Habanero.Base.Logging;
 using Habanero.Binding;
 using Habanero.BO;
 using Habanero.Faces.Base;

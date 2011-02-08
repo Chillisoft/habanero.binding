@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
+using Habanero.Base.Logging;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 

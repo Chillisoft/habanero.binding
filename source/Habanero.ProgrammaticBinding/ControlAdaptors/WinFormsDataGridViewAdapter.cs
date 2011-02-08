@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using Habanero.Base;
+using Habanero.Base.Logging;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
 using Habanero.Faces.Win.Grid;

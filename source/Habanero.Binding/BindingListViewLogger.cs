@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
+using Habanero.Base.Logging;
 using Habanero.BO;
 
 namespace Habanero.Binding
