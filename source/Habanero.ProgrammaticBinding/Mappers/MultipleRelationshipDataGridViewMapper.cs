@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using Habanero.Base;
 using Habanero.Base.Logging;
 using Habanero.Binding;
@@ -70,10 +71,10 @@ namespace Habanero.ProgrammaticBinding
             }
         }
 
-        private static IBindingListView CreateBindingListView(Type boType, IBusinessObjectCollection businessObjectCollection)
+        private IBindingListView CreateBindingListView(Type boType, IBusinessObjectCollection businessObjectCollection)
         {
-            _logger.Log("Start CreateBindingListView", LogCategory.Info);
-
+            _logger.Log("Start CreateBindingListView - Relationship : " + PropertyName, LogCategory.Debug);
+            _logger.Log(GetStackTrace(), LogCategory.Debug);
             if (businessObjectCollection == null)
             {
                 var businessObjectColType = typeof(BusinessObjectCollection<>).MakeGenericType(boType);
@@ -95,5 +96,14 @@ namespace Habanero.ProgrammaticBinding
             return (IBindingListView)Activator.CreateInstance(bindingListType, businessObjectCollection, viewBuilder);
 
         }
+
+        private static string GetStackTrace()
+        {
+                        var stack = new StackTrace();
+            return stack.ToString();
+   // var frame = stack.GetFrame(1);
+        }
+
+
     }
 }

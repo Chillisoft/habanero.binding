@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using Habanero.Base;
 using Habanero.Base.Logging;
 using Habanero.Binding;
@@ -11,7 +12,7 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
     public class GridBaseManagerBindingList : GridBaseManager
     {
         private static readonly IHabaneroLogger _logger =
-            GlobalRegistry.LoggerFactory.GetLogger("Habanero.ProgrammaticBinding.GridBaseManagerMapper");
+            GlobalRegistry.LoggerFactory.GetLogger("Habanero.ProgrammaticBinding.GridBaseManagerBindingList");
 
         private IBindingListView _bindingListView;
 
@@ -27,7 +28,8 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             {
                 this.ClassDef = businessObjectCollection.ClassDef;
             }
-            _logger.Log("Start CreateBindingListView");
+            _logger.Log("Start CreateBindingListView : classType : " + classType, LogCategory.Debug);
+            _logger.Log(GetStackTrace(), LogCategory.Debug);
 
             //Needs this code 
             //            var uiDef = ((ClassDef) this.ClassDef).GetUIDef(UiDefName);
@@ -56,15 +58,22 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             return _bindingListView;
         }
 
+        private static string GetStackTrace()
+        {
+            var stack = new StackTrace();
+            return stack.ToString();
+        }
+
         /// <summary>
         /// See <see cref="IBOColSelectorControl.GetBusinessObjectAtRow"/>
         /// </summary>
         public override IBusinessObject GetBusinessObjectAtRow(int rowIndex)
         {
             if (_bindingListView == null) return base.GetBusinessObjectAtRow(rowIndex);
-            if (rowIndex >= 0 && rowIndex < _bindingListView.Count) return _bindingListView[rowIndex] as IBusinessObject;
+            if (rowIndex >= 0 && rowIndex < _bindingListView.Count)
+                return _bindingListView[rowIndex] as IBusinessObject;
 
-            _logger.Log("IN GetBusinessObjectAtRow No Bo not found in binding list at index '" + rowIndex + "'");
+            _logger.Log("IN GetBusinessObjectAtRow No Bo not found in binding list at index '" + rowIndex + "'", LogCategory.Debug);
             return null;
         }
 
@@ -83,7 +92,7 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             var indexOf = _bindingListView.IndexOf(businessObject);
             if (indexOf < 0)
             {
-                _logger.Log("Bo not found in binding list : " + businessObject);
+                _logger.Log("Bo not found in binding list : " + businessObject, LogCategory.Warn);
                 return null;
             }
             return _gridBase.Rows[indexOf];
@@ -158,7 +167,6 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
                         var row = _gridBase.Rows[indexOf];
                         if (row != null)
                         {
-
                             if (_gridBase.ColumnCount > 0)
                             {
                                 var cell = row.Cells[0];
