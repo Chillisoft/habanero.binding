@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Windows.Forms;
 using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.Win;
 using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Util;
 
@@ -97,7 +95,7 @@ namespace Habanero.ProgrammaticBinding
         {
             return (CheckBoxMapper) AddMapper(checkBox, propName);
         }
-
+/*
         /// <summary>
         /// Adds a <see cref="EnumComboBoxMapper"/> to this <see cref="HabaneroControlBinder{TBo}"/>
         /// </summary>
@@ -108,7 +106,7 @@ namespace Habanero.ProgrammaticBinding
         {
             var controlHabanero = GetHabaneroControl(comboBox);
             return AddControlMapper<EnumComboBoxMapper>(controlHabanero, propName);
-        }
+        }*/
 
         /// <summary>
         /// Adds a <see cref="LookupComboBoxMapper"/> to this <see cref="HabaneroControlBinder{TBo}"/>
@@ -167,9 +165,10 @@ namespace Habanero.ProgrammaticBinding
             where TControl : Control
             where TMapperType : IControlMapper
         {
-            ConfigureLabel(label, propName);
+            //ConfigureLabel(label, propName);
             return (TMapperType)Add(typeof(TMapperType), control, propName);
         }
+/*
 
         /// <summary>
         /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
@@ -245,6 +244,7 @@ namespace Habanero.ProgrammaticBinding
             var propertyName = GetPropertyName(propExpression);
             return Add<TMapperType, TControl>(label, control, propertyName);
         }
+*/
 
         /// <summary>
         /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
@@ -310,7 +310,8 @@ namespace Habanero.ProgrammaticBinding
 
         private static void ConfigureLabel(Label label, string propName)
         {
-            IUIFormField field = new UIFormField(label.Text, propName) {ClassDef = ClassDef.Get<TBo>()};
+            IUIFormField field = new UIFormField(label.Text, propName);// {ClassDef = ClassDef.Get<TBo>()};
+           
             var singleValueDef = GetSingleValueDef(propName);
             label.Text = field.GetLabel();
             if (IsCompulsory(singleValueDef)) SetBoldText(label);
@@ -318,7 +319,7 @@ namespace Habanero.ProgrammaticBinding
 
         private static void SetBoldText(Label label)
         {
-            label.Font = new Font(label.Font, FontStyle.Bold);
+            label.Font = new Font(label.Font.Name, label.Font.Size, FontStyle.Bold);
         }
 
         private static bool IsCompulsory(ISingleValueDef singleValueDef)
@@ -350,10 +351,10 @@ namespace Habanero.ProgrammaticBinding
         }
 */
 
-        private static string GetPropertyName<TReturn>(Expression<Func<TBo, TReturn>> propExpression)
+/*        private static string GetPropertyName<TReturn>(Expression<Func<TBo, TReturn>> propExpression)
         {
             return ReflectionUtilities.GetPropertyName(propExpression);
-        }
+        }*/
 
         private static ISingleValueDef GetSingleValueDef(string propName)
         {
@@ -462,9 +463,9 @@ namespace Habanero.ProgrammaticBinding
             return AddMapper(CreateMapper(controlHabanero, propName));
         }
 
-        private static IControlMapper CreateMapper(IControlHabanero checkBoxControl, string propName)
+        private static IControlMapper CreateMapper(IControlHabanero control, string propName)
         {
-            return ControlMapper.Create(checkBoxControl, propName);
+            return ControlMapper.Create(control, propName);
         }
 
         private IControlHabanero GetHabaneroControl<TControlType>(TControlType control) where TControlType : Control

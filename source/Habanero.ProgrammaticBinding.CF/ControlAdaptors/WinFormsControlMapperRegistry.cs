@@ -5,9 +5,6 @@ using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.Win;
-using Habanero.Smooth;
-using Habanero.Smooth.ReflectionWrappers;
 
 namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
@@ -43,7 +40,6 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             _mapperRegistry.Add(typeof(CheckBox), typeof(CheckBoxMapper));
             _mapperRegistry.Add(typeof(TextBox), typeof(TextBoxMapper));
             _mapperRegistry.Add(typeof(DateTimePicker), typeof(DateTimePickerMapper));
-            _mapperRegistry.Add(typeof(DateTimePickerWin), typeof(DateTimePickerMapper));
             _mapperRegistry.Add(typeof(NumericUpDown), typeof(NumericUpDownMapper));
         }
 
@@ -92,7 +88,7 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
                 }
                 return null;
             }
-            if (propDef.PropertyType.ToTypeWrapper().IsEnumType()) return typeof (EnumComboBoxMapper);
+          //  if (propDef.PropertyType.ToTypeWrapper().IsEnumType()) return typeof (EnumComboBoxMapper);
             if(propDef.HasLookupList()) return typeof (LookupComboBoxMapper);
 
             return null;
