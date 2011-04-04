@@ -167,7 +167,7 @@ namespace Habanero.ProgrammaticBinding.CF
             //ConfigureLabel(label, propName);
             return (TMapperType)Add(typeof(TMapperType), control, propName);
         }
-/*
+/* not supported by CF
 
         /// <summary>
         /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
@@ -326,7 +326,8 @@ namespace Habanero.ProgrammaticBinding.CF
             return singleValueDef != null && singleValueDef.Compulsory;
         }
 
-/*        private static IRelationshipDef GetRelationshipDef<TReturn>(Expression<Func<TBo, TReturn>> propertyExpression,
+/* not supported by CF
+ * private static IRelationshipDef GetRelationshipDef<TReturn>(Expression<Func<TBo, TReturn>> propertyExpression,
                                                                     bool raiseErrIfNotExists)
         {
             string propertyName = GetPropertyName(propertyExpression);
@@ -354,6 +355,16 @@ namespace Habanero.ProgrammaticBinding.CF
         {
             return ReflectionUtilities.GetPropertyName(propExpression);
         }*/
+                    
+
+        public void ApplyChangesToBusinessObject()
+        {
+            foreach (var mapper in this.ControlMappers)
+            {
+                mapper.ApplyChangesToBusinessObject();
+            }
+        }
+
 
         private static ISingleValueDef GetSingleValueDef(string propName)
         {
