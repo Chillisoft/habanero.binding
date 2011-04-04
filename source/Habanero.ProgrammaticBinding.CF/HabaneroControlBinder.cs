@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,10 +7,10 @@ using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
+using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
 using Habanero.ProgrammaticBinding.ControlAdaptors;
-using Habanero.Util;
 
-namespace Habanero.ProgrammaticBinding
+namespace Habanero.ProgrammaticBinding.CF
 {
     /// <summary>
     /// This is a convenience class that is used to programmatically bind Properties of a Business Object

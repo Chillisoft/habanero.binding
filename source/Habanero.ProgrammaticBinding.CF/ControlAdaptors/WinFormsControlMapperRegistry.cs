@@ -5,8 +5,9 @@ using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
+using Habanero.Faces.CF;
 
-namespace Habanero.ProgrammaticBinding.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
 {
     public interface IControlMapperRegistry
     {
@@ -15,9 +16,9 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
 
     /// <summary>
     /// The Adaptor Factory is a Factory Class for
-    /// Creating the Appropriate <see cref="IWinFormsControlAdapter"/>
+    /// Creating the Appropriate <see cref="IWinFormsComboBoxAdapter"/>
     /// for the given environment e.g. A WinForms.ComboBox will be adapted 
-    /// with the relevant <see cref="IWinFormsComboBoxAdapter"/>
+    /// with the relevant <see cref="IWinFormsControlAdapter"/>
     /// </summary>
     public class WinFormsControlMapperRegistry : IControlMapperRegistry
     {
