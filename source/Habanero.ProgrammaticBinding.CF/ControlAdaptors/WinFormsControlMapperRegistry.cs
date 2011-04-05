@@ -133,6 +133,7 @@ namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
             return name.Substring(3);
         }
 
+
         /// <summary>
         /// Is the Control valid i.e. is the control named in a way that the name could 
         /// be used to derive a valid PropertyName

@@ -7,6 +7,7 @@ using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
+using Habanero.Faces.CF;
 using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
 using Habanero.ProgrammaticBinding.ControlAdaptors;
 
@@ -60,6 +61,17 @@ namespace Habanero.ProgrammaticBinding.CF
         {
             get { return this.ControlMappers.BusinessObject as TBo; }
             set { this.ControlMappers.BusinessObject = value; }
+        }
+        /// <summary>
+        /// Adds a Text Box mapper to the <paramref name="txtBox"/> for the <see cref="IBusinessObject"/>'s property
+        /// identified by propName
+        /// </summary>
+        /// <param name="txtBox">The TextBox being mapped</param>
+        /// <param name="propName">The <see cref="IBusinessObject"/>'s property it is being mapped to</param>
+        /// <returns></returns>
+        public TextBoxMapper AddTextBoxMapper(TextBox txtBox)
+        {
+            return (TextBoxMapper) AddMapper(txtBox);
         }
         /// <summary>
         /// Adds a Text Box mapper to the <paramref name="txtBox"/> for the <see cref="IBusinessObject"/>'s property
@@ -451,10 +463,22 @@ namespace Habanero.ProgrammaticBinding.CF
             var controlType = typeof (TControl);
             return AddMapper(controlType, control, propName);
         }
+        private IControlMapper AddMapper<TControl>(TControl control) where TControl : Control
+        {
+            var controlType = typeof (TControl);
+            var propName = _controlNamingConvention.GetPropName(control);
+            return AddMapper(controlType, control, propName);
+        }
 
         private TMapperType AddControlMapper<TMapperType>(IControlHabanero controlHabanero, string propName)
             where TMapperType : IControlMapper
         {
+            return (TMapperType) AddControlMapper(typeof (TMapperType), controlHabanero, propName);
+        }
+        private TMapperType AddControlMapper<TMapperType>(IControlHabanero controlHabanero)
+            where TMapperType : IControlMapper
+        {
+            var propName = _controlNamingConvention.GetPropName(controlHabanero.GetControl());
             return (TMapperType) AddControlMapper(typeof (TMapperType), controlHabanero, propName);
         }
 
