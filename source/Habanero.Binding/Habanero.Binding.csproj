@@ -65,7 +65,6 @@
     <Compile Include="PropertyDescriptorID.cs" />
     <Compile Include="PropertyDescriptorReflectiveProp.cs" />
     <Compile Include="SingleFilterInfo.cs" />
-    <Compile Include="TempSampleCode\Class1.cs" />
     <Compile Include="VirtualisedBindingList\Cache.cs" />
     <Compile Include="VirtualisedBindingList\CachedBindingListView.cs" />
     <Compile Include="VirtualisedBindingList\IPageProvider.cs" />

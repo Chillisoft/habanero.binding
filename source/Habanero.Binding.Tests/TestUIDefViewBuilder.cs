@@ -65,7 +65,7 @@ namespace Habanero.Binding.Tests
             //---------------Assert Precondition----------------
             Assert.IsTrue(ClassDef.ClassDefs.Contains(typeof(FakeBO)));
             //---------------Execute Test ----------------------
-            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetPropertyDescriptors();
+            var descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.IsNotNull(descriptorCollection);
             Assert.AreEqual(2, descriptorCollection.Count);
@@ -80,7 +80,7 @@ namespace Habanero.Binding.Tests
             //---------------Assert Precondition----------------
             Assert.IsTrue(ClassDef.ClassDefs.Contains(typeof(FakeBO)));
             //---------------Execute Test ----------------------
-            PropertyDescriptorCollection descriptorCollection = viewBuilder.GetPropertyDescriptors();
+            var descriptorCollection = viewBuilder.GetPropertyDescriptors();
             //---------------Test Result -----------------------
             Assert.IsNotNull(descriptorCollection);
             Assert.AreEqual(2, descriptorCollection.Count);
