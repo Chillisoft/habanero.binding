@@ -9,7 +9,6 @@ using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.CF;
 using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
-using Habanero.ProgrammaticBinding.ControlAdaptors;
 
 namespace Habanero.ProgrammaticBinding.CF
 {
@@ -67,7 +66,6 @@ namespace Habanero.ProgrammaticBinding.CF
         /// identified by propName
         /// </summary>
         /// <param name="txtBox">The TextBox being mapped</param>
-        /// <param name="propName">The <see cref="IBusinessObject"/>'s property it is being mapped to</param>
         /// <returns></returns>
         public TextBoxMapper AddTextBoxMapper(TextBox txtBox)
         {
@@ -179,83 +177,83 @@ namespace Habanero.ProgrammaticBinding.CF
             //ConfigureLabel(label, propName);
             return (TMapperType)Add(typeof(TMapperType), control, propName);
         }
-/* not supported by CF
+        /* Expression<Func<TBo, object>> not supported by CF
 
-        /// <summary>
-        /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
-        /// for the business object property identified by <paramref name="propExpression"/>
-        /// </summary>
-        /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
-        /// <typeparam name="TControl">Type of Control</typeparam>
-        /// <param name="control">instance of the Control</param>
-        /// <param name="propExpression">expression identifying the property being bound to</param>
-        /// <returns></returns>
-        public TMapperType Add<TMapperType, TControl>(TControl control, Expression<Func<TBo, object>> propExpression)
-            where TControl : Control
-            where TMapperType : IControlMapper
-        {
-            var propertyName = GetPropertyName(propExpression);
-            return Add<TMapperType, TControl>(control, propertyName);
-        }
+                /// <summary>
+                /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
+                /// for the business object property identified by <paramref name="propExpression"/>
+                /// </summary>
+                /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
+                /// <typeparam name="TControl">Type of Control</typeparam>
+                /// <param name="control">instance of the Control</param>
+                /// <param name="propExpression">expression identifying the property being bound to</param>
+                /// <returns></returns>
+                public TMapperType Add<TMapperType, TControl>(TControl control, Expression<Func<TBo, object>> propExpression)
+                    where TControl : Control
+                    where TMapperType : IControlMapper
+                {
+                    var propertyName = GetPropertyName(propExpression);
+                    return Add<TMapperType, TControl>(control, propertyName);
+                }
         
-        /// <summary>
-        /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
-        /// for the business object property identified by <paramref name="propExpression"/>
-        /// </summary>
-        /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
-        /// <typeparam name="TControl">Type of Control</typeparam>
-        /// <param name="control">instance of the Control</param>
-        /// <param name="propExpression">expression identifying the property being bound to</param>
-        /// <returns></returns>
-        public TMapperType Add<TMapperType, TControl>(TControl control, Expression<Func<TBo, object>> propExpression, bool isReadOnly)
-            where TControl : Control
-            where TMapperType : IControlMapper
-        {
-            var mapper = Add<TMapperType, TControl>(control, propExpression);
-            mapper.IsReadOnly = isReadOnly;
-            return mapper;
-        }
+                /// <summary>
+                /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
+                /// for the business object property identified by <paramref name="propExpression"/>
+                /// </summary>
+                /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
+                /// <typeparam name="TControl">Type of Control</typeparam>
+                /// <param name="control">instance of the Control</param>
+                /// <param name="propExpression">expression identifying the property being bound to</param>
+                /// <returns></returns>
+                public TMapperType Add<TMapperType, TControl>(TControl control, Expression<Func<TBo, object>> propExpression, bool isReadOnly)
+                    where TControl : Control
+                    where TMapperType : IControlMapper
+                {
+                    var mapper = Add<TMapperType, TControl>(control, propExpression);
+                    mapper.IsReadOnly = isReadOnly;
+                    return mapper;
+                }
 
-        /// <summary>
-        /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
-        /// for the business object property identified by <paramref name="propExpression"/>
-        /// </summary>
-        /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
-        /// <typeparam name="TControl">Type of Control</typeparam>
-        /// <param name="label">The label associated with this control</param>
-        /// <param name="control">instance of the Control</param>
-        /// <param name="propExpression">expression identifying the property being bound to</param>
-        /// <param name="isReadOnly">Is the property read only in this form. i.e. must <paramref name="control"/> remain disabled 
-        /// regardless of the BusinessObject's Property's ReadWrite state.</param>
-        /// <returns></returns>
-        public TMapperType Add<TMapperType, TControl>(Label label, TControl control, Expression<Func<TBo, object>> propExpression, bool isReadOnly)
-            where TControl : Control
-            where TMapperType : IControlMapper
-        {
-            var mapper = Add<TMapperType, TControl>(label, control, propExpression);
-            mapper.IsReadOnly = isReadOnly;
-            return mapper;
-        }
+                /// <summary>
+                /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
+                /// for the business object property identified by <paramref name="propExpression"/>
+                /// </summary>
+                /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
+                /// <typeparam name="TControl">Type of Control</typeparam>
+                /// <param name="label">The label associated with this control</param>
+                /// <param name="control">instance of the Control</param>
+                /// <param name="propExpression">expression identifying the property being bound to</param>
+                /// <param name="isReadOnly">Is the property read only in this form. i.e. must <paramref name="control"/> remain disabled 
+                /// regardless of the BusinessObject's Property's ReadWrite state.</param>
+                /// <returns></returns>
+                public TMapperType Add<TMapperType, TControl>(Label label, TControl control, Expression<Func<TBo, object>> propExpression, bool isReadOnly)
+                    where TControl : Control
+                    where TMapperType : IControlMapper
+                {
+                    var mapper = Add<TMapperType, TControl>(label, control, propExpression);
+                    mapper.IsReadOnly = isReadOnly;
+                    return mapper;
+                }
 
-        /// <summary>
-        /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
-        /// for the business object property identified by <paramref name="propExpression"/>
-        /// </summary>
-        /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
-        /// <typeparam name="TControl">Type of Control</typeparam>
-        /// <param name="label">The label that the control</param>
-        /// <param name="control">instance of the Control</param>
-        /// <param name="propExpression">expression identifying the property being bound to</param>
-        /// <returns></returns>
-        public TMapperType Add<TMapperType, TControl>(Label label, TControl control,
-                                                      Expression<Func<TBo, object>> propExpression)
-            where TControl : Control
-            where TMapperType : IControlMapper
-        {
-            var propertyName = GetPropertyName(propExpression);
-            return Add<TMapperType, TControl>(label, control, propertyName);
-        }
-*/
+                /// <summary>
+                /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
+                /// for the business object property identified by <paramref name="propExpression"/>
+                /// </summary>
+                /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
+                /// <typeparam name="TControl">Type of Control</typeparam>
+                /// <param name="label">The label that the control</param>
+                /// <param name="control">instance of the Control</param>
+                /// <param name="propExpression">expression identifying the property being bound to</param>
+                /// <returns></returns>
+                public TMapperType Add<TMapperType, TControl>(Label label, TControl control,
+                                                              Expression<Func<TBo, object>> propExpression)
+                    where TControl : Control
+                    where TMapperType : IControlMapper
+                {
+                    var propertyName = GetPropertyName(propExpression);
+                    return Add<TMapperType, TControl>(label, control, propertyName);
+                }
+        */
 
         /// <summary>
         /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
