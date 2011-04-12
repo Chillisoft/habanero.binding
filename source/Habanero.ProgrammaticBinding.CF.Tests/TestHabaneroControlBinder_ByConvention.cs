@@ -6,11 +6,8 @@ using Habanero.Base;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.Win;
-using Habanero.ProgrammaticBinding.ControlAdaptors;
-using Habanero.Smooth;
-using Habanero.Testability;
-using Habanero.Testability.Helpers;
+using Habanero.Faces.CF;
+using Habanero.ProgrammaticBinding.CF;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -28,7 +25,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             ClassDef.ClassDefs.Add(typeof(FakeBo).MapClasses());
             BORegistry.BusinessObjectManager = new BusinessObjectManagerNull();
             BORegistry.DataAccessor = GetDataAccessorInMemory();
-            GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+            GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
             GlobalRegistry.LoggerFactory = new HabaneroLoggerFactoryStub();
         }
 
@@ -101,7 +98,6 @@ namespace Habanero.ProgrammaticBinding.Tests
             catch (ArgumentNullException ex)
             {
                 StringAssert.Contains("Value cannot be null", ex.Message);
-                StringAssert.Contains("controls", ex.ParamName);
             }
         }
 
@@ -249,25 +245,6 @@ namespace Habanero.ProgrammaticBinding.Tests
         }
 
 
-        [Test]
-        public void Test_AddMappersByConventions_WhenOneControlAlreadyMapped_ShouldNotMapMappeControl()
-        {
-            var haberoControlBinder = CreateHabaneroControlBinder();
-            var textBox = new TextBox { Name = "txtFakeStringProp" };
-            var controls = CreateControlCollection();
-            controls.Add(textBox);
-            haberoControlBinder.Add<TextBoxMapperStub, TextBox> (textBox, bo => bo.FakeStringProp);
-            //---------------Assert Precondition----------------
-            Assert.AreEqual(1, controls.Count, "Should have controls");
-            Assert.AreEqual(1, haberoControlBinder.ControlMappers.Count);
-            //---------------Execute Test ----------------------
-            haberoControlBinder.AddMappersByConvention(controls.Cast<Control>());
-            //---------------Test Result -----------------------
-            Assert.AreEqual(1, haberoControlBinder.ControlMappers.Count);
-            var textBoxMapper = haberoControlBinder.ControlMappers[0];
-            Assert.IsInstanceOf<TextBoxMapperStub>(textBoxMapper, "The original mapper used should still be used");
-        }
-
         //NumericUpDownIntegerMapper
         [Test]
         public void Test_NumericUpdownMapper_WhenPropIsInteger_ShouldCreateNumericUpDownIntegerMapper()
@@ -313,7 +290,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(1, haberoControlBinder.ControlMappers.Count);
             Assert.AreEqual(propName + compulsoryPropSuffix, label.Text, "Should have updated label as with compulsory std");
-            Assert.IsTrue(label.Font.Bold, "Should be bold");
+           // Assert.IsTrue(label.Font.Bold, "Should be bold");
         }
         [Test]
         public void Test_AddMappersByConventions_WithLabelsTrue_WhenHasLabel_WhenControlAlreadyMapped_ShouldNotMapLabelTwice_FixBug1489()

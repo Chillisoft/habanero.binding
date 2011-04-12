@@ -2,11 +2,10 @@ using System.Windows.Forms;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.Win;
+using Habanero.Faces.CF;
+using Habanero.Faces.CF.Controls;
 using Habanero.ProgrammaticBinding;
-using Habanero.ProgrammaticBinding.ControlAdaptors;
-using Habanero.Smooth;
-using Habanero.Testability;
+
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -35,7 +34,7 @@ namespace Habanero.ProgrammaticBinding.Tests
         public void Test_SetBusinessObject_ShouldSetBusinessObject()
         {
             //---------------Set up test pack-------------------
-            var mapper = new TextBoxMapper(new WinFormsTextBoxAdapter(GenerateStub<TextBox>()), "FakeStringProp", false, new ControlFactoryWin());
+            var mapper = new TextBoxMapper(new WinFormsTextBoxAdapter(GenerateStub<TextBox>()), "FakeStringProp", false, new ControlFactoryCF());
             var expectedBO = new FakeBo();
             //---------------Assert Precondition----------------
             Assert.IsNotNull(expectedBO);
@@ -93,7 +92,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 
         private static string GetRandomString()
         {
-            return RandomValueGen.GetRandomString();
+            return RandomValueGenerator.GetRandomString();
         }
     }
 }

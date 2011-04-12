@@ -8,12 +8,10 @@ using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.BO.Loaders;
 using Habanero.Faces.Base;
-using Habanero.Faces.Win;
+using Habanero.Faces.CF;
 using Habanero.ProgrammaticBinding;
-using Habanero.ProgrammaticBinding.ControlAdaptors;
-using Habanero.Smooth;
-using Habanero.Testability;
-using Habanero.Testability.Helpers;
+using Habanero.ProgrammaticBinding.CF;
+using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
 using NUnit.Framework;
 using Rhino.Mocks;
 // ReSharper disable InconsistentNaming
@@ -30,7 +28,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 			ClassDef.ClassDefs.Add(typeof(FakeBo).MapClasses());
 			BORegistry.BusinessObjectManager = new BusinessObjectManagerNull();
 			BORegistry.DataAccessor = GetDataAccessorInMemory();
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			GlobalRegistry.LoggerFactory = new HabaneroLoggerFactoryStub();
 		}
 		[SetUp]
@@ -91,7 +89,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		{
 			//---------------Set up test pack-------------------
 			var haberoControlBinder = CreateHabaneroControlBinder();
-			var txtBox = GenerateStub<TextBoxWin>();
+			var txtBox = GenerateStub<TextBox>();
 			//---------------Assert Precondition----------------
 
 			//---------------Execute Test ----------------------
@@ -105,7 +103,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		{
 			//---------------Set up test pack-------------------
 			var haberoControlBinder = CreateHabaneroControlBinder();
-			var txtBox = GenerateStub<TextBoxWin>();
+			var txtBox = GenerateStub<TextBox>();
 			var propName = GetRandomString();
 			//---------------Assert Precondition----------------
 
@@ -114,7 +112,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 			//---------------Test Result -----------------------
 			Assert.IsInstanceOf<TextBoxMapper>(txtMapper);
 			var controlWrapper = txtMapper.Control as WinFormsControlAdapter;
-			Assert.IsNull(controlWrapper, "Since we are using a TextBoxWin the control does not need adapter");
+			Assert.IsNull(controlWrapper, "Since we are using a TextBox the control does not need adapter");
 			Assert.AreSame(txtBox, txtMapper.Control, "Should set TextBox");
 			Assert.AreEqual(propName, txtMapper.PropertyName, "Should set PropName");
 		}  
@@ -124,7 +122,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		{
 			//---------------Set up test pack-------------------
 			var haberoControlBinder = CreateHabaneroControlBinder();
-			var txtBox = GenerateStub<TextBoxWin>();
+			var txtBox = GenerateStub<TextBox>();
 			var propName = GetRandomString();
 			//---------------Assert Precondition----------------
 
@@ -140,7 +138,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 			var expectedControlFactory = GenerateStub<IControlFactory>();
 			GlobalUIRegistry.ControlFactory = expectedControlFactory;
 			var haberoControlBinder = CreateHabaneroControlBinder();
-			var txtBox = GenerateStub<TextBoxWin>();
+			var txtBox = GenerateStub<TextBox>();
 			var propName = GetRandomString();
 			//---------------Assert Precondition----------------
 			Assert.AreSame(expectedControlFactory,  GlobalUIRegistry.ControlFactory);
@@ -155,7 +153,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		{
 			//---------------Set up test pack-------------------
 			var haberoControlBinder = CreateHabaneroControlBinder();
-			var txtBox = GenerateStub<TextBoxWin>();
+			var txtBox = GenerateStub<TextBox>();
 			var propName = GetRandomString();
 			//---------------Assert Precondition----------------
 			Assert.AreEqual(0, haberoControlBinder.ControlMappers.Count);
@@ -340,7 +338,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		#endregion
 
 
-
+/*CF Not yet ported
 		#region CheckBoxMapper
 
 		[Test]
@@ -362,7 +360,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddCheckBoxMapper_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var chkBox = GenerateStub<CheckBox>();
 			var propName = GetRandomString();
@@ -384,7 +382,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddCheckBoxMapper_WithHabaneroCheckBox_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var chkBox = GenerateStub<CheckBoxWin>();
 			var propName = GetRandomString();
@@ -474,7 +472,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddEnumComboBoxMapper_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = GenerateStub<ComboBox>();
 			var propName = GetRandomString();
@@ -496,7 +494,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddEnumComboBoxMapper_WithHabaneroComboBox_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = GenerateStub<ComboBoxWin>();
 			var propName = GetRandomString();
@@ -569,7 +567,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddLookupComboBoxMapper_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = GenerateStub<ComboBox>();
 			var propName = GetRandomString();
@@ -589,7 +587,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddLookupComboBoxMapper_WithHabaneroControl_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = GenerateStub<ComboBoxWin>();
 			var propName = GetRandomString();
@@ -614,7 +612,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddListComboBoxMapper_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBox();
 			var propName = GetRandomString();
@@ -634,7 +632,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddListComboBoxMapper_WithHabaneroControl_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBoxWin();
 			var propName = GetRandomString();
@@ -654,7 +652,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddListComboBoxMapper_ShouldSetComboItemsToList()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBox();
 			var propName = GetRandomString();
@@ -671,7 +669,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddListComboBoxMapper_ShouldAddMapperToMapperCollection()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBox();
 			var propName = GetRandomString();
@@ -691,7 +689,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddRelationshipComboBoxMapper_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = GenerateStub<ComboBox>();
 			var propName = GetRandomString();
@@ -712,7 +710,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddRelationshipComboBoxMapper_WithHabaneroControl_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = GenerateStub<ComboBoxWin>();
 			var propName = GetRandomString();
@@ -729,14 +727,14 @@ namespace Habanero.ProgrammaticBinding.Tests
 		}
 
 		#endregion
-
-		#region AddGenericMethod
-
-		[Test]
+        */
+        #region AddGenericMethod
+        /*CF Not yet ported
+        [Test]
 		public void Test_AddGeneric_WithWinFormsControl_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBox();
 			var propName = GetRandomString();
@@ -756,7 +754,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddGeneric_WithHabaneroControl_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBoxWin();
 			var propName = GetRandomString();
@@ -774,7 +772,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddGeneric_WithHabaneroControl_UsingLambda_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBoxWin();
 			const string propName = "FakeStringProp";
@@ -794,7 +792,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddGeneric_WithHabaneroControl_UsingLambda_WithReadOnlyTrue_ShouldSetMapperReadOnly()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBoxWin();
 			//---------------Assert Precondition----------------
@@ -809,7 +807,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddGeneric_WithLabel_UsingLambda_WithReadOnlyTrue_ShouldSetMapperReadOnly()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var cmb = new ComboBoxWin();
 			//---------------Assert Precondition----------------
@@ -824,7 +822,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddGeneric_NumericUpDown_UsingLambda_ShouldSetMappers_ControlAndPropName()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var numericUpDown = new NumericUpDown();
 			const string propName = "FakeIntProp";
@@ -840,16 +838,16 @@ namespace Habanero.ProgrammaticBinding.Tests
 			Assert.AreSame(numericUpDown, dtControlWrapper.WrappedControl, "Should set NumericUpDown");
 			Assert.AreEqual(propName, mapper.PropertyName, "Should set PropName");
 		}
-
+        */
 		#endregion
 
 		#region AddReadUpdateControl With Label
-
+        /*CF Not yet ported
 		[Test]
 		public void TestAccept_AddGeneric_WithLabel_WithCompulsory_UsingLambda_ShouldSetMappersControlAndPropName_ShouldSetLabelCompIndicator()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var numericUpDown = new NumericUpDown();
 			var labelText = GetRandomString();
@@ -877,7 +875,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void TestAccept_AddGeneric_WithLabel_WithCompulsory_UsingPropertyNameString_ShouldSetMappers_ControlAndPropName_ShouldSetLabelCompIndicato()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 
 			var numericUpDown = new NumericUpDown();
@@ -906,7 +904,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddGeneric_WithLabel_WhenCompulsory_ShouldAddStarAndBold()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var control = new NumericUpDown();
 			var labelText = RandomValueGen.GetRandomString(10);
@@ -925,7 +923,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 		public void Test_AddGeneric_WithLabel_WhenNotCompulsory_ShouldNotAddStarAndNotBeBold()
 		{
 			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+			GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
 			var haberoControlBinder = CreateHabaneroControlBinder();
 			var numericUpDown = new NumericUpDown();
 			var labelText = RandomValueGen.GetRandomString(10);
@@ -940,74 +938,9 @@ namespace Habanero.ProgrammaticBinding.Tests
 			Assert.AreEqual(labelText, label.Text, "Should Not append star");
 			Assert.IsFalse(label.Font.Bold, "Should Not be bold");
 		}
-
+        */
 		#endregion
 
-
-		#region MultipleRelationshipDataGridViewMapper
-
-		[Test]
-		public void Test_AddMultipleRelationshipDataGridViewMapper_ShouldSetMappers_ControlAndRelationshipName()
-		{
-			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
-			var haberoControlBinder = CreateHabaneroControlBinder();
-			var dgv = GenerateStub<DataGridView>();
-			var propName = GetRandomString();
-			//---------------Assert Precondition----------------
-
-			//---------------Execute Test ----------------------
-			var mapper = haberoControlBinder.Add<MultipleRelationshipDataGridViewMapper, DataGridView>(dgv, propName);
-			//---------------Test Result -----------------------
-			Assert.IsInstanceOf<MultipleRelationshipDataGridViewMapper>(mapper);
-			var dgvAdapter = mapper.Control as WinFormsControlAdapter;
-			Assert.IsNotNull(dgvAdapter);
-			var wrappedControl = dgvAdapter.WrappedControl;
-			Assert.AreSame(dgv, wrappedControl, "Should set DataGridView");
-			Assert.AreEqual(propName, mapper.PropertyName, "Should set PropName");
-		}
-		[Test]
-		public void Test_AddMultipleRelationshipDataGridViewMapper_WithLambda_ShouldSetMappers_ControlAndRelationshipName()
-		{
-			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
-			var haberoControlBinder = new HabaneroControlBinder<FakeBoWithMultipleRelationship>();
-			var dgv = GenerateStub<DataGridView>();
-			const string expectedRelName = "FakeBos";
-			//---------------Assert Precondition----------------
-
-			//---------------Execute Test ----------------------
-			var mapper = haberoControlBinder.Add<MultipleRelationshipDataGridViewMapper, DataGridView>(dgv, bo => bo.FakeBos);
-			//---------------Test Result -----------------------
-			Assert.IsInstanceOf<MultipleRelationshipDataGridViewMapper>(mapper);
-			var dgvAdapter = mapper.Control as WinFormsControlAdapter;
-			Assert.IsNotNull(dgvAdapter);
-			var wrappedControl = dgvAdapter.WrappedControl;
-			Assert.AreSame(dgv, wrappedControl, "Should set DataGridView");
-			Assert.AreEqual(expectedRelName, mapper.PropertyName, "Should set PropName");
-		}
-/*
-		[Test]
-		public void Test_AddMultipleRelationshipDataGridViewMapper_WithHabaneroControl_ShouldSetMappers_ControlAndRelationshipName()
-		{
-			//---------------Set up test pack-------------------
-			GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
-			var haberoControlBinder = CreateHabaneroControlBinder();
-			var dgv = GenerateStub<DataGridView>();
-			var propName = GetRandomString();
-			//---------------Assert Precondition----------------
-
-			//---------------Execute Test ----------------------
-			var mapper = haberoControlBinder.Add<MultipleRelationshipDataGridViewMapper, DataGridView>(dgv, propName);
-			//---------------Test Result -----------------------
-			Assert.IsInstanceOf<MultipleRelationshipDataGridViewMapper>(mapper);
-			var dtControlWrapper = mapper.Control as WinFormsControlAdapter;
-			Assert.IsNull(dtControlWrapper);
-			Assert.AreSame(dgv, mapper.Control, "Should set ComboBox");
-			Assert.AreEqual(propName, mapper.PropertyName, "Should set PropName");
-		}*/
-
-		#endregion
 
 		[Test]
 		public void Test_SetBusinessObject_WhenOneMapper_ShouldSetBusinessObjectOnMapper()

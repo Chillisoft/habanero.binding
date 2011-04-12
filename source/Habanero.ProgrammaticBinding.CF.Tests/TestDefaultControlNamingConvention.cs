@@ -4,10 +4,8 @@ using Habanero.Base.Exceptions;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.Win;
-using Habanero.ProgrammaticBinding.ControlAdaptors;
-using Habanero.Smooth;
-using Habanero.Smooth.ReflectionWrappers;
+using Habanero.Faces.CF;
+using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -26,7 +24,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             ClassDef.ClassDefs.Add(typeof (FakeBo).MapClasses());
             BORegistry.BusinessObjectManager = new BusinessObjectManagerNull();
             BORegistry.DataAccessor = GetDataAccessorInMemory();
-            GlobalUIRegistry.ControlFactory = new ControlFactoryWin();
+            GlobalUIRegistry.ControlFactory = new ControlFactoryCF();
         }
 
         [SetUp]
