@@ -332,7 +332,7 @@ namespace Habanero.Binding
             if (ListChanged != null)
             {
 
-                _logger.Log("B4 FireListChanged : " + args.ListChangedType + " at new index " + args.NewIndex + " old index " + args.OldIndex);
+                _logger.Log("B4 FireListChanged : " + args.ListChangedType + " at new index " + args.NewIndex + " old index " + args.OldIndex, LogCategory.Debug);
                 ListChanged(this, args);
             }
         }

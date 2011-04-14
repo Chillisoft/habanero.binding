@@ -36,7 +36,7 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             _grid.DataError +=(sender, args) => 
                         {
                             //do nothing  necessary because of strange behaviour in windows grid
-                            _logger.Log("DataError from Grid " + args.Exception.Message);
+                            _logger.Log("DataError from Grid " + args.Exception.Message, args.Exception, LogCategory.Debug);
                         };
             _grid.SelectionChanged += FireBusinessObjectSelected;
         }

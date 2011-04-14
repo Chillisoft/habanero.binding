@@ -71,7 +71,7 @@ namespace Habanero.Binding
         /// <returns></returns>
         public string GetListName(PropertyDescriptor[] listAccessors)
         {
-            _logger.Log("GetListName"); 
+            _logger.Log("GetListName", LogCategory.Debug); 
             return this.GetType().Name;
         }
 
@@ -83,7 +83,7 @@ namespace Habanero.Binding
         /// <returns></returns>
         public PropertyDescriptorCollection GetItemProperties(PropertyDescriptor[] listAccessors)
         {
-            _logger.Log("GetItemProperties"); 
+            _logger.Log("GetItemProperties", LogCategory.Debug); 
             return this.ViewBuilder != null
                        ? this.ViewBuilder.GetPropertyDescriptors()
                        : CreateDefaultViewBuilder().GetPropertyDescriptors();
