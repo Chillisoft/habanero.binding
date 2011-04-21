@@ -6,6 +6,7 @@ using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.CF;
+using Habanero.Faces.CF.Adapters;
 
 namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
 {

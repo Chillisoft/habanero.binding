@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Habanero.Base.Util;
 using Habanero.Faces.Base;
 using Habanero.Faces.CF;
+using Habanero.Faces.CF.Adapters;
 using Habanero.Faces.CF.Controls;
 
 namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
@@ -31,8 +32,9 @@ namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
 /*            _adapaterRegistry.Add(typeof(ListBox), typeof(WinFormsListBoxAdapter));
             _adapaterRegistry.Add(typeof(CheckBox), typeof(WinFormsCheckBoxAdapter));*/
             _adapaterRegistry.Add(typeof(TextBox), typeof(WinFormsTextBoxAdapter));
-/*            _adapaterRegistry.Add(typeof(DateTimePicker), typeof(WinFormsDateTimePickerAdapter));
             _adapaterRegistry.Add(typeof(ComboBox), typeof(WinFormsComboBoxAdapter));
+/*            _adapaterRegistry.Add(typeof(DateTimePicker), typeof(WinFormsDateTimePickerAdapter));
+            
             _adapaterRegistry.Add(typeof(NumericUpDown), typeof(WinFormsNumericUpDownAdapter));*/
         }
 
@@ -55,8 +57,6 @@ namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
                 {
                     var adapterType = _adapaterRegistry[controlType];
                     habaneroControl = CreateAdaptor(adapterType, control);
-                    //if (adapterType == typeof(WinFormsTextBoxAdapter)) return new WinFormsTextBoxAdapter(control as TextBox);
-                    //habaneroControl = Activator.CreateInstance(adapterType, control) as IControlHabanero;
                 }
             }
             return habaneroControl;

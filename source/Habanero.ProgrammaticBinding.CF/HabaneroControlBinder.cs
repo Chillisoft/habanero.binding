@@ -14,7 +14,7 @@ namespace Habanero.ProgrammaticBinding.CF
 {
     /// <summary>
     /// This is a convenience class that is used to programmatically bind Properties of a Business Object
-    /// to WinForms Controls. <see cref="AddTextBoxMapper"/> etc.
+    /// to WinForms Controls. <see cref="AddTextBoxMapper(TextBox)"/> etc.
     /// Note_: There is no validation that the propName is a property of the BusinessObjet.
     /// </summary>
     /// <typeparam name="TBo"></typeparam>
@@ -268,6 +268,22 @@ namespace Habanero.ProgrammaticBinding.CF
             where TControl : Control
             where TMapperType : IControlMapper
         {
+            return (TMapperType)Add(typeof(TMapperType), control, propName);
+        }
+
+        /// <summary>
+        /// Adds the Control mapper of type <typeparamref name="TMapperType"/> to the <paramref name="control"/>
+        /// for the business object property identified by the <see cref="IControlNamingConvention"/>
+        /// </summary>
+        /// <typeparam name="TMapperType">Type of Control Mapper</typeparam>
+        /// <typeparam name="TControl">Type of Control</typeparam>
+        /// <param name="control">instance of the Control</param>
+        /// <returns></returns>
+        public TMapperType Add<TMapperType, TControl>(TControl control)
+            where TControl : Control
+            where TMapperType : IControlMapper
+        {
+            var propName = _controlNamingConvention.GetPropName(control);
             return (TMapperType)Add(typeof(TMapperType), control, propName);
         }
 
