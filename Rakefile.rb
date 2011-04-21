@@ -21,25 +21,19 @@ msbuild_settings = {
   :properties => {:configuration => :release},
   :targets => [:clean, :rebuild],
   :verbosity => :quiet,
-  #:use => :net35  ;uncomment to use .net 3.5 - default is 4.0
+  :use => :net35  #;uncomment to use .net 3.5 - default is 4.0
 }
 
 #------------------------dependency settings---------------------
-$habanero_version = 'trunk'
+$habanero_version = 'branches/v2.6-DotNet2CompactFramework'
 require 'rake-habanero.rb'
 
-$smooth_version = 'trunk'
-require 'rake-smooth.rb'
-
-$testability_version = 'trunk'
-require 'rake-testability.rb'
-
-$faces_version = 'trunk'
+$faces_version = 'branches/V2.6-CF_Stargate'
 require 'rake-faces.rb'
 
 #------------------------project settings------------------------
-$basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/trunk'
-$solution = "source/Habanero.Binding - 2010.sln"
+$basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/branches/v1.2_ForCF_Stargate'
+$solution = "source/Habanero.Binding - 2008_CF.sln"
 
 #______________________________________________________________________________
 #---------------------------------TASKS----------------------------------------
@@ -48,7 +42,7 @@ desc "Runs the build all task"
 task :default => [:build_all]
 
 desc "Rake Dependencies"
-task :rake_dependencies => [:rake_habanero, :rake_smooth, :rake_testability, :rake_faces]
+task :rake_dependencies => [:rake_habanero, :rake_faces]
 
 desc "Rakes dependencies, builds solution"
 task :build_all => [:create_temp, :rake_dependencies, :build, :delete_temp]
@@ -57,7 +51,7 @@ desc "Rakes dependencies, updates lib only"
 task :rake_and_update_lib => [:create_temp, :rake_dependencies, :updatelib, :delete_temp]
 
 desc "Builds solution, including tests"
-task :build => [:clean, :updatelib, :msbuild, :test, :commitlib]
+task :build => [:clean, :updatelib, :msbuild, :commitlib]
 
 #------------------------build Faces  --------------------
 
@@ -85,29 +79,13 @@ task :updatelib => :update_lib_from_svn do
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.dll'), 'lib'
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.pdb'), 'lib'
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Test.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Test.pdb'), 'lib'
-	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.pdb'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Naked.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Naked.pdb'), 'lib'	
-	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.pdb'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.pdb'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Testers.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Testers.pdb'), 'lib'	
-	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Test.Base.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Test.Win.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.xml'), 'lib'
+
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.CF.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.CF.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.CF.xml'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.CF.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.CF.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.CF.xml'), 'lib'
 end
 
 desc "Builds the solution with msbuild"
@@ -117,11 +95,11 @@ msbuild :msbuild do |msb|
 	msb.solution = $solution
 end
 
-desc "Runs the tests"
-nunit :test do |nunit|
-	puts cyan("Running tests")
-	nunit.assemblies 'bin\Habanero.Binding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tester.Tests.dll'
-end
+#desc "Runs the tests"
+#nunit :test do |nunit|
+#	puts cyan("Running tests")
+#	nunit.assemblies 'bin\Habanero.Binding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tester.Tests.dll'
+#end
 
 svn :commitlib do |s|
 	puts cyan("Commiting lib")
