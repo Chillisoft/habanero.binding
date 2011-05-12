@@ -6,6 +6,8 @@ using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.CF;
 using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
+using Habanero.Smooth;
+using Habanero.Testability.CF;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -57,27 +59,27 @@ namespace Habanero.ProgrammaticBinding.Tests
                 StringAssert.Contains("Value cannot be null", ex.Message);
             }
         }
-
-        [Test]
-        public void Test_Construct_WithNonDefaultNamingConvention_WhenComboBox_ShouldUseNonDefaultNamingConvention()
-        {
-            //---------------Set up test pack-------------------
-            //-----Note_: the Naming convention is only needed in the registry to deal with
-            // ------comboboxes since they could be enum, Relationship or lookups so have to 
-            // ------get the property name to resolve.
-            var namingConvention = MockRepository.GenerateStub<IControlNamingConvention>();
-            var control = new ComboBox {Name = "cmbSomeName"};
-            namingConvention.Stub(nc => nc.GetPropName(control)).Return("SomeName");
-            var mapperRegistry = new WinFormsControlMapperRegistry(namingConvention);
-            //---------------Assert Precondition----------------
-            Assert.IsNotNull(namingConvention);
-            Assert.IsInstanceOf<ComboBox>(control);
-            namingConvention.AssertWasNotCalled(nc => nc.GetPropName(control));
-            //---------------Execute Test ----------------------
-            mapperRegistry.GetMapperType<FakeBo>(control);
-            //---------------Test Result -----------------------
-            namingConvention.AssertWasCalled(nc => nc.GetPropName(control));
-        }
+        /*AssertWasNotCalled not supported by CF
+                [Test]
+                public void Test_Construct_WithNonDefaultNamingConvention_WhenComboBox_ShouldUseNonDefaultNamingConvention()
+                {
+                    //---------------Set up test pack-------------------
+                    //-----Note_: the Naming convention is only needed in the registry to deal with
+                    // ------comboboxes since they could be enum, Relationship or lookups so have to 
+                    // ------get the property name to resolve.
+                    var namingConvention = MockRepository.GenerateStub<IControlNamingConvention>();
+                    var control = new ComboBox {Name = "cmbSomeName"};
+                    namingConvention.Stub(nc => nc.GetPropName(control)).Return("SomeName");
+                    var mapperRegistry = new WinFormsControlMapperRegistry(namingConvention);
+                    //---------------Assert Precondition----------------
+                    Assert.IsNotNull(namingConvention);
+                    Assert.IsInstanceOf<ComboBox>(control);
+                    namingConvention.AssertWasNotCalled(nc => nc.GetPropName(control));
+                    //---------------Execute Test ----------------------
+                    mapperRegistry.GetMapperType<FakeBo>(control);
+                    //---------------Test Result -----------------------
+                    namingConvention.AssertWasCalled(nc => nc.GetPropName(control));
+                }*/
    /*CF Not yet ported
     * [Test]
         public void Test_GetMapperType_WhenControlTypeCheckBox_ShouldReturnCheckBoxMapper()

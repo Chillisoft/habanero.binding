@@ -4,9 +4,11 @@ using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.CF;
+using Habanero.Faces.CF.Adapters;
 using Habanero.Faces.CF.Controls;
 using Habanero.ProgrammaticBinding;
 using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
+using Habanero.Smooth;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming

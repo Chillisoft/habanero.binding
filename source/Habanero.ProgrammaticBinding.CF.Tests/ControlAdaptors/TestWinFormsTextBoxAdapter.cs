@@ -3,9 +3,11 @@ using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.CF;
+using Habanero.Faces.CF.Adapters;
 using Habanero.Faces.CF.Controls;
 using Habanero.ProgrammaticBinding;
-
+using Habanero.Smooth;
+using Habanero.Testability.CF;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -92,7 +94,7 @@ namespace Habanero.ProgrammaticBinding.Tests
 
         private static string GetRandomString()
         {
-            return RandomValueGenerator.GetRandomString();
+            return RandomValueGen.GetRandomString();
         }
     }
 }

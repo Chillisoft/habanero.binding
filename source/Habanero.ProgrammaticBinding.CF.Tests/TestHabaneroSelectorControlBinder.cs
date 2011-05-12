@@ -5,6 +5,7 @@ using Habanero.Faces.Base;
 using Habanero.Faces.CF;
 using Habanero.ProgrammaticBinding;
 using Habanero.ProgrammaticBinding.CF;
+using Habanero.Smooth;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -34,7 +35,7 @@ namespace Habanero.ProgrammaticBinding.Tests
         {
             return new DataAccessorInMemory();
         }
-
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_Construct_ShouldCreate()
         {
@@ -47,7 +48,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.IsTrue(true, "If it constructed all is good.");
         }
-
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_BindBusinessObjectCollection_ToListBox_ShouldAddToControlList()
         {
@@ -63,7 +64,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(1, lstBox.Items.Count, "The business object collection's items should be in list");
         }
-        
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_AddToBusinessObjectCollection_ShouldAddToControlList()
         {
@@ -79,7 +80,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(4, lstBox.Items.Count, "should have added new item");
         }
-
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_RemvoveToBusinessObjectCollection_ShouldRemoveFromControlList()
         {
@@ -95,7 +96,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreEqual(2, lstBox.Items.Count, "should have removed item");
         }
-
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_SetSelectedBusinessObject_SetsSelectedBO()
         {
@@ -113,6 +114,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreSame(boToSelect, selectorBinder.SelectedBusinessObject);
         }
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_SetSelectedBusinessObject_RaisesBusinessObjectSelectedEvent()
         {
@@ -131,6 +133,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.IsTrue(boSelectedEventCalled);
         }
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_SetSelectedBusinessObject_SetsSelectedBO_OnControl()
         {
@@ -149,6 +152,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreSame(boToSelect, listControl.SelectedItem);
         }
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_BindHabaneroControlBinder_ThenSetSelectedItem_ShouldSetBusinessObjectControlBinder()
         {
@@ -168,6 +172,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreSame(boToSelect, controlBinder.BusinessObject);
         }
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_BindHabaneroControlBinder_ShouldReturnHabaneroControlBinder()
         {
@@ -186,7 +191,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreSame(returnedBinder, controlBinder);
         }
-
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_BindHabaneroControlBinder_ThenSelectItemViaControl_ShouldSetBusinessObjectControlBinder()
         {
@@ -206,7 +211,7 @@ namespace Habanero.ProgrammaticBinding.Tests
             //---------------Test Result -----------------------
             Assert.AreSame(boToSelect, controlBinder.BusinessObject);
         }
-
+        [Ignore("NYI")] //TODO Brett 12 May 2011: Ignored Test - NYI
         [Test]
         public void Test_SetSelectedBusinessObject_WithComboBox_SetsSelectedBO_OnControl()
         {

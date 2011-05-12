@@ -6,6 +6,7 @@ using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
 using Habanero.Faces.CF;
 using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
+using Habanero.Smooth;
 using NUnit.Framework;
 using Rhino.Mocks;
 

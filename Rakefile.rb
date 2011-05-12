@@ -29,7 +29,7 @@ $habanero_version = 'branches/v2.6-DotNet2CompactFramework'
 require 'rake-habanero.rb'
 
 $faces_version = 'branches/V2.6-CF_Stargate'
-require 'rake-facesCF.rb'
+require 'rake-faces.rb'
 
 #------------------------project settings------------------------
 $basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/branches/v1.2_ForCF_Stargate'

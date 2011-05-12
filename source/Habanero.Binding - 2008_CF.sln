@@ -3,14 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.ProgrammaticBinding.CF", "Habanero.ProgrammaticBinding.CF\Habanero.ProgrammaticBinding.CF.csproj", "{6B01839D-5C77-4699-ACF2-1AA076000F01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.Faces.Base.CF", "..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.Base.CF\Habanero.Faces.Base.CF.csproj", "{6EECF70C-D930-4CC2-81FE-6E05E956F336}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.Faces.CF", "..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.CF\Habanero.Faces.CF.csproj", "{9FDA897E-9642-498B-8CEB-FDCE18B6C92D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.Faces.Base.CF.Tests", "..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.Base.CF.Tests\Habanero.Faces.Base.CF.Tests.csproj", "{56AE140B-ED1B-43FF-8360-F0A7063A04F6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.Faces.CF.Tests", "..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.CF.Tests\Habanero.Faces.CF.Tests.csproj", "{B454E0E8-BB14-46CE-A068-79A3DC228938}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.ProgrammaticBinding.CF.Tests", "Habanero.ProgrammaticBinding.CF.Tests\Habanero.ProgrammaticBinding.CF.Tests.csproj", "{31074E85-2D4B-4D2A-B81E-F5D2920B976D}"
 EndProject
 Global
@@ -23,22 +15,6 @@ Global
 		{6B01839D-5C77-4699-ACF2-1AA076000F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B01839D-5C77-4699-ACF2-1AA076000F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B01839D-5C77-4699-ACF2-1AA076000F01}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EECF70C-D930-4CC2-81FE-6E05E956F336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EECF70C-D930-4CC2-81FE-6E05E956F336}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EECF70C-D930-4CC2-81FE-6E05E956F336}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EECF70C-D930-4CC2-81FE-6E05E956F336}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FDA897E-9642-498B-8CEB-FDCE18B6C92D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FDA897E-9642-498B-8CEB-FDCE18B6C92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FDA897E-9642-498B-8CEB-FDCE18B6C92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FDA897E-9642-498B-8CEB-FDCE18B6C92D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56AE140B-ED1B-43FF-8360-F0A7063A04F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56AE140B-ED1B-43FF-8360-F0A7063A04F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56AE140B-ED1B-43FF-8360-F0A7063A04F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56AE140B-ED1B-43FF-8360-F0A7063A04F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B454E0E8-BB14-46CE-A068-79A3DC228938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B454E0E8-BB14-46CE-A068-79A3DC228938}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B454E0E8-BB14-46CE-A068-79A3DC228938}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B454E0E8-BB14-46CE-A068-79A3DC228938}.Release|Any CPU.Build.0 = Release|Any CPU
 		{31074E85-2D4B-4D2A-B81E-F5D2920B976D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31074E85-2D4B-4D2A-B81E-F5D2920B976D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31074E85-2D4B-4D2A-B81E-F5D2920B976D}.Release|Any CPU.ActiveCfg = Release|Any CPU

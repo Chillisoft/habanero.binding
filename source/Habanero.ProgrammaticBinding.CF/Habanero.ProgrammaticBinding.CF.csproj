@@ -51,6 +51,14 @@
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
+    <Reference Include="Habanero.Faces.Base.CF, Version=1.0.4149.32711, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Faces.Base.CF.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.CF, Version=1.0.4149.32712, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Faces.CF.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\mscorlib.dll</HintPath>
@@ -97,16 +105,6 @@
     <Compile Include="HabaneroControlBinder.cs" />
     <Compile Include="HabaneroSelectorControlBinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.Base.CF\Habanero.Faces.Base.CF.csproj">
-      <Project>{6EECF70C-D930-4CC2-81FE-6E05E956F336}</Project>
-      <Name>Habanero.Faces.Base.CF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.CF\Habanero.Faces.CF.csproj">
-      <Project>{9FDA897E-9642-498B-8CEB-FDCE18B6C92D}</Project>
-      <Name>Habanero.Faces.CF</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mappers\" />

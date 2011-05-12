@@ -50,6 +50,26 @@
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
+    <Reference Include="Habanero.Faces.Base.CF, Version=1.0.4149.32711, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Faces.Base.CF.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.CF, Version=1.0.4149.32712, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Faces.CF.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Smooth, Version=9.9.9.999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Smooth.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Testability.CF, Version=9.9.9.999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Testability.CF.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Testability.Helpers.CF, Version=9.9.9.999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Testability.Helpers.CF.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <HintPath>..\..\lib\log4net.dll</HintPath>
     </Reference>
@@ -111,17 +131,9 @@
     <Compile Include="ControlAdaptors\TestWinFormsTextBoxAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.Base.CF\Habanero.Faces.Base.CF.csproj">
-      <Project>{6EECF70C-D930-4CC2-81FE-6E05E956F336}</Project>
-      <Name>Habanero.Faces.Base.CF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Faces\branches\V2.6-CF_Stargate\source\Habanero.Faces.CF\Habanero.Faces.CF.csproj">
-      <Project>{9FDA897E-9642-498B-8CEB-FDCE18B6C92D}</Project>
-      <Name>Habanero.Faces.CF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Habanero.ProgrammaticBinding\Habanero.ProgrammaticBinding.csproj">
+    <ProjectReference Include="..\Habanero.ProgrammaticBinding.CF\Habanero.ProgrammaticBinding.CF.csproj">
       <Project>{6B01839D-5C77-4699-ACF2-1AA076000F01}</Project>
-      <Name>Habanero.ProgrammaticBinding</Name>
+      <Name>Habanero.ProgrammaticBinding.CF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

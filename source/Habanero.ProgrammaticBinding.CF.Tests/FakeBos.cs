@@ -3,6 +3,7 @@ using Habanero.Base;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.BO.Loaders;
+using Habanero.Smooth;
 
 namespace Habanero.ProgrammaticBinding.Tests
 {
@@ -15,6 +16,14 @@ namespace Habanero.ProgrammaticBinding.Tests
 		{
 			get { return ((string) (base.GetPropertyValue("FakeStringProp"))); }
 			set { base.SetPropertyValue("FakeStringProp", value); }
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public virtual string FakeStringProp2
+		{
+            get { return ((string)(base.GetPropertyValue("FakeStringProp2"))); }
+            set { base.SetPropertyValue("FakeStringProp2", value); }
 		}
 		/// <summary>
 		/// 

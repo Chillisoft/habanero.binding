@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Habanero.Testability.Helpers.CF</name>
+    </assembly>
+    <members>
+        <member name="T:Habanero.Testability.Helpers.HabaneroLoggerFactoryStub">
+            <summary>
+            This is a stub implementation of a HabaneroLoggerFactor.
+            GetLogger returns <see cref="T:Habanero.Testability.Helpers.HabaneroLoggerStub"/>
+            Basically just returns a logger that stubs out all methods.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.HabaneroLoggerFactoryStub.GetLogger(System.String)">
+            <summary>
+            </summary>
+            <param name="contextName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.HabaneroLoggerFactoryStub.GetLogger(System.Type)">
+            <summary>
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.HabaneroLoggerStub">
+            <summary>
+             Basically just a logger that stubs out all methods.
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.HabaneroConsoleLogger">
+            <summary>
+            Logs any messaged to the console
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.HabaneroConsoleLogger.#ctor(System.String)">
+            <summary>
+            </summary>
+            <param name="contextName"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.HabaneroConsoleLogger.Log(System.String)">
+            <summary>
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.HabaneroConsoleLogger.Log(System.String,Habanero.Base.LogCategory)">
+            <summary>
+            </summary>
+            <param name="message"></param>
+            <param name="logCategory"></param>
+        </member>
+        <member name="P:Habanero.Testability.Helpers.HabaneroConsoleLogger.ContextName">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1">
+            <summary>
+            This is a Fake BO which is used for testing.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.#ctor">
+            <summary>
+            Default constructor. 
+            The <see cref="T:Habanero.Base.IClassDef"/> will be implied from <typeparamref name="TBusinessObject"/> and the Current Database Connection will be used.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.#ctor(Habanero.Base.IClassDef)">
+            <summary>
+            Use this constructor if you will only know <typeparamref name="TBusinessObject"/> at run time - <see cref="T:Habanero.BO.BusinessObject"/> will be the generic type
+            and the objects in the collection will be determined from the <see cref="T:Habanero.Base.IClassDef"/> passed in.
+            </summary>
+            <param name="classDef">The <see cref="T:Habanero.Base.IClassDef"/> of the objects to be contained in this collection</param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.#ctor(`0)">
+            <summary>
+            Constructor to initialize a new collection with a
+            class definition provided by an existing business object
+            </summary>
+            <param name="bo">The business object whose class definition
+            is used to initialize the collection</param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.Add(`0)">
+            <summary>
+            Adds a business object to the collection
+            </summary>
+            <param name="bo">The business object to add</param>
+            <exception cref="T:System.ArgumentNullException"><c>bo</c> is null.</exception>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.Refresh">
+            <summary>
+            Refreshes the business objects in the collection
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.Clear">
+            <summary>
+            Clears the collection
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.GetSortedList(System.String,System.Boolean)">
+            <summary>
+            Returns a list containing all the objects sorted by the property
+            name and in the order specified
+            </summary>
+            <param name="propertyName">The property name</param>
+            <param name="isAscending">True for ascending, false for descending
+            </param>
+            <returns>Returns a sorted list</returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.GetList">
+            <summary>
+            Returns the business object collection as an <see cref="T:System.Collections.Generic.IList`1"/>.
+            </summary>
+            <returns>Returns an <see cref="T:System.Collections.Generic.IList`1"/> object</returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.SaveAll">
+            <summary>
+            Commits to the database all the business objects that are either
+            new or have been altered since the last committal
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.CancelEdits">
+            <summary>
+            Restores all the business objects to their last persisted state, that
+            is their state and values at the time they were last saved to the database
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakeBusinessObjectCollection`1.MarkForDelete(`0)">
+            <summary>
+             Marks the business object as MarkedForDeletion and places the object
+            </summary>
+            <param name="businessObject"></param>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.DataAccessorInMemoryWithMockCommitter">
+            <summary>
+            DataAccessor that returns a Mock TransactionCommitter.
+            The Mock TransactionCommitter can then be used for testing whether commit was called etc.
+            Also if you are using Mocked out BusinessObjects then you can still test saving etc.
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.DataAccessorWithMockCommitter">
+            <summary>
+            DataAccessor that returns a Mock TransactionCommitter.
+            The Mock TransactionCommitter can then be used for testing whether commit was called etc.
+            Also if you are using Mocked out BusinessObjects then you can still test saving etc.
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.NonValidatingTransactionCommitter">
+            <summary>
+            A Transaction Committer for a <see cref="T:Habanero.BO.DataStoreInMemory"/> that does not Validate the BusinessObject before persisting it
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingTransactionCommitter.#ctor(Habanero.BO.DataStoreInMemory)">
+            <summary>
+            
+            </summary>
+            <param name="dataStoreInMemory"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingTransactionCommitter.CreateTransactionalBusinessObject(Habanero.Base.IBusinessObject)">
+            <summary>
+            Used to decorate a businessObject in a TransactionalBusinessObject. To be overridden in the concrete 
+            implementation of a TransactionCommitter depending on the type of transaction you need.
+            </summary>
+            <param name="businessObject">The business object to decorate</param>
+            <returns>
+            A decorated Business object (TransactionalBusinessObject)
+            </returns>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.NonValidatingDataAccessorInMemory">
+            <summary>
+            This is a <see cref="T:Habanero.BO.DataAccessorInMemory"/> that does not validate the businessObjects.
+            This is very usefull for testing in cases where you need to persist an object that 
+            is in a state that would break some validation rules.
+            E.g. Expired samples but you cannot create the expired samples in the normal way since the rule is ExpiryDate &gt; Today.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingDataAccessorInMemory.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingDataAccessorInMemory.#ctor(Habanero.BO.DataStoreInMemory)">
+            <summary>
+            
+            </summary>
+            <param name="dataStore"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingDataAccessorInMemory.CreateTransactionCommitter">
+            <summary>
+            Creates a TransactionCommitter for you to use to persist BusinessObjects. A new TransactionCommitter is required
+            each time an object or set of objects is persisted.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.NonValidatingTransactionalBusinessObject">
+            <summary>
+            Wraps a BO in a <see cref="T:Habanero.BO.TransactionalBusinessObject"/> but does not call validate the BO when IsValid is called.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingTransactionalBusinessObject.IsValid(System.String@)">
+            <summary>
+                        Indicates whether all of the property values are valid
+            </summary>
+            <param name="invalidReason">A string to modify with a reason
+                        for any invalid values</param>
+            <returns>
+            Returns true if all are valid
+            </returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingTransactionalBusinessObject.HasDuplicateIdentifier(System.String@)">
+            <summary>
+            returns true if there is already an object in the database with the same primary identifier (primary key)
+            or with the same alternate identifier (alternate key)
+            </summary>
+            <param name="errMsg"></param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.NonValidatingTransactionalBusinessObject.CheckForConcurrencyErrors">
+            <summary>
+            Checks the underlying business object for any concurrency control errors before trying to commit to 
+            the datasource
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.HabaneroConsoleLoggerFactory">
+            <summary>
+            Constructs Loggers that log to the Console.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.HabaneroConsoleLoggerFactory.GetLogger(System.String)">
+            <summary>
+            </summary>
+            <param name="contextName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.HabaneroConsoleLoggerFactory.GetLogger(System.Type)">
+            <summary>
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.DBNumberGeneratorStub">
+            <summary>
+             Used to stub out the IDBNumber generator for visual testing with an in memory database as well as
+             for Unit and integration testing.
+            </summary>
+        </member>
+        <member name="P:Habanero.Testability.Helpers.DBNumberGeneratorStub.CurrentNumber">
+            <summary>
+             The current value being used by the Number Gen
+            </summary>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.FakePropertyInfo">
+            <summary>
+            Fake PropertyInfo for testing reflection code e.g. binding, Smooth, testability.
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.String,System.Type,System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="propName"></param>
+            <param name="propType"></param>
+            <param name="declaringType"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.String,System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="propName"></param>
+            <param name="propType"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.Type)">
+            <summary>
+            /
+            </summary>
+            <param name="declaringType"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="propName"></param>
+        </member>
+        <member name="M:Habanero.Testability.Helpers.FakePropertyInfo.SetReflectedType(System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="reflectedType"></param>
+        </member>
+        <member name="P:Habanero.Testability.Helpers.FakePropertyInfo.DeclaringType">
+            <summary>
+            Gets the class that declares this member.
+            </summary>
+            <returns>
+            The Type object for the class that declares this member.
+            </returns>
+        </member>
+        <member name="T:Habanero.Testability.Helpers.DummyPropertyInfo">
+            <summary>
+            This class is used by Reflection you cannot construct an instance of Property Info directly.
+            This class only implementes the .Name and .Type interface of the PropertyInfo.
+            This class is copied as is from FluentNHibernate.
+            </summary>
+        </member>
+    </members>
+</doc>
