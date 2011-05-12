@@ -31,6 +31,9 @@ require 'rake-habanero.rb'
 $faces_version = 'branches/V2.6-CF_Stargate'
 require 'rake-facesCF.rb'
 
+$faces_version = 'branches/v2.5-CF'
+require 'rake-testabilityCF.rb'
+
 #------------------------project settings------------------------
 $basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/branches/v1.2_ForCF_Stargate'
 $solution = "source/Habanero.Binding - 2008_CF.sln"
@@ -42,7 +45,7 @@ desc "Runs the build all task"
 task :default => [:build_all]
 
 desc "Rake Dependencies"
-task :rake_dependencies => [:rake_habanero, :rake_faces]
+task :rake_dependencies => [:rake_habanero, :rake_faces, :rake_testability]
 
 desc "Rakes dependencies, builds solution"
 task :build_all => [:create_temp, :rake_dependencies, :build, :delete_temp]
