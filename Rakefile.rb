@@ -21,7 +21,7 @@ msbuild_settings = {
   :properties => {:configuration => :release},
   :targets => [:clean, :rebuild],
   :verbosity => :quiet,
-  :use => :net35  #;uncomment to use .net 3.5 - default is 4.0
+  #:use => :net35  ;uncomment to use .net 3.5 - default is 4.0
 }
 
 #------------------------dependency settings---------------------
