@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6B01839D-5C77-4699-ACF2-1AA076000F01}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Habanero.ProgrammaticBinding</RootNamespace>
+    <AssemblyName>Habanero.ProgrammaticBinding</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <OSVersion>5.1</OSVersion>
+    <DeployDirSuffix>SmartDeviceProject3</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Habanero.Base">
+      <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.BO">
+      <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces, Version=1.0.4153.35762, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Faces.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Base, Version=1.0.4153.35756, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.Data.DataSetExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft.NET\SDK\CompactFramework\v3.5\WindowsCE\System.Xml.Linq.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\AssemblyInfoShared.cs">
+      <Link>Properties\AssemblyInfoShared.cs</Link>
+    </Compile>
+    <Compile Include="ControlAdaptors\WinFormsControlAdaptorFactory.cs" />
+    <Compile Include="ControlAdaptors\WinFormsControlMapperRegistry.cs" />
+    <Compile Include="HabaneroControlBinder.cs" />
+    <Compile Include="HabaneroSelectorControlBinder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mappers\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)PostBuild.cmd" "$(SolutionDir)"  "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

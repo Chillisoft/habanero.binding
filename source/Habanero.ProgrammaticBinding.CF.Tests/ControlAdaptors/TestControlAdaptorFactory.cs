@@ -3,11 +3,11 @@ using System.Windows.Forms;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.CF;
-using Habanero.Faces.CF.Adapters;
-using Habanero.Faces.CF.Controls;
+using Habanero.Faces;
+using Habanero.Faces.Adapters;
+using Habanero.Faces.Controls;
 using Habanero.ProgrammaticBinding;
-using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Smooth;
 using NUnit.Framework;
 

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Habanero.Base.Util;
 using Habanero.Faces.Base;
-using Habanero.Faces.CF;
-using Habanero.Faces.CF.Adapters;
-using Habanero.Faces.CF.Controls;
+using Habanero.Faces;
+using Habanero.Faces.Adapters;
+using Habanero.Faces.Controls;
 
-namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     public interface IControlAdaptorFactory
     {

@@ -4,10 +4,10 @@ using Habanero.Base;
 using Habanero.BO;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.CF;
-using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
+using Habanero.Faces;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 using Habanero.Smooth;
-using Habanero.Testability.CF;
+using Habanero.Testability;
 using NUnit.Framework;
 using Rhino.Mocks;
 

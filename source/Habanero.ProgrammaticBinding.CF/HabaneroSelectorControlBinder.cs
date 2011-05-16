@@ -4,9 +4,9 @@ using System.Windows.Forms;
 using Habanero.Base;
 using Habanero.BO;
 using Habanero.Faces.Base;
-using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 
-namespace Habanero.ProgrammaticBinding.CF
+namespace Habanero.ProgrammaticBinding
 {
     public interface IHabaneroSelectorControlBinder<TBo> where TBo : class, IBusinessObject, new()
     {

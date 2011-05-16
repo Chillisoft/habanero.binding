@@ -5,10 +5,10 @@ using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.CF;
-using Habanero.Faces.CF.Adapters;
+using Habanero.Faces;
+using Habanero.Faces.Adapters;
 
-namespace Habanero.ProgrammaticBinding.CF.ControlAdaptors
+namespace Habanero.ProgrammaticBinding.ControlAdaptors
 {
     public interface IControlMapperRegistry
     {

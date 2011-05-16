@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.ProgrammaticBinding.CF", "Habanero.ProgrammaticBinding.CF\Habanero.ProgrammaticBinding.CF.csproj", "{6B01839D-5C77-4699-ACF2-1AA076000F01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.ProgrammaticBinding", "Habanero.ProgrammaticBinding.CF\Habanero.ProgrammaticBinding.csproj", "{6B01839D-5C77-4699-ACF2-1AA076000F01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.ProgrammaticBinding.CF.Tests", "Habanero.ProgrammaticBinding.CF.Tests\Habanero.ProgrammaticBinding.CF.Tests.csproj", "{31074E85-2D4B-4D2A-B81E-F5D2920B976D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Habanero.ProgrammaticBinding.Tests", "Habanero.ProgrammaticBinding.CF.Tests\Habanero.ProgrammaticBinding.Tests.csproj", "{31074E85-2D4B-4D2A-B81E-F5D2920B976D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

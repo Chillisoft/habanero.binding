@@ -1,3 +1,4 @@
+#rake binding
 require 'rake'
 require 'albacore'
 
@@ -31,6 +32,9 @@ require 'rake-habanero.rb'
 $faces_version = 'branches/V2.6-CF_Stargate'
 require 'rake-facesCF.rb'
 
+$smooth_version = 'branches/v1.5_CF_Stargate'
+require 'rake-smoothCF.rb'
+
 $testability_version = 'branches/v2.5-CF'
 require 'rake-testabilityCF.rb'
 
@@ -44,8 +48,8 @@ $solution = "source/Habanero.Binding - 2008_CF.sln"
 desc "Runs the build all task"
 task :default => [:build_all]
 
-desc "Rake Dependencies"
-task :rake_dependencies => [:rake_habanero, :rake_faces, :rake_testability]
+desc "Rake Faces, smooth and testability"
+task :rake_dependencies => [:rake_habanero, :rake_smooth, :rake_faces, :rake_testability]
 
 desc "Rakes dependencies, builds solution"
 task :build_all => [:create_temp, :rake_dependencies, :build, :delete_temp]
@@ -82,13 +86,23 @@ task :updatelib => :update_lib_from_svn do
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.dll'), 'lib'
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.pdb'), 'lib'
 	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.xml'), 'lib'
-
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.CF.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.CF.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.CF.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.CF.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.CF.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.CF.xml'), 'lib'
+	
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.dll'), 'lib'	
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.pdb'), 'lib'	
+	
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.xml'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.xml'), 'lib'
+	
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.xml'), 'lib'	
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.dll'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.pdb'), 'lib'
+	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.xml'), 'lib'	
 end
 
 desc "Builds the solution with msbuild"

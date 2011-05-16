@@ -7,10 +7,10 @@ using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.BO.ClassDefinition;
 using Habanero.Faces.Base;
-using Habanero.Faces.CF;
-using Habanero.ProgrammaticBinding.CF.ControlAdaptors;
+using Habanero.Faces;
+using Habanero.ProgrammaticBinding.ControlAdaptors;
 
-namespace Habanero.ProgrammaticBinding.CF
+namespace Habanero.ProgrammaticBinding
 {
     /// <summary>
     /// This is a convenience class that is used to programmatically bind Properties of a Business Object
