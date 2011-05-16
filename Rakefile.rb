@@ -31,7 +31,7 @@ require 'rake-habanero.rb'
 $faces_version = 'branches/V2.6-CF_Stargate'
 require 'rake-facesCF.rb'
 
-$faces_version = 'branches/v2.5-CF'
+$testability_version = 'branches/v2.5-CF'
 require 'rake-testabilityCF.rb'
 
 #------------------------project settings------------------------
