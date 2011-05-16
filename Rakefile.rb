@@ -98,11 +98,11 @@ msbuild :msbuild do |msb|
 	msb.solution = $solution
 end
 
-#desc "Runs the tests"
-#nunit :test do |nunit|
-#	puts cyan("Running tests")
-#	nunit.assemblies 'bin\Habanero.Binding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tester.Tests.dll'
-#end
+desc "Runs the tests"
+nunit :test do |nunit|
+	puts cyan("Running tests")
+	nunit.assemblies 'bin\Habanero.ProgrammaticBinding.Tests.dll'
+end
 
 svn :commitlib do |s|
 	puts cyan("Commiting lib")
