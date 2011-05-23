@@ -58,7 +58,7 @@ desc "Rakes dependencies, updates lib only"
 task :rake_and_update_lib => [:create_temp, :rake_dependencies, :updatelib, :delete_temp]
 
 desc "Builds solution, including tests"
-task :build => [:clean, :updatelib, :msbuild, :test, :commitlib]
+task :build => [:clean, :updatelib, :msbuild, :test]
 
 #------------------------build Faces  --------------------
 
