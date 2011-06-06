@@ -34,7 +34,7 @@ namespace Habanero.Binding
         /// for this class.
         /// </summary>
         /// <returns></returns>
-        public PropertyDescriptorCollection GetPropertyDescriptors()
+        public virtual PropertyDescriptorCollection GetPropertyDescriptors()
         {
             var origDescriptors = TypeDescriptor.GetProperties(typeof(T));
             var propDescriptorsToBind = origDescriptors.Cast<PropertyDescriptor>().Where(HasIgnoreAttribute());
