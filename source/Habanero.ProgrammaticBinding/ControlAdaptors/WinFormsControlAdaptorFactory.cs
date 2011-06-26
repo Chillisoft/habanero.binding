@@ -21,7 +21,7 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
     public class WinFormsControlAdaptorFactory : IControlAdaptorFactory
     {
         //TODO brett 16 Dec 2010: This adapter registry needs to be moved to a binding context or something.
-        private Dictionary<Type, Type> _adapaterRegistry = new Dictionary<Type, Type>();
+        private readonly Dictionary<Type, Type> _adapaterRegistry = new Dictionary<Type, Type>();
 
 
         public WinFormsControlAdaptorFactory()
@@ -33,6 +33,8 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             _adapaterRegistry.Add(typeof(ComboBox), typeof(WinFormsComboBoxAdapter));
             _adapaterRegistry.Add(typeof(NumericUpDown), typeof(WinFormsNumericUpDownAdapter));
             _adapaterRegistry.Add(typeof(DataGridView), typeof(WinFormsDataGridViewAdapter));
+            _adapaterRegistry.Add(typeof(Panel), typeof(WinFormsPanelAdapter));
+            _adapaterRegistry.Add(typeof(Label), typeof(WinFormsLabelAdapter));
         }
 
         public IControlHabanero GetHabaneroControl<TControlType>(TControlType control) where TControlType : Control
@@ -58,6 +60,11 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
                 }
             }
             return habaneroControl;
+        }
+
+        public T GetHabaneroControl<T, TControlType>(TControlType control) where T : class, IControlHabanero where TControlType : Control
+        {
+            return GetHabaneroControl<TControlType>(control) as T;
         }
     }
 }
