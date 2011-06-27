@@ -503,11 +503,19 @@ namespace Habanero.ProgrammaticBinding
 
     }
 
-    internal static class ControlExtensions
+    public static class ControlExtensions
     {
         public static bool IsLabel(this Control control)
         {
             return control.GetType() == typeof(Label);
+        }
+
+
+        public static IControlHabanero GetHabaneroControl<TControlType>(this TControlType control) where TControlType : Control
+        {
+            var controlAdaptorFactory = new WinFormsControlAdaptorFactory();
+            var controlHabanero = controlAdaptorFactory.GetHabaneroControl(typeof(TControlType), control) ?? controlAdaptorFactory.GetHabaneroControl(control.GetType(), control);
+            return controlHabanero;
         }
     }
 }

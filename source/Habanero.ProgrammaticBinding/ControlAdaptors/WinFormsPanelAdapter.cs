@@ -55,4 +55,21 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
 
         #endregion
     }
+
+    /// <summary>
+    /// This is a ControlWraper for Any Control that Inherits from System.Windows.Forms.Label
+    /// It wraps this Control behind a standard interface that allows any Control in a Windows Environment 
+    /// to take advantage of the Habanero ControlMappers <see cref="IControlMapper"/>
+    /// </summary>
+    public class WinFormsGroupBoxAdapter : WinFormsControlAdapter, IWinFormsGroupBoxAdapter
+    {
+        private readonly GroupBox _groupBox;
+
+        public WinFormsGroupBoxAdapter(GroupBox control)
+            : base(control)
+        {
+            _groupBox = control;
+        }
+
+    }
 }

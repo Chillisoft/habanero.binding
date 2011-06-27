@@ -35,6 +35,7 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             _adapaterRegistry.Add(typeof(DataGridView), typeof(WinFormsDataGridViewAdapter));
             _adapaterRegistry.Add(typeof(Panel), typeof(WinFormsPanelAdapter));
             _adapaterRegistry.Add(typeof(Label), typeof(WinFormsLabelAdapter));
+            _adapaterRegistry.Add(typeof(GroupBox), typeof(WinFormsGroupBoxAdapter));
         }
 
         public IControlHabanero GetHabaneroControl<TControlType>(TControlType control) where TControlType : Control
