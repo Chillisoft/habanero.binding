@@ -26,6 +26,14 @@
             </summary>
             <param name="databaseConnection"></param>
         </member>
+        <member name="M:Habanero.DB.BusinessObjectLoaderDB.GetSelectQuery(Habanero.Base.IClassDef,Habanero.Base.IPrimaryKey)">
+            <summary>
+            Create a select Query based on the class definition and the primary key.
+            </summary>
+            <param name="classDef">The class definition.</param>
+            <param name="primaryKey">The primary key of the object.</param>
+            <returns></returns>
+        </member>
         <member name="M:Habanero.DB.BusinessObjectLoaderDB.GetBusinessObject``1(Habanero.Base.IPrimaryKey)">
             <summary>
             Loads a business object of type T, using the Primary key given as the criteria
@@ -53,14 +61,6 @@
             <param name="criteria">The search criteria</param>
             <returns>Returns the business object found</returns>
             <exception cref="T:Habanero.Base.Exceptions.UserException">Thrown if more than one object matches the criteria</exception>
-        </member>
-        <member name="M:Habanero.DB.BusinessObjectLoaderDB.GetSelectQuery(Habanero.Base.IClassDef,Habanero.Base.IPrimaryKey)">
-            <summary>
-            Create a select Query based on the class definition and the primary key.
-            </summary>
-            <param name="classDef">The class definition.</param>
-            <param name="primaryKey">The primary key of the object.</param>
-            <returns></returns>
         </member>
         <member name="M:Habanero.DB.BusinessObjectLoaderDB.GetSelectQuery(Habanero.Base.IClassDef,Habanero.Base.Criteria)">
             <summary>
@@ -179,13 +179,6 @@
             <param name="relationship">The relationship to use to load the object</param>
             <returns>An object of the type defined by the relationship if one was found, otherwise null</returns>
         </member>
-        <member name="M:Habanero.DB.BusinessObjectLoaderDB.CreateCollectionOfType(System.Type)">
-            <summary>
-            Creates a Generic Collection of the appropriate Typee.
-            </summary>
-            <param name="boType">The Type of collection to create</param>
-            <returns></returns>
-        </member>
         <member name="M:Habanero.DB.BusinessObjectLoaderDB.GetCorrectSubClassDef(Habanero.Base.IBusinessObject,System.Data.IDataRecord)">
             <summary>
             Checks to see if the loaded object is the base of a single table inheritance structure
@@ -209,7 +202,7 @@
             A version number is used to check if the object has been edited. 
             To use this class effectively, the update properties method 
             must be called before the database is updated (i.e. in  
-            <see cref="!:BusinessObject.Save"/> ) 
+            <see cref="M:Habanero.BO.BusinessObject.Save"/> ) 
             <see cref="M:Habanero.DB.ConcurrencyControl.OptimisticLockingVersionNumberDB.UpdatePropertiesWithLatestConcurrencyInfoBeforePersisting"/>)
             This class implements the followign concurrency control philosophy.
             Every time a non dirty object is retrieved from the database the 
@@ -323,6 +316,12 @@
             </summary>
             <returns>Returns a collection of sql statements</returns>
         </member>
+        <member name="M:Habanero.DB.ConcurrencyControl.PessimisticLockingDB.GetReleaseLockSql">
+            <summary>
+            Returns an "update" sql statement that will release the lock on this object
+            </summary>
+            <returns>Returns a collection of sql statements</returns>
+        </member>
         <member name="M:Habanero.DB.ConcurrencyControl.PessimisticLockingDB.UpdatePropertiesWithLatestConcurrencyInfoBeforePersisting">
             <summary>
             Updates the version number, machine name, username and time edited.
@@ -341,6 +340,52 @@
              Makes any changes required to the concurrency control mechanism 
              to assert that the transaction has failed and thus been rolled back.
             </summary>
+        </member>
+        <member name="T:Habanero.DB.UpdateStatementGenerator">
+            <summary>
+            Generates "update" sql statements to update a specified business
+            object's properties in the database
+            </summary>
+        </member>
+        <member name="M:Habanero.DB.UpdateStatementGenerator.#ctor(Habanero.Base.IBusinessObject,Habanero.Base.IDatabaseConnection)">
+            <summary>
+            Constructor to initialise the generator
+            </summary>
+            <param name="bo">The business object whose properties are to
+            be updated</param>
+            <param name="connection">A database connection</param>
+        </member>
+        <member name="M:Habanero.DB.UpdateStatementGenerator.Generate">
+            <summary>
+            Generates a collection of sql statements to update the business
+            object's properties in the database
+            </summary>
+            <returns>Returns a sql statement collection</returns>
+        </member>
+        <member name="M:Habanero.DB.UpdateStatementGenerator.GenerateSingleUpdateStatement(System.String,Habanero.Base.IBOPropCol,System.Boolean,Habanero.BO.ClassDefinition.ClassDef)">
+            <summary>
+            Generates an "update" sql statement for the properties in the
+            business object
+            </summary>
+            <param name="tableName">The table name</param>
+            <param name="propsToInclude">A collection of properties to update,
+            if the previous include-all boolean was not set to true</param>
+            <param name="isSuperClassStatement">Whether a super-class is involved</param>
+            <param name="currentClassDef">The current class definition</param>
+        </member>
+        <member name="M:Habanero.DB.UpdateStatementGenerator.GetPropsToInclude(Habanero.Base.IClassDef)">
+            <summary>
+            Builds a collection of properties to include in the update,
+            depending on the inheritance type
+            </summary>
+        </member>
+        <member name="M:Habanero.DB.UpdateStatementGenerator.GenerateForRelationship(Habanero.Base.IRelationship,Habanero.Base.IBusinessObject)">
+            <summary>
+             Generate SqlStatementCollection for the Relationsp
+            </summary>
+            <param name="relationship"></param>
+            <param name="relatedBusinessObject"></param>
+            <returns></returns>
         </member>
         <member name="T:Habanero.DB.ConnectionStringAccess2007Factory">
             <summary>
@@ -799,12 +844,12 @@
             <param name="openConnection"></param>
             <returns></returns>
         </member>
-        <member name="M:Habanero.DB.DatabaseConnection.ExecuteSql(Habanero.Base.ISqlStatementCollection)">
+        <member name="M:Habanero.DB.DatabaseConnection.ExecuteSql(System.Collections.Generic.IEnumerable{Habanero.Base.ISqlStatement})">
             <summary>
             Executes a sql command that returns no result set and takes no 
             parameters, using the provided connection
             </summary>
-            <param name="sql">A valid sql statement (typically "insert",
+            <param name="statements">A valid sql statement (typically "insert",
             "update" or "delete"). Note_ that this assumes that the
             sqlCommand is not a stored procedure.</param>
             <returns>Returns the number of rows affected</returns>
@@ -845,7 +890,7 @@
             pass in stored procedures and parameters.
             </future>
         </member>
-        <member name="M:Habanero.DB.DatabaseConnection.ExecuteSql(Habanero.Base.ISqlStatementCollection,System.Data.IDbTransaction)">
+        <member name="M:Habanero.DB.DatabaseConnection.ExecuteSql(System.Collections.Generic.IEnumerable{Habanero.Base.ISqlStatement},System.Data.IDbTransaction)">
             <summary>
             Executes a collection of sql commands that returns no result set 
             and takes no parameters, using the provided connection.
@@ -855,7 +900,7 @@
             Access and MySql, the sql statements will need to be split up
             and executed as separate transactions.
             </summary>
-            <param name="sql">A valid sql statement object (typically "insert",
+            <param name="statements">A valid sql statement object (typically "insert",
             "update" or "delete"). Note_ that this assumes that the
             sqlCommand is not a stored procedure.</param>
             <param name="transaction">A valid transaction object in which the 
@@ -905,6 +950,12 @@
             added to an <see cref="T:Habanero.Base.ISqlStatement"/> because each database uses a different naming convention for their parameters.
             </summary>
             <returns>The <see cref="T:Habanero.Base.IParameterNameGenerator"/> valid for this <see cref="T:Habanero.Base.IDatabaseConnection"/></returns>
+        </member>
+        <member name="M:Habanero.DB.DatabaseConnection.CreateSqlStatement">
+            <summary>
+            Creates a <see cref="T:Habanero.Base.ISqlStatement"/> initialised with this <see cref="T:Habanero.Base.IDatabaseConnection"/>
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Habanero.DB.DatabaseConnection.LoadDataTable(Habanero.Base.ISqlStatement,System.String,System.String)">
             <summary>
@@ -1509,6 +1560,11 @@
             <param name="transactionCommitter">The transaction committer suitable
             for the persistence environment</param>
         </member>
+        <member name="M:Habanero.DB.NumberGeneratorPessimisticLocking.ReleaseLocks">
+            <summary>
+            This method is only used for testing purposes.
+            </summary>
+        </member>
         <member name="T:Habanero.DB.BOSequenceNumberLocking">
             <summary>
             Manages locking for sequence number control
@@ -1879,6 +1935,11 @@
             <summary>
             Returns the decrypted password.  This will be the same as <see cref="P:Habanero.DB.DatabaseConfig.Password"/> if the private key has not been
             set (via <see cref="M:Habanero.DB.DatabaseConfig.SetPrivateKey(System.String)"/> or <see cref="M:Habanero.DB.DatabaseConfig.SetPrivateKey(System.Security.Cryptography.RSA)"/>.
+            </summary>
+        </member>
+        <member name="P:Habanero.DB.DatabaseConfig.IsInMemoryDB">
+            <summary>
+            Returns true or false for whether this DatabaseConfig points at an In Memory DB or not.
             </summary>
         </member>
         <member name="T:Habanero.DB.DatabaseConnectionAccess">
@@ -2914,101 +2975,6 @@
             </summary>
             <param name="orderByCriteria">The order-by clause</param>
         </member>
-        <member name="T:Habanero.DB.SqlStatementCollection">
-            <summary>
-            Manages a collection of sql statements
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.#ctor">
-            <summary>
-            Constructor to initialise a new empty collection
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.#ctor(Habanero.Base.ISqlStatement)">
-            <summary>
-            Constructor to initialise a new collection containing one
-            sql statement object
-            </summary>
-            <param name="statement">The sql statement object</param>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.Add(Habanero.Base.ISqlStatement)">
-            <summary>
-            Adds a sql statement object to the collection
-            </summary>
-            <param name="statement">The sql statement object</param>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.Add(Habanero.Base.ISqlStatementCollection)">
-            <summary>
-            Adds the contents of another sql statement collection into this
-            collection
-            </summary>
-            <param name="statementCollection">The other collection</param>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.Insert(System.Int32,Habanero.Base.ISqlStatement)">
-            <summary>
-            Inserts a sql statement object at the position specified
-            </summary>
-            <param name="index">The position to insert at</param>
-            <param name="sql">The sql statement object to add</param>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.System#Collections#Generic#IEnumerable{Habanero#Base#ISqlStatement}#GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the collection.
-            </summary>
-            
-            <returns>
-            A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
-            </returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through a collection.
-            </summary>
-            
-            <returns>
-            An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
-            </returns>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.Equals(System.Object)">
-            <summary>
-            Indicates whether a specified collection is equal in content
-            and order to this one
-            </summary>
-            <param name="obj">A SqlStatementCollection object</param>
-            <returns>Returns true if equal</returns>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.GetHashCode">
-            <summary>
-            Serves as a hash function for a particular type. 
-             <see cref="M:System.Object.GetHashCode"></see> is suitable for use in 
-             hashing algorithms and data structures like a hash table.
-            </summary>
-            <returns>
-            A hash code for the current <see cref="T:System.Object"></see>.
-            </returns>
-            <filterpriority>2</filterpriority>
-        </member>
-        <member name="M:Habanero.DB.SqlStatementCollection.ToString">
-            <summary>
-            Returns a string containing all the collection's sql statements
-            </summary>
-            <returns>Returns a string</returns>
-        </member>
-        <member name="P:Habanero.DB.SqlStatementCollection.Count">
-            <summary>
-            Returns the count of statements in this collection
-            </summary>
-        </member>
-        <member name="P:Habanero.DB.SqlStatementCollection.Item(System.Int32)">
-            <summary>
-            Provides an indexing facility so that the collection can
-            be accessed like an array with square brackets
-            </summary>
-            <param name="index">The position in the collection</param>
-            <returns>Returns the sql statement object at that position</returns>
-        </member>
         <member name="T:Habanero.DB.SqlStatementException">
             <summary>
             An exception thrown when an error occurred while attempting to
@@ -3275,52 +3241,6 @@
             <summary>
              updates the object as rolled back
             </summary>
-        </member>
-        <member name="T:Habanero.DB.UpdateStatementGenerator">
-            <summary>
-            Generates "update" sql statements to update a specified business
-            object's properties in the database
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.UpdateStatementGenerator.#ctor(Habanero.Base.IBusinessObject,Habanero.Base.IDatabaseConnection)">
-            <summary>
-            Constructor to initialise the generator
-            </summary>
-            <param name="bo">The business object whose properties are to
-            be updated</param>
-            <param name="connection">A database connection</param>
-        </member>
-        <member name="M:Habanero.DB.UpdateStatementGenerator.Generate">
-            <summary>
-            Generates a collection of sql statements to update the business
-            object's properties in the database
-            </summary>
-            <returns>Returns a sql statement collection</returns>
-        </member>
-        <member name="M:Habanero.DB.UpdateStatementGenerator.GenerateSingleUpdateStatement(System.String,Habanero.Base.IBOPropCol,System.Boolean,Habanero.BO.ClassDefinition.ClassDef)">
-            <summary>
-            Generates an "update" sql statement for the properties in the
-            business object
-            </summary>
-            <param name="tableName">The table name</param>
-            <param name="propsToInclude">A collection of properties to update,
-            if the previous include-all boolean was not set to true</param>
-            <param name="isSuperClassStatement">Whether a super-class is involved</param>
-            <param name="currentClassDef">The current class definition</param>
-        </member>
-        <member name="M:Habanero.DB.UpdateStatementGenerator.GetPropsToInclude(Habanero.Base.IClassDef)">
-            <summary>
-            Builds a collection of properties to include in the update,
-            depending on the inheritance type
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.UpdateStatementGenerator.GenerateForRelationship(Habanero.Base.IRelationship,Habanero.Base.IBusinessObject)">
-            <summary>
-             Generate SqlStatementCollection for the Relationsp
-            </summary>
-            <param name="relationship"></param>
-            <param name="relatedBusinessObject"></param>
-            <returns></returns>
         </member>
         <member name="T:Habanero.DB.XmlDatabaseConfig">
             <summary>

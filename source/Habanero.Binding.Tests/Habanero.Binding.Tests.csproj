@@ -38,6 +38,12 @@
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
+    <Reference Include="Habanero.Faces.Base">
+      <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Win">
+      <HintPath>..\..\lib\Habanero.Faces.Win.dll</HintPath>
+    </Reference>
     <Reference Include="Habanero.Naked">
       <HintPath>..\..\lib\Habanero.Naked.dll</HintPath>
     </Reference>

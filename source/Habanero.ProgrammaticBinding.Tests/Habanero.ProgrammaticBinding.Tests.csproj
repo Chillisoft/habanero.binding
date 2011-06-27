@@ -38,16 +38,16 @@
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Base">
+    <Reference Include="Habanero.Faces.Base, Version=9.9.9.999, Culture=neutral, PublicKeyToken=a8408464fc128d8b, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Test.Base">
+    <Reference Include="Habanero.Faces.Test.Base, Version=9.9.9.999, Culture=neutral, PublicKeyToken=11b2ace2749e3f86, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Habanero.Faces.Test.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Test.Win">
+    <Reference Include="Habanero.Faces.Test.Win, Version=9.9.9.999, Culture=neutral, PublicKeyToken=4d30b79b24d790be, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Habanero.Faces.Test.Win.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Win">
+    <Reference Include="Habanero.Faces.Win, Version=9.9.9.999, Culture=neutral, PublicKeyToken=0e9ee1bfff5ba48c, processorArchitecture=MSIL">
       <HintPath>..\..\lib\Habanero.Faces.Win.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Smooth">

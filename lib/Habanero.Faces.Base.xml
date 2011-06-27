@@ -617,6 +617,11 @@
             Gets and sets whether this selector autoselects the first item or not when a new collection is set.
             </summary>
         </member>
+        <member name="P:Habanero.Faces.Base.IBOColSelector.ControlEnabled">
+            <summary>
+            Gets and sets whether the Control is enabled or not
+            </summary>
+        </member>
         <member name="T:Habanero.Faces.Base.IControlHabanero">
             <summary>
             Defines controls, which are components with visual representation
@@ -1343,6 +1348,11 @@
             <summary>
             Gets an object representing the collection of the items
             contained in this ComboBox
+            </summary>
+        </member>
+        <member name="P:Habanero.Faces.Base.IComboBox.SelectedIndex">
+            <summary>
+            Gets or sets the index specifying the currently selected item
             </summary>
         </member>
         <member name="P:Habanero.Faces.Base.IComboBox.DropDownWidth">
@@ -2172,12 +2182,17 @@
             Gets and sets the Enabled state of the Control that is being mapped by the Mapper.
             </summary>
         </member>
+        <member name="P:Habanero.Faces.Base.IControlMapper.IsReadOnly">
+            <summary>
+             Returns the value of the IsReadonly field as set up in the Control Mappers's construtor.
+            </summary>
+        </member>
         <member name="P:Habanero.Faces.Base.IComboBoxMapper.SelectedIndexChangedHandler">
             <summary>
             Gets or sets the SelectedIndexChanged event handler assigned to this mapper
             </summary>
         </member>
-        <member name="F:Habanero.Faces.Base.RelationshipComboBoxMapper.log">
+        <member name="F:Habanero.Faces.Base.RelationshipComboBoxMapper._logger">
             <summary>
             Uses for logging 
             </summary>
@@ -2353,6 +2368,11 @@
             Provides an overrideable method for Loading the collection of business objects
             </summary>
         </member>
+        <member name="P:Habanero.Faces.Base.AutoLoadingRelationshipComboBoxMapper.TimeOut">
+            <summary>
+            The time that the collection of business objects will be cached before reloading from the database a second time.
+            </summary>
+        </member>
         <member name="T:Habanero.Faces.Base.CollectionComboBoxMapper">
             <summary>
             This is used to map a collection of Business objects to a particular property of the Business object.
@@ -2368,7 +2388,7 @@
             of a Business Object. Think of the Control Mappers as Binding on Steriods. 
             </summary>
         </member>
-        <member name="F:Habanero.Faces.Base.ControlMapper.Log">
+        <member name="F:Habanero.Faces.Base.ControlMapper._logger">
             <summary>
             the <see cref="T:log4net.ILog"/> used to log any messages for this class or its children
             </summary>
@@ -2619,7 +2639,7 @@
         </member>
         <member name="M:Habanero.Faces.Base.CollectionComboBoxMapper.DoUpdateControlValueFromBO">
             <summary>
-            This is a hack that allows Extended Combo box mapper to use Lookup ComboBox mapper code
+            This is a hack that allows Extended Combo box mapper to use Collection ComboBox mapper code
              without having to inherit from it.
             </summary>
         </member>
@@ -2729,7 +2749,7 @@
             then this control mapper can be used to provide an editable grid of Invoice Items.
             </summary>
         </member>
-        <member name="M:Habanero.Faces.Base.EditableGridControlMapper.#ctor(Habanero.Faces.Base.IControlHabanero,System.String,System.Boolean,Habanero.Faces.Base.IControlFactory)">
+        <member name="M:Habanero.Faces.Base.EditableGridControlMapper.#ctor(Habanero.Faces.Base.IEditableGridControl,System.String,System.Boolean,Habanero.Faces.Base.IControlFactory)">
             <summary>
             Constructor for the mapper.
             </summary>
@@ -2988,6 +3008,33 @@
             <param name="list">A pipe (|) seperated string representing 
             the list of string options to populate the list e.g Mr|Mrs|Dr </param>
         </member>
+        <member name="T:Habanero.Faces.Base.ReadOnlyGridMapper">
+            <summary>
+            Maps a multiple relationship collection onto an <see cref="T:Habanero.Faces.Base.IEditableGridControl"/>
+            This is used for editing a Many relationship e.g. If an Invoice has many items
+            then this control mapper can be used to provide an editable grid of Invoice Items.
+            </summary>
+        </member>
+        <member name="M:Habanero.Faces.Base.ReadOnlyGridMapper.#ctor(Habanero.Faces.Base.IReadOnlyGrid,System.String,System.Boolean,Habanero.Faces.Base.IControlFactory)">
+            <summary>
+            Constructor for the mapper.
+            </summary>
+            <param name="ctl">The IEditableGridControl</param>
+            <param name="relationshipName">This is the relationship name to use - this relationship must be a multiple relationship and exist on the BusinessObject</param>
+            <param name="isReadOnly">Whether the editable grid should be read only or not. Ignored</param>
+            <param name="factory">The control factory to use</param>
+        </member>
+        <member name="M:Habanero.Faces.Base.ReadOnlyGridMapper.ApplyChangesToBusinessObject">
+            <summary>
+            Updates the properties on the represented business object
+            </summary>
+        </member>
+        <member name="M:Habanero.Faces.Base.ReadOnlyGridMapper.InternalUpdateControlValueFromBo">
+            <summary>
+            Updates the value on the control from the corresponding property
+            on the represented <see cref="P:Habanero.Faces.Base.IControlMapper.BusinessObject"/>
+            </summary>
+        </member>
         <member name="T:Habanero.Faces.Base.ExtendedTextBoxMapper">
             <summary>
              The mapper for <see cref="T:Habanero.Faces.Base.ControlMappers.IExtendedTextBox"/>.
@@ -3197,6 +3244,15 @@
             </summary>
         </member>
         <member name="M:Habanero.Faces.Base.EnumComboBoxFilter.#ctor(Habanero.Faces.Base.IControlFactory,System.String,Habanero.Base.FilterClauseOperator,System.Type)">
+            <summary>
+             Constructor with controlFactory, propertyName and filterClauseOperator
+            </summary>
+            <param name="controlFactory"></param>
+            <param name="propertyName"></param>
+            <param name="filterClauseOperator"></param>
+            <param name="enumType"></param>
+        </member>
+        <member name="M:Habanero.Faces.Base.EnumComboBoxFilter.#ctor(Habanero.Faces.Base.IControlFactory,System.String,Habanero.Base.FilterClauseOperator)">
             <summary>
              Constructor with controlFactory, propertyName and filterClauseOperator
             </summary>
@@ -3650,6 +3706,16 @@
             Close or Cancel the Closing of the origional form.
             </summary>
         </member>
+        <member name="M:Habanero.Faces.Base.ICloseBOEditorDialog.ShowDialog(Habanero.Base.IBusinessObject)">
+            <summary>
+            Shows the Dialog form with the relevant options and messages for the business object.
+            In certain circumstances this dialog form will not be shown/visble e.g. if the business object is null
+            Or if the business object is not dirty.
+            In these circumstances the Dialog should make its own decision e.g. CloseWithoutSaving.
+            </summary>
+            <param name="businessObject">The business Object whose Dirty state is being checked.</param>
+            <returns>Returns the option selected by the user.</returns>
+        </member>
         <member name="P:Habanero.Faces.Base.ICloseBOEditorDialog.CancelCloseBtn">
             <summary>
             The CancelClose Button.
@@ -3736,6 +3802,12 @@
             in our example the "States" relationship on the Business Object "Country".
             </summary>
         </member>
+        <member name="P:Habanero.Faces.Base.BOColSelectorLinker`2.Enabled">
+            <summary>
+            Gets and Sets whether Linking is currently enabled. This can be used for fine grained control e.g. where
+            the user would want to disable the linker during control loading etc.
+            </summary>
+        </member>
         <member name="T:Habanero.Faces.Base.IBOSelectorAndEditor">
             <summary>
             Provides a common interface that is specialised for showing a collection of 
@@ -3743,9 +3815,9 @@
             The common controls used for selecting business objects are ComboBox, ListBox, ListView, Grid,
              <see cref="T:Habanero.Faces.Base.ICollapsiblePanelGroupControl"/>, <see cref="T:Habanero.Faces.Base.IBOColTabControl"/>, a <see cref="T:Habanero.Faces.Base.IMultiSelector`1"/>
              or an <see cref="T:Habanero.Faces.Base.ITreeView"/>.
-            For an <see cref="T:Habanero.Faces.Base.IEditableGridControl"/> the business objects can be edited directly in the grid. In the case of 
-             a <see cref="T:Habanero.Faces.Base.IReadOnlyGridControl"/> the business objects are edited via pop up forms that open when appropriate.
-            The <see cref="T:Habanero.Faces.Base.IBOGridAndEditorControl"/> has a grid selector with the functionality to edit the business obects to the right.
+            E.g. For an <see cref="T:Habanero.Faces.Base.IEditableGridControl"/> the business objects can be edited directly in the grid. In the case of 
+               - The <see cref="T:Habanero.Faces.Base.IReadOnlyGridControl"/> the business objects are edited via pop up forms that open when appropriate.
+               - The <see cref="T:Habanero.Faces.Base.IBOGridAndEditorControl"/> has a grid selector with the functionality to edit the business obects to the right.
             This interface inherits from the <see cref="T:Habanero.Faces.Base.IBOColSelectorControl"/> and adds three additional methods.
             <li><see cref="P:Habanero.Faces.Base.IBOSelectorAndEditor.AllowUsersToAddBO"/></li>"
             <li><see cref="P:Habanero.Faces.Base.IBOSelectorAndEditor.AllowUsersToDeleteBO"/></li>"
@@ -3773,7 +3845,7 @@
         <member name="P:Habanero.Faces.Base.IBOSelectorAndEditor.ConfirmDeletion">
             <summary>
             Gets or sets a boolean value that determines whether to confirm
-            deletion with the user when they have chosen to delete a row
+            deletion with the user when they have chosen to delete a row/ businessObject
             </summary>
         </member>
         <member name="P:Habanero.Faces.Base.IBOSelectorAndEditor.CheckUserConfirmsDeletionDelegate">
@@ -3970,6 +4042,11 @@
              Gets the <see cref="T:Habanero.Faces.Base.IDateTimePicker"/> control
             </summary>
         </member>
+        <member name="P:Habanero.Faces.Base.DateTimePickerManager.NullDisplayBoxCustomizationDelegate">
+            <summary>
+            The delegate that will be used to apply customizations to the Null Display Box (also called when resized).
+            </summary>
+        </member>
         <member name="P:Habanero.Faces.Base.DateTimePickerManager.NullDisplayValue">
             <summary>
              The text that will be displayed when the Value is null
@@ -4024,7 +4101,7 @@
             <param name="filterDef">The <see cref="T:Habanero.BO.ClassDefinition.FilterDef"/> defining what filter fields are required</param>
             <param name="filterControl">The <see cref="T:Habanero.Faces.Base.IFilterControl"/> to place the filter controls on.</param>
         </member>
-        <member name="M:Habanero.Faces.Base.FilterControlBuilder.BuildCustomFilter(Habanero.BO.ClassDefinition.FilterPropertyDef)">
+        <member name="M:Habanero.Faces.Base.FilterControlBuilder.BuildCustomFilter(Habanero.Base.IFilterPropertyDef)">
             <summary>
              Builds a custom filter.
             </summary>
@@ -4490,55 +4567,6 @@
             <returns>true if the cancel was successful; otherwise, false.</returns>
             <filterpriority>1</filterpriority>
         </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.ClearSelection">
-            <summary>Clears the current selection by unselecting all selected cells.</summary>
-            <filterpriority>1</filterpriority>
-            <PermissionSet>
-            <IPermission class="System.Security.Permissions.EnvironmentPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
-            <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
-            <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="UnmanagedCode, ControlEvidence" />
-            <IPermission class="System.Diagnostics.PerformanceCounterPermission, System, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Unrestricted="true" />
-            </PermissionSet>
-        </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.DisplayedColumnCount(System.Boolean)">
-            <summary>Returns the number of columns displayed to the user.</summary>
-            <returns>The number of columns displayed to the user.</returns>
-            <param name="includePartialColumns">true to include partial columns in the displayed column count; otherwise, false. </param>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.DisplayedRowCount(System.Boolean)">
-            <summary>Returns the number of rows displayed to the user.</summary>
-            <returns>The number of rows displayed to the user.</returns>
-            <param name="includePartialRow">true to include partial rows in the displayed row count; otherwise, false. </param>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.EndEdit">
-            <summary>Commits and ends the edit operation on the current cell using the default error context.</summary>
-            <returns>true if the edit operation is committed and ended; otherwise, false.</returns>
-            <exception cref="T:System.Exception">The cell value could not be committed and either there
-            is no handler for the DataError event or the handler has set the DataGridViewDataErrorEventArgs.ThrowException
-            property to true.</exception>
-        </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.RefreshEdit">
-            <summary>Refreshes the value of the current cell with the underlying cell value when the
-            cell is in edit mode, discarding any previous value.</summary>
-            <returns>true if successful; false if a DataError event occurred.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.SelectAll">
-            <summary>Selects all the cells in the <see cref="T:Habanero.Faces.Base.IDataGridView"></see>.</summary>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.Sort(System.Collections.IComparer)">
-            <summary>Sorts the contents of the IDataGridView control using an implementation of the
-            <see cref="T:System.Collections.IComparer"></see> interface.</summary>
-            <param name="comparer">An implementation of <see cref="T:System.Collections.IComparer"></see> that
-            performs the custom sorting operation. </param>
-            <exception cref="T:System.InvalidOperationException">VirtualMode is set to true.-or-
-            DataSource is not null.</exception>
-            <exception cref="T:System.ArgumentNullException">comparer is null.</exception>
-            <filterpriority>1</filterpriority>
-        </member>
         <member name="M:Habanero.Faces.Base.IDataGridView.Sort(Habanero.Faces.Base.IDataGridViewColumn,System.ComponentModel.ListSortDirection)">
             <summary>Sorts the contents of the <see cref="T:Habanero.Faces.Base.IDataGridView"></see> control in ascending or
             descending order based on the contents of the specified column.</summary>
@@ -4564,15 +4592,6 @@
             <param name="columnName">The column number to sort on</param>
             <param name="ascending">True for ascending order, false for descending order</param>
         </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.UpdateCellValue(System.Int32,System.Int32)">
-            <summary>Forces the control to update its display of the cell at the specified location based 
-            on its new value, applying any automatic sizing modes currently in effect. </summary>
-            <param name="columnIndex">The zero-based column index of the cell with the new value.</param>
-            <param name="rowIndex">The zero-based row index of the cell with the new value.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">columnIndex is less than zero or greater
-            than the number of columns in the control minus one.-or-rowIndex is less than zero or
-            greater than the number of rows in the control minus one.</exception>
-        </member>
         <member name="M:Habanero.Faces.Base.IDataGridView.ChangeToPageOfRow(System.Int32)">
             <summary>
             When pagination is used, changes the current page to the one containing
@@ -4583,11 +4602,6 @@
             <param name="rowNum">The row that you wish to show the page of.  For example, if your grid has
             30 rows and is set to 20 rows per page, calling ChangeToPageOfRow with an argument
             of 25 will set the page to page 2 since row 25 is on page 2.</param>
-        </member>
-        <member name="M:Habanero.Faces.Base.IDataGridView.Update">
-            <summary>
-            Updates the Grid with the latest data. (This updates the visual aspects of the grid.
-            </summary>
         </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.AllowUserToAddRows">
             <summary>Gets or sets a value indicating whether the option to add rows is displayed to the user.</summary>
@@ -4600,39 +4614,10 @@
             <returns>true if the user can delete rows; otherwise, false. The default is true.</returns>
             <filterpriority>1</filterpriority>
         </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.AllowUserToOrderColumns">
-            <summary>Gets or sets a value indicating whether manual column repositioning is enabled.</summary>
-            <returns>true if the user can change the column order; otherwise, false. The default is false.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.AllowUserToResizeColumns">
-            <summary>Gets or sets a value indicating whether users can resize columns.</summary>
-            <returns>true if users can resize columns; otherwise, false. The default is true.</returns>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.AllowUserToResizeRows">
-            <summary>Gets or sets a value indicating whether users can resize rows.</summary>
-            <returns>true if all the rows are resizable; otherwise, false. The default is true.</returns>
-        </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.AutoGenerateColumns">
             <summary>Gets or sets a value indicating whether columns are created automatically when
             the DataSource or DataMember properties are set.</summary>
             <returns>true if the columns should be created automatically; otherwise, false. The default is true.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.ColumnCount">
-            <summary>Gets or sets the number of columns displayed in the <see cref="T:Habanero.Faces.Base.IDataGridView"></see>.</summary>
-            <returns>The number of columns displayed in the <see cref="T:Habanero.Faces.Base.IDataGridView"></see>.</returns>
-            <exception cref="T:System.InvalidOperationException">When setting this property,
-            the DataSource property has been set. </exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">The specified value when setting this property is less than 0. </exception>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.ColumnHeadersVisible">
-            <summary>Gets or sets a value indicating whether the column header row is displayed.</summary>
-            <returns>true if the column headers are displayed; otherwise, false. The default is true.</returns>
-            <exception cref="T:System.InvalidOperationException">The specified value when setting this
-            property is false and one or more columns have an DataGridViewColumn.InheritedAutoSizeMode
-            property value of DataGridViewAutoSizeColumnMode.ColumnHeader.</exception>
             <filterpriority>1</filterpriority>
         </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.Columns">
@@ -4653,26 +4638,10 @@
             setting this property is in a hidden row or column. </exception>
             <filterpriority>1</filterpriority>
         </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.CurrentCellAddress">
-            <summary>Gets the row and column indexes of the currently active cell.</summary>
-            <returns>A <see cref="T:System.Drawing.Point"></see> that represents the row and column indexes 
-            of the currently active cell.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.CurrentRow">
             <summary>Gets the row containing the current cell.</summary>
             <returns>The <see cref="T:Habanero.Faces.Base.IDataGridViewRow"></see> that represents the row containing the current 
             cell, or null if there is no current cell.</returns>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.DataMember">
-            <summary>Gets or sets the name of the list or table in the data source for which the 
-            <see cref="T:Habanero.Faces.Base.IDataGridView"></see> is displaying data.</summary>
-            <returns>The name of the table or list in the <see cref="P:Habanero.Faces.Base.IDataGridView.DataSource"></see> for which the 
-            <see cref="T:Habanero.Faces.Base.IDataGridView"></see> is displaying data. The default is <see cref="F:System.String.Empty"></see>.</returns>
-            <exception cref="T:System.Exception">An error occurred in the data source and either 
-            there is no handler for the DataError event or the handler has set the DataGridViewDataErrorEventArgs.ThrowException
-            property to true. The exception object can typically be cast to type <see cref="T:System.FormatException"></see>.</exception>
-            <filterpriority>1</filterpriority>
         </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.DataSource">
             <summary>Gets or sets the data source that the <see cref="T:Habanero.Faces.Base.IDataGridView"></see> is displaying data for.</summary>
@@ -4687,27 +4656,6 @@
             Gets or sets the index of the row that is the first row displayed on the DataGridView
             </summary>
         </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.IsCurrentCellDirty">
-            <summary>Gets a value indicating whether the current cell has uncommitted changes.</summary>
-            <returns>true if the current cell has uncommitted changes; otherwise, false.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.IsCurrentRowDirty">
-            <summary>Gets a value indicating whether the current row has uncommitted changes.</summary>
-            <returns>true if the current row has uncommitted changes; otherwise, false.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.MultiSelect">
-            <summary>Gets or sets a value indicating whether the user is allowed to select more than one 
-            cell, row, or column of the <see cref="T:Habanero.Faces.Base.IDataGridView"></see> at a time.</summary>
-            <returns>true if the user can select more than one cell, row, or column at a time; otherwise, 
-            false. The default is true.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.NewRowIndex">
-            <summary>Gets the index of the row for new records.</summary>
-            <returns>The index of the row for new records, or -1 if <see cref="P:Habanero.Faces.Base.IDataGridView.AllowUserToAddRows"></see> is false.</returns>
-        </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.ReadOnly">
             <summary>Gets a value indicating whether the user can edit the cells of the <see cref="T:Habanero.Faces.Base.IDataGridView"></see> control.</summary>
             <returns>true if the user cannot edit the cells of the <see cref="T:Habanero.Faces.Base.IDataGridView"></see> control; 
@@ -4719,11 +4667,6 @@
             is no handler for the DataError event or the handler has set the DataGridViewDataErrorEventArgs.ThrowException
             property to true. The exception object can typically be cast to type <see cref="T:System.FormatException"></see>.</exception>
             <filterpriority>1</filterpriority>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.UseInternalPaging">
-            <summary>
-            Uses internal paging algorithem
-            </summary>
         </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.CurrentPage">
             <summary>
@@ -4783,12 +4726,6 @@
             contents are currently sorted.</returns>
             <filterpriority>1</filterpriority>
         </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.StandardTab">
-            <summary>Gets or sets a value indicating whether the TAB key moves the focus to the next 
-            control in the tab order rather than moving focus to the next cell in the control.</summary>
-            <returns>true if the TAB key moves the focus to the next control in the tab order; otherwise, false.</returns>
-            <filterpriority>1</filterpriority>
-        </member>
         <member name="P:Habanero.Faces.Base.IDataGridView.SelectedRows">
             <summary>
             Gets the collection of currently selected rows
@@ -4810,14 +4747,6 @@
             <returns>One of the DataGridViewSelectionMode values. The default is DataGridViewSelectionMode.RowHeaderSelect.</returns>
             <exception cref="T:System.InvalidOperationException">The specified value when setting this property is DataGridViewSelectionMode.FullColumnSelect or DataGridViewSelectionMode.ColumnHeaderSelect and the DataGridViewColumn.SortMode property of one or more columns is set to DataGridViewColumnSortMode.Automatic.</exception>
             <exception cref="T:System.ComponentModel.InvalidEnumArgumentException">The specified value when setting this property is not a valid DataGridViewSelectionMode value.</exception>
-        </member>
-        <member name="P:Habanero.Faces.Base.IDataGridView.Item(System.Int32,System.Int32)">
-            <summary>
-            Provides an indexer to get or set the cell located at the intersection of the column and row with the specified indexes.
-            </summary>
-            <param name="columnIndex">The index of the column containing the cell.</param>
-            <param name="rowIndex">The index of the row containing the cell</param>
-            <returns>The DataGridViewCell at the specified location</returns>
         </member>
         <member name="M:Habanero.Faces.Base.IGridBase.SetBusinessObjectCollection(Habanero.Base.IBusinessObjectCollection)">
             <summary>
@@ -4874,20 +4803,6 @@
             </summary>
             <param name="searchClause">The search clause</param>
             <param name="orderBy"></param>
-        </member>
-        <member name="M:Habanero.Faces.Base.IGridBase.SelectedBusinessObjectEdited(Habanero.BO.BusinessObject)">
-            <summary>
-            Fires an event indicating that the selected business object
-            is being edited
-            </summary>
-            <param name="bo">The business object being edited</param>
-        </member>
-        <member name="M:Habanero.Faces.Base.IGridBase.FireBusinessObjectEditedEvent(Habanero.BO.BusinessObject)">
-            <summary>
-            Fires an event indicating that the selected business object
-            is being edited
-            </summary>
-            <param name="bo">The business object being edited</param>
         </member>
         <member name="M:Habanero.Faces.Base.IGridBase.RefreshGrid">
             <summary>
@@ -4946,11 +4861,6 @@
              Else it will be "HABANERO_OBJECTID".
             </summary>
         </member>
-        <member name="E:Habanero.Faces.Base.IGridBase.BusinessObjectEdited">
-            <summary>
-            Occurs when a business object is being edited
-            </summary>
-        </member>
         <member name="E:Habanero.Faces.Base.IGridBase.RowDoubleClicked">
             <summary>
             Occurs when a row is double-clicked by the user
@@ -4976,6 +4886,11 @@
         <member name="P:Habanero.Faces.Base.IGridBase.CheckUserConfirmsDeletionDelegate">
             <summary>
             Gets or sets the delegate that checks whether the user wants to delete selected rows
+            </summary>
+        </member>
+        <member name="P:Habanero.Faces.Base.IGridBase.ColumnCount">
+            <summary>
+            Gets the Number of Columns in the Grid
             </summary>
         </member>
         <member name="M:Habanero.Faces.Base.IEditableGrid.RejectChanges">
@@ -5833,6 +5748,13 @@
             </summary>
             <param name="dateTimePicker">The date-time picker</param>
             <param name="date">The date to set to</param>
+        </member>
+        <member name="M:Habanero.Faces.Base.DateTimePickerUtil.GetDateFormatString(Habanero.Faces.Base.IDateTimePicker)">
+            <summary>
+             Returns the current date format, expressed as a string.
+            </summary>
+            <param name="dateTimePicker"></param>
+            <returns>Returns the current date format, expressed as a string.</returns>
         </member>
         <member name="M:Habanero.Faces.Base.DateTimePickerUtil.SetShowUpDown(Habanero.Faces.Base.IDateTimePicker,System.Boolean)">
             <summary>
@@ -7067,6 +6989,11 @@
         <member name="P:Habanero.Faces.Base.ListControlCollectionManager`1.AutoSelectFirstItem">
             <summary>
             Gets and sets whether this selector autoselects the first item or not when a new collection is set.
+            </summary>
+        </member>
+        <member name="P:Habanero.Faces.Base.ListControlCollectionManager`1.ControlEnabled">
+            <summary>
+            Gets and sets whether the Control is enabled or not
             </summary>
         </member>
         <member name="P:Habanero.Faces.Base.ListControlCollectionManager`1.Control">
@@ -10333,7 +10260,9 @@
         </member>
         <member name="M:Habanero.Faces.Base.GridBaseManager.DefaultGridLoader(Habanero.Faces.Base.IGridBase,Habanero.Base.IBusinessObjectCollection)">
             <summary>
-            Sets the default grid loader
+            Sets the default grid loader which is used as the default for the GridLoader delegate.
+            If you want to load in any other way then please set the <see cref="P:Habanero.Faces.Base.GridBaseManager.GridLoader"/>
+            delegate to load your business objects as you require.
             </summary>
         </member>
         <member name="M:Habanero.Faces.Base.GridBaseManager.RefreshBusinessObjectRow(Habanero.Base.IBusinessObject)">

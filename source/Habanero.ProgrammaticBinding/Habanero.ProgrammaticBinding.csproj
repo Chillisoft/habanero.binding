@@ -37,6 +37,12 @@
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
+    <Reference Include="Habanero.Faces.Base, Version=9.9.9.999, Culture=neutral, PublicKeyToken=a8408464fc128d8b, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Habanero.Faces.Win, Version=9.9.9.999, Culture=neutral, PublicKeyToken=0e9ee1bfff5ba48c, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Habanero.Faces.Win.dll</HintPath>
+    </Reference>
     <Reference Include="Habanero.Smooth">
       <HintPath>..\..\lib\Habanero.Smooth.dll</HintPath>
     </Reference>
@@ -77,14 +83,6 @@
     <Compile Include="ControlAdaptors\WinFormsTextBoxAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Faces\trunk\source\Habanero.Faces.Base\Habanero.Faces.Base.csproj">
-      <Project>{18828910-F528-48F5-B56D-7C1658D0987A}</Project>
-      <Name>Habanero.Faces.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Faces\trunk\source\Habanero.Faces.Win\Habanero.Faces.Win.csproj">
-      <Project>{E761E05B-B9CC-4EAC-B940-C19E42D3819C}</Project>
-      <Name>Habanero.Faces.Win</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Habanero.Binding\Habanero.Binding.csproj">
       <Project>{B94E18F9-2504-405F-ACD9-2144E6A00B89}</Project>
       <Name>Habanero.Binding</Name>
