@@ -37,10 +37,10 @@
     <Reference Include="Habanero.BO">
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Base, Version=9.9.9.999, Culture=neutral, PublicKeyToken=a8408464fc128d8b, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Faces.Base">
       <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Win, Version=9.9.9.999, Culture=neutral, PublicKeyToken=0e9ee1bfff5ba48c, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Faces.Win">
       <HintPath>..\..\lib\Habanero.Faces.Win.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Smooth">

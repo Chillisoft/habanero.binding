@@ -1112,6 +1112,11 @@
             objects to load for the lookup-list
             </summary>
         </member>
+        <member name="T:Habanero.Base.Logging.ConsoleLoggerFactory">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:Habanero.Base.Logging.IHabaneroLoggerFactory">
             <summary>
             </summary>
@@ -1146,7 +1151,7 @@
             This is an interface for a logger adapter.
             It is expected that you can create a specific Adapter 
             for the Logger that you use. 
-            In Habanero we use the <see cref="T:Habanero.Base.Logging.HabaneroLoggerLog4Net"/> by default.
+            In Habanero we use the <see cref="T:Habanero.Base.Logging.Log4NetLogger"/> by default.
             You can change this in the BootStrapping of your application by registering the appropriate
             Logger Factor see <see cref="T:Habanero.Base.Logging.IHabaneroLoggerFactory"/> for more details
             </summary>
@@ -1161,7 +1166,7 @@
         <member name="M:Habanero.Base.Logging.IHabaneroLogger.Log(System.Exception)">
             <summary>
             Creates a single log entry for with the appropriate exception message.
-            Although this is an interface and you can implement it as you wish for <see cref="T:Habanero.Base.Logging.HabaneroLoggerLog4Net"/>
+            Although this is an interface and you can implement it as you wish for <see cref="T:Habanero.Base.Logging.Log4NetLogger"/>
             We log an entry with <see cref="F:Habanero.Base.Logging.LogCategory.Exception"/> unless the exception inherits from
             <see cref="T:Habanero.Base.Exceptions.UserException"/> in which case we log this with the <see cref="F:Habanero.Base.Logging.LogCategory.Info"/>
             </summary>
@@ -1170,7 +1175,7 @@
         <member name="M:Habanero.Base.Logging.IHabaneroLogger.Log(System.String,System.Exception)">
             <summary>
             Creates a single log entry for with the appropriate exception message and message.
-            Although this is an interface and you can implement it as you wish for <see cref="T:Habanero.Base.Logging.HabaneroLoggerLog4Net"/>
+            Although this is an interface and you can implement it as you wish for <see cref="T:Habanero.Base.Logging.Log4NetLogger"/>
             We log an entry with <see cref="F:Habanero.Base.Logging.LogCategory.Exception"/> unless the exception inherits from
             <see cref="T:Habanero.Base.Exceptions.UserException"/> in which case we log this with the <see cref="F:Habanero.Base.Logging.LogCategory.Info"/>
             </summary>
@@ -1547,24 +1552,24 @@
             See the PropReadWriteRule enumeration (<see cref="T:Habanero.Base.PropReadWriteRule"/> for more detail.
             </summary>
         </member>
-        <member name="T:Habanero.Base.Logging.HabaneroLoggerLog4Net">
+        <member name="T:Habanero.Base.Logging.Log4NetLogger">
             <summary>
              The Log4Net adapter.
             </summary>
         </member>
-        <member name="M:Habanero.Base.Logging.HabaneroLoggerLog4Net.#ctor(System.String)">
+        <member name="M:Habanero.Base.Logging.Log4NetLogger.#ctor(System.String)">
             <summary>
              Constructs the Logger with the appropriate context
             </summary>
             <param name="contextName"></param>
         </member>
-        <member name="M:Habanero.Base.Logging.HabaneroLoggerLog4Net.#ctor(System.Type)">
+        <member name="M:Habanero.Base.Logging.Log4NetLogger.#ctor(System.Type)">
             <summary>
              Constructs the Logger with the appropriate contextType
             </summary>
             <param name="contextType">The Type of object this context is for.</param>
         </member>
-        <member name="M:Habanero.Base.Logging.HabaneroLoggerLog4Net.Log(System.String,Habanero.Base.Logging.LogCategory)">
+        <member name="M:Habanero.Base.Logging.Log4NetLogger.Log(System.String,Habanero.Base.Logging.LogCategory)">
             <summary>
              Logs the message to the configured loLog4Netgger with the 
              appropriate <see cref="T:Habanero.Base.Logging.LogCategory"/>
@@ -1572,7 +1577,7 @@
             <param name="message"></param>
             <param name="logCategory"></param>
         </member>
-        <member name="M:Habanero.Base.Logging.HabaneroLoggerLog4Net.Log(System.Exception)">
+        <member name="M:Habanero.Base.Logging.Log4NetLogger.Log(System.Exception)">
             <summary>
             Creates a single log entry for with the message with the appropriate message.
             The HabaneroLoggerLog4Net logs an entry with <see cref="F:Habanero.Base.Logging.LogCategory.Exception"/> unless the exception inherits from
@@ -1580,14 +1585,14 @@
             </summary>
             <param name="exception"></param>
         </member>
-        <member name="P:Habanero.Base.Logging.HabaneroLoggerLog4Net.ContextName">
+        <member name="P:Habanero.Base.Logging.Log4NetLogger.ContextName">
             <summary>
              The context that the Logger is currently running e.g. ComponentName.ClassName.MethodName
             </summary>
         </member>
         <member name="T:Habanero.Base.Logging.Log4NetLoggerFactory">
             <summary>
-            Logger factory for creating a <see cref="T:Habanero.Base.Logging.HabaneroLoggerLog4Net"/>
+            Logger factory for creating a <see cref="T:Habanero.Base.Logging.Log4NetLogger"/>
             </summary>
         </member>
         <member name="M:Habanero.Base.Logging.Log4NetLoggerFactory.#ctor">
@@ -1630,6 +1635,11 @@
             <summary>
             There is a Fatal Exception that has occured. 
               You want to log this. Probably want to log and close the app down or something like that.
+            </summary>
+        </member>
+        <member name="F:Habanero.Base.Logging.LogCategory.Error">
+            <summary>
+            There is an Error Exception that has occured.
             </summary>
         </member>
         <member name="T:Habanero.Base.NullSecurityController">
@@ -5084,9 +5094,12 @@
             receipt number for a retail business.  Incrementing the numbers
             as they are dispensed is one means of achieving uniqueness.
             </summary>
-            need to apply concurrency control to ensure new number not retrieved
-            by another user before first user saves and updates number (could
-            update immediately)
+            <remarks>
+            This number generator does not implement concurrency control of any type.
+            It is susceptible to both lost number and to multiple users generating the 
+            same number. If either of these scenarious exist in your application then
+            please use one of the sub types of <see cref="T:Habanero.Base.INumberGenerator"/>. 
+            </remarks>
         </member>
         <member name="M:Habanero.Base.IDBNumberGenerator.GetNextNumberInt">
             <summary>
