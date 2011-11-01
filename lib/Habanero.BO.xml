@@ -5817,11 +5817,11 @@
             <param name="classDef">ClassDef that the BusinessObject must match.</param>
             <returns></returns>
         </member>
-        <member name="M:Habanero.BO.IBusinessObjectManager.AddWithReplace(Habanero.BO.BusinessObject)">
+        <member name="M:Habanero.BO.IBusinessObjectManager.AddWithReplace(Habanero.Base.IBusinessObject)">
             <summary>
              Adds the Business Object to the Object Manager and removes the existing object.
              This is used for Deserialising objects etc where a new exact deserialised replacement of the
-             origional businessObject has been made.
+             original businessObject has been made.
             </summary>
             <param name="businessObject"></param>
         </member>
@@ -5994,7 +5994,7 @@
             <param name="classDef">ClassDef that the BusinessObject must match.</param>
             <returns></returns>
         </member>
-        <member name="M:Habanero.BO.BusinessObjectManager.AddWithReplace(Habanero.BO.BusinessObject)">
+        <member name="M:Habanero.BO.BusinessObjectManager.AddWithReplace(Habanero.Base.IBusinessObject)">
             <summary>
              Adds the Business Object to the Object Manager and removes the existing object.
              This is used for Deserialising objects etc where a new exact deserialised replacement of the
@@ -6147,7 +6147,7 @@
             <param name="classDef">ClassDef that the BusinessObject must match.</param>
             <returns></returns>
         </member>
-        <member name="M:Habanero.BO.BusinessObjectManagerNull.AddWithReplace(Habanero.BO.BusinessObject)">
+        <member name="M:Habanero.BO.BusinessObjectManagerNull.AddWithReplace(Habanero.Base.IBusinessObject)">
             <summary>
              Adds the Business Object to the Object Manager and removes the existing object.
              This is used for Deserialising objects etc where a new exact deserialised replacement of the
@@ -8811,6 +8811,15 @@
             </summary>
             <param name="classDef">The class definition to use for preparing the <see cref="T:Habanero.Base.Criteria"/>.</param>
             <param name="criteria">The <see cref="T:Habanero.Base.Criteria"/> to prepare for use with a <see cref="T:Habanero.BO.SelectQuery"/>.</param>
+        </member>
+        <member name="M:Habanero.BO.QueryBuilder.PrepareField(Habanero.Base.Source,Habanero.Base.IClassDef,Habanero.Base.QueryField)">
+            <summary>
+             Prepares 
+            </summary>
+            <param name="currentSource"></param>
+            <param name="classDef"></param>
+            <param name="field"></param>
+            <returns></returns>
         </member>
         <member name="M:Habanero.BO.QueryBuilder.PrepareSource(Habanero.Base.IClassDef,Habanero.Base.Source@)">
             <summary>
@@ -15461,6 +15470,14 @@
              Add an object of type business object to the transaction.
              The DBTransactionCommiter wraps this Business Object in the
              appropriate Transactional Business Object
+            </summary>
+            <param name="businessObject"></param>
+        </member>
+        <member name="M:Habanero.BO.TransactionCommitter.InsertBusinessObject(Habanero.Base.IBusinessObject)">
+            <summary>
+            Adds the <param name="businessObject"></param> into the first position
+             in the list of transactional objects that will be committed by this
+            transaction committer. This is often required for referential integrity issues.
             </summary>
             <param name="businessObject"></param>
         </member>

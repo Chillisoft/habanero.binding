@@ -594,130 +594,37 @@
             <param name="port">The port</param>
             <returns>Returns the connection string</returns>
         </member>
-        <member name="T:Habanero.Base.CriteriaDB">
+        <member name="T:Habanero.DB.ConnectionStringSqlServerCeFactory">
             <summary>
-             This class inherits from the <see cref="T:Habanero.Base.Criteria"/> class and implements a
-             <see cref="!:ToString(SqlFormatter, AddParameterDelegate)"/> behaviour.
-             This allows the formatting of a criteria object into a format specific for the database.
+            Produces connection strings that are tailored for the SqlServer database
             </summary>
         </member>
-        <member name="M:Habanero.Base.CriteriaDB.#ctor(Habanero.Base.Criteria)">
+        <member name="M:Habanero.DB.ConnectionStringSqlServerCeFactory.CheckArguments(System.String,System.String,System.String,System.String,System.String)">
             <summary>
-             Constructor for a Database critieria. takes the Criteria object that it wraps as a parameter.
+            Checks that each of the arguments provided are valid
             </summary>
-            <param name="criteria">The criteria object being wrapped.</param>
+            <param name="server">The database server</param>
+            <param name="database">The database name</param>
+            <param name="userName">The userName</param>
+            <param name="password">The password</param>
+            <param name="port">The port</param>
+            <exception cref="T:System.ArgumentException">Thrown if any of the
+            arguments provided are invalid</exception>
         </member>
-        <member name="M:Habanero.Base.CriteriaDB.ToString">
+        <member name="M:Habanero.DB.ConnectionStringSqlServerCeFactory.CreateConnectionString(System.String,System.String,System.String,System.String,System.String)">
             <summary>
-            Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            Creates a connection string from the arguments provided
             </summary>
-            
-            <returns>
-            A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
-            </returns>
-            <filterpriority>2</filterpriority>
+            <param name="server">The database server</param>
+            <param name="database">The database name</param>
+            <param name="userName">The userName</param>
+            <param name="password">The password</param>
+            <param name="port">The port</param>
+            <returns>Returns the connection string</returns>
         </member>
-        <member name="M:Habanero.Base.CriteriaDB.ToString(Habanero.Base.ISqlFormatter,Habanero.Base.CriteriaDB.AddParameterDelegate,System.Collections.Generic.IDictionary{System.String,System.String})">
+        <member name="T:Habanero.DB.DatabaseConnectionSqlServerCe">
             <summary>
-            Converts this Criteria object to a string, using field names instead of property names and entity names instead of
-            source names. The <see cref="T:Habanero.Base.CriteriaDB.AddParameterDelegate"/> allows a database query builder to create a parameter value
-            when adding the value to the string for use with parametrized SQL.  Also see <see cref="T:Habanero.Base.ISqlStatement"/>.
-            
-            The <see cref="M:Habanero.Base.CriteriaDB.ToString"/> method uses this method with a simple delegate that converts DateTimes and Guids 
-            to sensible string representations and to 
-            </summary>
-            See <see cref="T:Habanero.Base.CriteriaDB.PropNameConverterDelegate"/>
-            <param name="formatter">A formatter for any specific database <see cref="T:Habanero.Base.SqlFormatter"/></param>
-            <param name="addParameter">The delegate to use to convert the value in object form to a value in string form. 
-            See <see cref="T:Habanero.Base.CriteriaDB.AddParameterDelegate"/></param>
-            <returns>The Criteria in string form.</returns>
-        </member>
-        <member name="P:Habanero.Base.CriteriaDB.Field">
-            <summary>
-             Gets the query Field being used by this criteria object (Where the criteria object is a leaf).
-             the query field is a query field object representing the objects property as defined in the 
-             Constructor [Criteria(string propName, ComparisonOp op, object value)].
-            </summary>
-        </member>
-        <member name="P:Habanero.Base.CriteriaDB.LeftCriteria">
-            <summary>
-             Gets the left critieria object (If this is not a leaf criteria)
-            </summary>
-        </member>
-        <member name="P:Habanero.Base.CriteriaDB.LogicalOperator">
-            <summary>
-             Gets the logical operator being used for this criteria object (If this is not a leaf criteria)
-            </summary>
-        </member>
-        <member name="P:Habanero.Base.CriteriaDB.RightCriteria">
-            <summary>
-             Gets the right criteria object (If this is not a leaf criteria)
-            </summary>
-        </member>
-        <member name="P:Habanero.Base.CriteriaDB.FieldValue">
-            <summary>
-             Gets or sets the field value being compared to for this criteria object (If this is a leaf criteria)
-            </summary>
-        </member>
-        <member name="P:Habanero.Base.CriteriaDB.ComparisonOperator">
-            <summary>
-             Gets the comparison operator being used by this Criteria object (If this is a leaf criteria)
-            </summary>
-        </member>
-        <member name="T:Habanero.Base.CriteriaDB.AddParameterDelegate">
-            <summary>
-            For details of what this delegate is used for, see <see cref="T:Habanero.Base.CriteriaDB.PropNameConverterDelegate"/>
-            
-            This delegate is designed to format a value of a criteria into a datasource equivalent. For example, in a database context,
-            this delegate might be used to return a parameter name and store the parameter value so that the criteria can be used as part
-            of a where clause in a parametrized SQL statement.
-            </summary>
-            <param name="parameterValue">The value of the criteria given, as an object. </param>
-            <returns>The string format of this criteria to append to the string.</returns>
-        </member>
-        <member name="T:Habanero.Base.CriteriaDB.PropNameConverterDelegate">
-            <summary>
-             When converting the Criteria expression to a string there are contexts that must be taken into account. The default implementation
-             (<see cref="M:Habanero.Base.Criteria.ToString"/>) will not do any conversions of property names or values given other than to convert
-             DateTimes and Guids to sensible, universal string equivalents (see <see cref="F:Habanero.Base.Criteria.DATE_FORMAT"/>).
-             
-             This delegate is designed to map a property name to a datasource name (such as to a field name on table).
-            </summary>
-            <param name="propName">The property name to map to the datasource equivalent</param>
-             <returns>The mapped property name ie the datasource equivalent of the property name (perhaps the field name on a database table)</returns>
-        </member>
-        <member name="T:Habanero.DB.DataAccessorDB">
-            <summary>
-             A Data Accessor for Retrieving and committing data from a relational database.
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.DataAccessorDB.#ctor">
-            <summary>
-             The constructor for relational database data accessor. Sets up the appropriate
-             Business object loader for the databse using the current connection string.
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.DataAccessorDB.#ctor(Habanero.Base.IDatabaseConnection)">
-            <summary>
-             The constructor for relational database data accessor. Sets up the appropriate
-             Business object loader for the databse using the current connection string.
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.DataAccessorDB.CreateTransactionCommitter">
-            <summary>
-            Creates a TransactionCommitter for you to use to persist BusinessObjects. A new TransactionCommitter is required
-            each time an object or set of objects is persisted.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Habanero.DB.DataAccessorDB.BusinessObjectLoader">
-            <summary>
-            The <see cref="P:Habanero.BO.IDataAccessor.BusinessObjectLoader"/> to use to load BusinessObjects
-            </summary>
-        </member>
-        <member name="T:Habanero.DB.DatabaseConnectionAccess2007">
-            <summary>
-            A database connection customised for the Microsoft Access database
+            A database connection customised for the SqlServer database
             </summary>
         </member>
         <member name="T:Habanero.DB.DatabaseConnection">
@@ -1052,6 +959,176 @@
             Gets the IsolationLevel to use for this connection
             </summary>
         </member>
+        <member name="M:Habanero.DB.DatabaseConnectionSqlServerCe.#ctor(System.String,System.String)">
+            <summary>
+            Constructor to initialise the connection object with an
+            assembly name and class name
+            </summary>
+            <param name="assemblyName">The assembly name</param>
+            <param name="className">The class name</param>
+        </member>
+        <member name="M:Habanero.DB.DatabaseConnectionSqlServerCe.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Constructor to initialise the connection object with an
+            assembly name, class name and connection string
+            </summary>
+            <param name="assemblyName">The assembly name</param>
+            <param name="className">The class name</param>
+            <param name="connectString">The connection string, which can be
+            generated using ConnectionStringSqlServerFactory.CreateConnectionString()
+            </param>
+        </member>
+        <member name="M:Habanero.DB.DatabaseConnectionSqlServerCe.GetLastAutoIncrementingID(System.String,System.Data.IDbTransaction,System.Data.IDbCommand)">
+            <summary>
+            Gets the value of the last auto-incrementing number.  This called after doing an insert statement so that
+            the inserted auto-number can be retrieved.  The table name, current IDbTransaction and IDbCommand are passed
+            in so that they can be used if necessary.  
+            </summary>
+            <param name="tableName">The name of the table inserted into</param>
+            <param name="tran">The current transaction, the one the insert was done in</param>
+            <param name="command">The Command the did the insert statement</param>
+            <returns></returns>
+        </member>
+        <member name="M:Habanero.DB.DatabaseConnectionSqlServerCe.CreateParameterNameGenerator">
+            <summary>
+            Creates an <see cref="T:Habanero.Base.IParameterNameGenerator"/> for this database connection.  This is used to create names for parameters
+            added to an <see cref="T:Habanero.Base.ISqlStatement"/> because each database uses a different naming convention for their parameters.
+            </summary>
+            <returns>The <see cref="T:Habanero.Base.IParameterNameGenerator"/> valid for this <see cref="T:Habanero.Base.IDatabaseConnection"/></returns>
+        </member>
+        <member name="P:Habanero.DB.DatabaseConnectionSqlServerCe.IsolationLevel">
+            <summary>
+            Gets the IsolationLevel <see cref="P:Habanero.DB.DatabaseConnectionSqlServerCe.IsolationLevel"/> to use for this connection.
+            This is set to ReadUncommitted For SQL to overcome issues with trying to load children of a business
+            object while the children are already in the Transaction to be deleted resulting in a deadlock.
+            </summary>
+        </member>
+        <member name="T:Habanero.Base.CriteriaDB">
+            <summary>
+             This class inherits from the <see cref="T:Habanero.Base.Criteria"/> class and implements a
+             <see cref="!:ToString(SqlFormatter, AddParameterDelegate)"/> behaviour.
+             This allows the formatting of a criteria object into a format specific for the database.
+            </summary>
+        </member>
+        <member name="M:Habanero.Base.CriteriaDB.#ctor(Habanero.Base.Criteria)">
+            <summary>
+             Constructor for a Database critieria. takes the Criteria object that it wraps as a parameter.
+            </summary>
+            <param name="criteria">The criteria object being wrapped.</param>
+        </member>
+        <member name="M:Habanero.Base.CriteriaDB.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </summary>
+            
+            <returns>
+            A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Habanero.Base.CriteriaDB.ToString(Habanero.Base.ISqlFormatter,Habanero.Base.CriteriaDB.AddParameterDelegate,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Converts this Criteria object to a string, using field names instead of property names and entity names instead of
+            source names. The <see cref="T:Habanero.Base.CriteriaDB.AddParameterDelegate"/> allows a database query builder to create a parameter value
+            when adding the value to the string for use with parametrized SQL.  Also see <see cref="T:Habanero.Base.ISqlStatement"/>.
+            
+            The <see cref="M:Habanero.Base.CriteriaDB.ToString"/> method uses this method with a simple delegate that converts DateTimes and Guids 
+            to sensible string representations and to 
+            </summary>
+            See <see cref="T:Habanero.Base.CriteriaDB.PropNameConverterDelegate"/>
+            <param name="formatter">A formatter for any specific database <see cref="T:Habanero.Base.SqlFormatter"/></param>
+            <param name="addParameter">The delegate to use to convert the value in object form to a value in string form. 
+            See <see cref="T:Habanero.Base.CriteriaDB.AddParameterDelegate"/></param>
+            <returns>The Criteria in string form.</returns>
+        </member>
+        <member name="P:Habanero.Base.CriteriaDB.Field">
+            <summary>
+             Gets the query Field being used by this criteria object (Where the criteria object is a leaf).
+             the query field is a query field object representing the objects property as defined in the 
+             Constructor [Criteria(string propName, ComparisonOp op, object value)].
+            </summary>
+        </member>
+        <member name="P:Habanero.Base.CriteriaDB.LeftCriteria">
+            <summary>
+             Gets the left critieria object (If this is not a leaf criteria)
+            </summary>
+        </member>
+        <member name="P:Habanero.Base.CriteriaDB.LogicalOperator">
+            <summary>
+             Gets the logical operator being used for this criteria object (If this is not a leaf criteria)
+            </summary>
+        </member>
+        <member name="P:Habanero.Base.CriteriaDB.RightCriteria">
+            <summary>
+             Gets the right criteria object (If this is not a leaf criteria)
+            </summary>
+        </member>
+        <member name="P:Habanero.Base.CriteriaDB.FieldValue">
+            <summary>
+             Gets or sets the field value being compared to for this criteria object (If this is a leaf criteria)
+            </summary>
+        </member>
+        <member name="P:Habanero.Base.CriteriaDB.ComparisonOperator">
+            <summary>
+             Gets the comparison operator being used by this Criteria object (If this is a leaf criteria)
+            </summary>
+        </member>
+        <member name="T:Habanero.Base.CriteriaDB.AddParameterDelegate">
+            <summary>
+            For details of what this delegate is used for, see <see cref="T:Habanero.Base.CriteriaDB.PropNameConverterDelegate"/>
+            
+            This delegate is designed to format a value of a criteria into a datasource equivalent. For example, in a database context,
+            this delegate might be used to return a parameter name and store the parameter value so that the criteria can be used as part
+            of a where clause in a parametrized SQL statement.
+            </summary>
+            <param name="parameterValue">The value of the criteria given, as an object. </param>
+            <returns>The string format of this criteria to append to the string.</returns>
+        </member>
+        <member name="T:Habanero.Base.CriteriaDB.PropNameConverterDelegate">
+            <summary>
+             When converting the Criteria expression to a string there are contexts that must be taken into account. The default implementation
+             (<see cref="M:Habanero.Base.Criteria.ToString"/>) will not do any conversions of property names or values given other than to convert
+             DateTimes and Guids to sensible, universal string equivalents (see <see cref="F:Habanero.Base.Criteria.DATE_FORMAT"/>).
+             
+             This delegate is designed to map a property name to a datasource name (such as to a field name on table).
+            </summary>
+            <param name="propName">The property name to map to the datasource equivalent</param>
+             <returns>The mapped property name ie the datasource equivalent of the property name (perhaps the field name on a database table)</returns>
+        </member>
+        <member name="T:Habanero.DB.DataAccessorDB">
+            <summary>
+             A Data Accessor for Retrieving and committing data from a relational database.
+            </summary>
+        </member>
+        <member name="M:Habanero.DB.DataAccessorDB.#ctor">
+            <summary>
+             The constructor for relational database data accessor. Sets up the appropriate
+             Business object loader for the databse using the current connection string.
+            </summary>
+        </member>
+        <member name="M:Habanero.DB.DataAccessorDB.#ctor(Habanero.Base.IDatabaseConnection)">
+            <summary>
+             The constructor for relational database data accessor. Sets up the appropriate
+             Business object loader for the databse using the current connection string.
+            </summary>
+        </member>
+        <member name="M:Habanero.DB.DataAccessorDB.CreateTransactionCommitter">
+            <summary>
+            Creates a TransactionCommitter for you to use to persist BusinessObjects. A new TransactionCommitter is required
+            each time an object or set of objects is persisted.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Habanero.DB.DataAccessorDB.BusinessObjectLoader">
+            <summary>
+            The <see cref="P:Habanero.BO.IDataAccessor.BusinessObjectLoader"/> to use to load BusinessObjects
+            </summary>
+        </member>
+        <member name="T:Habanero.DB.DatabaseConnectionAccess2007">
+            <summary>
+            A database connection customised for the Microsoft Access database
+            </summary>
+        </member>
         <member name="M:Habanero.DB.DatabaseConnectionAccess2007.#ctor(System.String,System.String)">
             <summary>
             Constructor to initialise the connection object with an
@@ -1367,6 +1444,15 @@
             </summary>
             <param name="connection">A database connection</param>
             <param name="statement">An existing sql statement</param>
+        </member>
+        <member name="M:Habanero.DB.SqlStatement.AddParameter(System.String,System.Object,System.Type)">
+            <summary>
+            Adds a parameter value
+            </summary>
+            <param name="paramName">The parameter name</param>
+            <param name="paramValue">The value to assign</param>
+            <param name="paramType">The type of the parameter (only necessary if the value is null, or you wish to specify more directly the type to use when creating the parameter)</param>
+            <returns>Returns an IDbDataParameter object</returns>
         </member>
         <member name="M:Habanero.DB.SqlStatement.AddParameter(System.String,System.Object)">
             <summary>
@@ -1735,6 +1821,11 @@
         <member name="F:Habanero.DB.DatabaseConfig.SqlServer">
             <summary>
             Microsoft Sql Server - the built in SqlClient data provider will be used
+            </summary>
+        </member>
+        <member name="F:Habanero.DB.DatabaseConfig.SqlServerCe">
+            <summary>
+            Microsoft Sql Server Compact Edition - the built in SqlClient data provider will be used
             </summary>
         </member>
         <member name="F:Habanero.DB.DatabaseConfig.Oracle">
@@ -2218,6 +2309,12 @@
             next request.  A database update transaction can also be generated
             to increment the number stored in the database.
             </summary>
+            <remarks>
+            This number generator does not implement concurrency control of any type.
+            It is susceptible to both lost number and to multiple users generating the 
+            same number. If either of these scenarious exist in your application then
+            please use one of the sub types of <see cref="T:Habanero.Base.INumberGenerator"/>. 
+            </remarks>
         </member>
         <member name="M:Habanero.DB.DatabaseNumberGenerator.#ctor(System.String)">
             <summary>
@@ -2249,6 +2346,20 @@
             <param name="seedValue">The seed value to begin incrementing
             from</param>
         </member>
+        <member name="M:Habanero.DB.DatabaseNumberGenerator.#ctor(System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Constructor to initialise a new generator, supplying a specific
+            table name and starting seed value
+            </summary>
+            <param name="settingName">The database setting name that
+            stores the number</param>
+            <param name="tableName">The database table name that
+            stores the number</param>
+            <param name="seedValue">The seed value to begin incrementing
+            from</param>
+            <param name="settingNameFieldName"></param>
+            <param name="settingValueFieldName"></param>
+        </member>
         <member name="M:Habanero.DB.DatabaseNumberGenerator.GetNextNumberInt">
             <summary>
             Returns the next unique number, which is incremented from the
@@ -2272,28 +2383,20 @@
             </summary>
             <returns>Returns an ITransaction object</returns>
         </member>
-        <member name="M:Habanero.DB.DatabaseNumberGenerator.UpdateStateAsCommitted">
-            <summary>
-             Updates the business object as committed
-            </summary>
-        </member>
-        <member name="M:Habanero.DB.DatabaseNumberGenerator.UpdateAsRolledBack">
-            <summary>
-             updates the object as rolled back
-            </summary>
-        </member>
         <member name="T:Habanero.DB.DatabaseNumberGenerator.NumberUpdate">
             <summary>
             Creates an ITransactional object to update the number in the database when the number is updated.
             </summary>
         </member>
-        <member name="M:Habanero.DB.DatabaseNumberGenerator.NumberUpdate.#ctor(System.Int32,System.String,System.String)">
+        <member name="M:Habanero.DB.DatabaseNumberGenerator.NumberUpdate.#ctor(System.Int32,System.String,System.String,System.String,System.String)">
             <summary>
             Constructor to initialise a new update
             </summary>
-            <param name="newNumber">The new number to store</param>
-            <param name="settingName">The database setting name</param>
+            <param name="currentNumber">The new number to store</param>
+            <param name="setting">The database setting name</param>
             <param name="tableName">The database table name</param>
+            <param name="settingFieldName"></param>
+            <param name="settingValueFieldName"></param>
         </member>
         <member name="M:Habanero.DB.DatabaseNumberGenerator.NumberUpdate.GetPersistSql">
             <summary>
@@ -3175,6 +3278,14 @@
             </summary>
             <param name="busObjToLog"></param>
             <param name="securityController"></param>
+        </member>
+        <member name="M:Habanero.DB.TransactionLogTable.#ctor(Habanero.BO.BusinessObject,Habanero.Base.ISecurityController,System.String)">
+            <summary>
+            Constructs the new transactionlogTable with default table name and logging fields and a specific security controller for getting the currently logged on user.
+            </summary>
+            <param name="busObjToLog"></param>
+            <param name="securityController"></param>
+            <param name="transactionLogTable"></param>
         </member>
         <member name="M:Habanero.DB.TransactionLogTable.#ctor(Habanero.BO.BusinessObject,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>
