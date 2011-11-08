@@ -25,20 +25,20 @@ msbuild_settings = {
 }
 
 #------------------------dependency settings---------------------
-$habanero_version = 'trunk'
+$habanero_version = 'branches/v2.6'
 require 'rake-habanero.rb'
 
-$smooth_version = 'trunk'
+$smooth_version = 'branches/v1.6'
 require 'rake-smooth.rb'
 
-$testability_version = 'trunk'
+$testability_version = 'branches/v1.3'
 require 'rake-testability.rb'
 
-$faces_version = 'trunk'
+$faces_version = 'branches/v2.7'
 require 'rake-faces.rb'
 
 #------------------------project settings------------------------
-$basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/trunk'
+$basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/branches/v1.1'
 $solution = "source/Habanero.Binding - 2010.sln"
 
 #______________________________________________________________________________

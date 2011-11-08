@@ -2219,15 +2219,15 @@
         </member>
         <member name="M:Habanero.Base.Criteria.FromPrimaryKey(Habanero.Base.IPrimaryKey)">
             <summary>
-            Creates a Criteria from an IPrimaryKey object. For each property in the primary primaryKey an Equals criteria is created, and these
+            Creates a Criteria from an IPrimaryKey object. For each property in the primary key an Equals criteria is created, and these
             are all chained together with AND clauses to build up a composite Criteria representing the IPrimaryKey
             </summary>
-            <param name="primaryKey">The IPrimaryKey to create Criteria for</param>
+            <param name="key">The IPrimaryKey to create Criteria for</param>
             <returns>The Criteria this IPrimaryKey instance is defined by</returns>
         </member>
         <member name="M:Habanero.Base.Criteria.FromRelationship(Habanero.Base.IRelationship)">
             <summary>
-            Creates a Criteria from an IRelationship object. For each relationship property in the relationship's primaryKey a simple 
+            Creates a Criteria from an IRelationship object. For each relationship property in the relationship's key a simple 
             Equals Criteria object is created, and these are chained together with AND clauses to build up a composite criteria
             representing the relationship.
             </summary>
