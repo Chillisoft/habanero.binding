@@ -38,7 +38,6 @@ $faces_version = 'branches/v2.7'
 require 'rake-faces.rb'
 
 #------------------------project settings------------------------
-$basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/branches/v1.1'
 $solution = "source/Habanero.Binding - 2010.sln"
 
 #______________________________________________________________________________
