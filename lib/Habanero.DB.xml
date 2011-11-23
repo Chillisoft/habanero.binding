@@ -1629,9 +1629,16 @@
             </summary>
             <param name="numberType"></param>
         </member>
+        <member name="M:Habanero.DB.NumberGeneratorPessimisticLocking.#ctor(System.String,System.Int32)">
+            <summary>
+             Creates a number generator with Pesssimistic locking.
+            </summary>
+            <param name="numberType"></param>
+            <param name="lockDurationInMinutes"></param>
+        </member>
         <member name="M:Habanero.DB.NumberGeneratorPessimisticLocking.NextNumber">
             <summary>
-            Returns the next number in the sequence
+            Returns the next numbers in the sequence
             </summary>
         </member>
         <member name="M:Habanero.DB.NumberGeneratorPessimisticLocking.SetSequenceNumber(System.Int64)">
@@ -1651,9 +1658,15 @@
             This method is only used for testing purposes.
             </summary>
         </member>
+        <member name="P:Habanero.DB.NumberGeneratorPessimisticLocking.IsLocked">
+            <summary>
+             Is this pessimistic number generator currently locked.
+            </summary>
+        </member>
         <member name="T:Habanero.DB.BOSequenceNumberLocking">
             <summary>
-            Manages locking for sequence number control
+            Manages locking for sequence number control. This is used by <see cref="T:Habanero.DB.NumberGeneratorPessimisticLocking"/> to implement the locking
+            strategy.
             </summary>
         </member>
         <member name="P:Habanero.DB.BOSequenceNumberLocking.NumberType">
