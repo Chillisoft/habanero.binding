@@ -3032,6 +3032,22 @@
             <param name="objValue">The value to prepare</param>
             <returns>Returns the reformatted object</returns>
         </member>
+        <member name="T:Habanero.DB.SqlFormatterForSqlServerCe">
+            <summary>
+             Used to store specific SQL formatting information for an SQL Server Compact Edition database.
+             Typically databases differ in the characters used to differentiate fields and tables e.g. [ and ] for ms sql and
+             ` for MySQL.
+            </summary>
+        </member>
+        <member name="M:Habanero.DB.SqlFormatterForSqlServerCe.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+             Constructor of a sql formatter
+            </summary>
+            <param name="leftFieldDelimiter">The left field delimiter to be used for formatting a sql statement</param>
+            <param name="rightFieldDelimiter">The right field delimiter to be used for formatting a sql statement</param>
+            <param name="limitClauseAtBeginning"></param>
+            <param name="limitClauseAtEnd"></param>
+        </member>
         <member name="T:Habanero.DB.SqlStatementBuilder">
             <summary>
              Builds a SQL Select statement for a specific database type
