@@ -52,7 +52,7 @@ desc "Rake Faces, smooth and testability"
 task :rake_dependencies => [:rake_habanero, :rake_smooth, :rake_faces, :rake_testability]
 
 desc "Rakes dependencies, builds solution"
-task :build_all => [:create_temp, :rake_dependencies, :build, :delete_temp]
+task :build_all => [:create_temp, :rake_dependencies, :build, :delete_temp, :nuget]
 
 desc "Rakes dependencies, updates lib only"
 task :rake_and_update_lib => [:create_temp, :rake_dependencies, :updatelib, :delete_temp]
