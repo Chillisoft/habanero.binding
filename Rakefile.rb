@@ -60,6 +60,9 @@ task :rake_and_update_lib => [:create_temp, :rake_dependencies, :updatelib, :del
 desc "Builds solution, including tests"
 task :build => [:clean, :updatelib, :msbuild, :test]
 
+desc "Pushes Habanero into the local nuget folder"
+task :nuget => [:publishProgrammaticBindingNugetPackage]
+
 #------------------------build Faces  --------------------
 
 desc "Cleans the bin folder"
@@ -121,4 +124,12 @@ end
 svn :commitlib do |s|
 	puts cyan("Commiting lib")
 	s.parameters "ci lib -m autocheckin"
+end
+
+desc "Publish the Habanero.ProgrammaticBinding nuget package"
+pushnugetpackages :publishProgrammaticBindingNugetPackage do |package|
+  package.InputFileWithPath = "bin/Habanero.ProgrammaticBinding.dll"
+  package.Nugetid = "Habanero.ProgrammaticBinding.v1.2_ForCF_Stargate"
+  package.Version = "1.2"
+  package.Description = "Habanero.ProgrammaticBinding"
 end
