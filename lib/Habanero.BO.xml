@@ -5314,7 +5314,7 @@
             datastore by calling Save().
             </summary>
         </member>
-        <member name="F:Habanero.BO.BusinessObject._beginEditRunning">
+        <member name="F:Habanero.BO.BusinessObject._beginEditLock">
             <summary>
             Sets the object's state into editing mode.  The original state can
             be restored with Restore() and changes can be committed to the
