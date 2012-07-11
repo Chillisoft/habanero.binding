@@ -9157,6 +9157,18 @@
             property to true.
             </summary>
         </member>
+        <member name="M:Habanero.Faces.Base.IReadOnlyGridButtonsControl.RemoveHandlers(System.String)">
+            <summary>
+            Removes the current handlers for an operation -- useful to clear 
+            out handlers before replacing with your own
+            </summary>
+            <param name="operation">one of "add", "edit", or "delete"</param>
+        </member>
+        <member name="M:Habanero.Faces.Base.IReadOnlyGridButtonsControl.RemoveAllHandlers">
+            <summary>
+            Convenience function to call RemoveHandlers for all handler types
+            </summary>
+        </member>
         <member name="E:Habanero.Faces.Base.IReadOnlyGridButtonsControl.DeleteClicked">
             <summary>
             Fires when the Delete button is clicked
