@@ -8137,6 +8137,12 @@
             on the user's machine.
             </summary>
         </member>
+        <member name="P:Habanero.Faces.Base.DateDisplaySettings.DateTimePickerDefaultFormat">
+            <summary>
+            Gets and sets the default format to use for DateTimePicker controls; set to null to use
+            the control default
+            </summary>
+        </member>
         <member name="T:Habanero.Faces.Base.LookupComboBoxMapper">
             <summary>
             Wraps/Decorates a ComboBox in order to display and capture a lookup property of the business object 
