@@ -33,7 +33,7 @@ else
 	$nuget_faces_version = 'v2.7-13_02_2012'
 	$nuget_security_version = 'v2.7'
 	
-	$nuget_publish_version = 'v2.6-13_02_2012'
+	$nuget_publish_version = 'v1.2'
 	$nuget_publish_version_id = 'v1.2'
 end
 
