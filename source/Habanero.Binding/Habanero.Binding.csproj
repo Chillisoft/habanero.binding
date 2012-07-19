@@ -37,12 +37,15 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Habanero.Base">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.BO">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Naked">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Naked.dll</HintPath>
     </Reference>
     <Reference Include="System" />

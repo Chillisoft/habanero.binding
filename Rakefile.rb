@@ -14,6 +14,29 @@ $buildscriptpath = File.expand_path(bs)
 $:.unshift($buildscriptpath) unless
     $:.include?(bs) || $:.include?($buildscriptpath)
 
+if (bs.index("branches") == nil)
+	nuget_version = 'Trunk'
+	nuget_version_id = '9.9.999'
+	
+	$nuget_habanero_version	= nuget_version
+	$nuget_smooth_version =	nuget_version
+	$nuget_testability_version = nuget_version
+	$nuget_faces_version = nuget_version
+	$nuget_security_version = nuget_version
+	
+	$nuget_publish_version = nuget_version
+	$nuget_publish_version_id = nuget_version_id
+else
+	$nuget_habanero_version	= 'v2.6-2012-06-12'
+	$nuget_smooth_version =	'v1.5_2011-08-24'
+	$nuget_testability_version = 'v1.3'
+	$nuget_faces_version = 'v2.7-13_02_2012'
+	$nuget_security_version = 'v2.7'
+	
+	$nuget_publish_version = 'v2.6-13_02_2012'
+	$nuget_publish_version_id = 'v1.2'
+end
+
 #------------------------build settings--------------------------
 require 'rake-settings.rb'
 
@@ -25,18 +48,6 @@ msbuild_settings = {
 }
 
 #------------------------dependency settings---------------------
-$habanero_version = 'trunk'
-require 'rake-habanero.rb'
-
-$smooth_version = 'trunk'
-require 'rake-smooth.rb'
-
-$testability_version = 'trunk'
-require 'rake-testability.rb'
-
-$faces_version = 'trunk'
-require 'rake-faces.rb'
-
 #------------------------project settings------------------------
 $basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/trunk'
 $solution = "source/Habanero.Binding - 2010.sln"
@@ -45,19 +56,10 @@ $solution = "source/Habanero.Binding - 2010.sln"
 #---------------------------------TASKS----------------------------------------
 
 desc "Runs the build all task"
-task :default => [:build_all]
-
-desc "Rake Dependencies"
-task :rake_dependencies => [:rake_habanero, :rake_smooth, :rake_testability, :rake_faces]
-
-desc "Rakes dependencies, builds solution"
-task :build_all => [:create_temp, :rake_dependencies, :build, :delete_temp]
-
-desc "Rakes dependencies, updates lib only"
-task :rake_and_update_lib => [:create_temp, :rake_dependencies, :updatelib, :delete_temp]
+task :default => [:build]
 
 desc "Builds solution, including tests"
-task :build => [:clean, :updatelib, :msbuild, :test, :commitlib]
+task :build => [:clean, :installNugetPackages, :msbuild, :test, :publishHabaneroProgrammaticBindingNugetPackage]
 
 #------------------------build Faces  --------------------
 
@@ -71,43 +73,31 @@ svn :update_lib_from_svn do |s|
 	s.parameters "update lib"
 end
 
-task :updatelib => :update_lib_from_svn do 
-	puts cyan("Updating lib")
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Base.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Base.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Base.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.BO.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.BO.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.BO.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Console.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Console.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Console.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.DB.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Test.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Test.pdb'), 'lib'
-	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Smooth.pdb'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Naked.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Naked.pdb'), 'lib'	
-	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.pdb'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Helpers.pdb'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Testers.dll'), 'lib'	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Testability.Testers.pdb'), 'lib'	
-	
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Test.Base.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Base.xml'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Test.Win.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.dll'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.pdb'), 'lib'
-	FileUtils.cp Dir.glob('temp/bin/Habanero.Faces.Win.xml'), 'lib'
+desc "Install nuget packages"
+getnugetpackages :installNugetPackages do |ip|
+    ip.package_names = ["Habanero.Base.#{$nuget_habanero_version}",  
+						"Habanero.BO.#{$nuget_habanero_version}",  
+						"Habanero.Console.#{$nuget_habanero_version}",  
+						"Habanero.DB.#{$nuget_habanero_version}", 
+						"Habanero.Test.#{$nuget_habanero_version}", 
+						"Habanero.Smooth.#{$nuget_smooth_version}",  
+						"Habanero.Naked.#{$nuget_smooth_version}",  
+						"Habanero.Faces.Base.#{$nuget_faces_version}",  
+						"Habanero.Faces.Win.#{$nuget_faces_version}",   
+						"Habanero.Faces.Test.Win.#{$nuget_faces_version}",   
+						"Habanero.Faces.Test.Base.#{$nuget_faces_version}",  
+						"Habanero.Testability.#{$nuget_testability_version}",  
+						"Habanero.Testability.Helpers.#{$nuget_testability_version}",  
+						"Habanero.Testability.Testers.#{$nuget_testability_version}",
+						"nunit.framework"]
+end
+
+desc "Publish the Habanero.ProgrammaticBinding nuget package"
+pushnugetpackages :publishHabaneroProgrammaticBindingNugetPackage do |package|
+  package.InputFileWithPath = "bin/Habanero.ProgrammaticBinding.dll"
+  package.Nugetid = "Habanero.ProgrammaticBinding.#{$nuget_publish_version}"
+  package.Version = $nuget_publish_version_id
+  package.Description = "Habanero.ProgrammaticBinding"
 end
 
 desc "Builds the solution with msbuild"
@@ -121,9 +111,4 @@ desc "Runs the tests"
 nunit :test do |nunit|
 	puts cyan("Running tests")
 	nunit.assemblies 'bin\Habanero.Binding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tests.dll','bin\Habanero.ProgrammaticBinding.Tester.Tests.dll'
-end
-
-svn :commitlib do |s|
-	puts cyan("Commiting lib")
-	s.parameters "ci lib -m autocheckin"
 end

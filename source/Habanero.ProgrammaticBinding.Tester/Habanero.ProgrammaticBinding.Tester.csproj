@@ -32,12 +32,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Habanero.Base">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Faces.Base">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />

@@ -33,45 +33,59 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Habanero.Base">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Base.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.BO">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.BO.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Base, Version=9.9.9.999, Culture=neutral, PublicKeyToken=a8408464fc128d8b, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Faces.Base">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Faces.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Test.Base, Version=9.9.9.999, Culture=neutral, PublicKeyToken=11b2ace2749e3f86, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Faces.Test.Base">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Faces.Test.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Test.Win, Version=9.9.9.999, Culture=neutral, PublicKeyToken=4d30b79b24d790be, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Faces.Test.Win">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Faces.Test.Win.dll</HintPath>
     </Reference>
-    <Reference Include="Habanero.Faces.Win, Version=9.9.9.999, Culture=neutral, PublicKeyToken=0e9ee1bfff5ba48c, processorArchitecture=MSIL">
+    <Reference Include="Habanero.Faces.Win">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Faces.Win.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Smooth">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Smooth.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Test">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Test.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Testability">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Testability.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Testability.Helpers">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Testability.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="Habanero.Testability.Testers">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Habanero.Testability.Testers.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+    <Reference Include="log4net">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+    <Reference Include="Rhino.Mocks">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
