@@ -46,6 +46,12 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             this.GridBaseManager.BusinessObjectSelected += delegate { FireBusinessObjectSelected(); };
             _gridView.DoubleClick += DoubleClickHandler;
 
+            if (GlobalUIRegistry.UIStyleHints != null)
+            {
+                this.ColumnAutoSizingStrategy = GlobalUIRegistry.UIStyleHints.GridHints.ColumnAutoSizingStrategy;
+                this.ColumnAutoSizingPadding = GlobalUIRegistry.UIStyleHints.GridHints.ColumnAutoSizingPadding;
+            }
+
             _gridView.Resize += (sender, e) =>
                 {
                     this.ImplementColumnAutoSizingStrategy();
