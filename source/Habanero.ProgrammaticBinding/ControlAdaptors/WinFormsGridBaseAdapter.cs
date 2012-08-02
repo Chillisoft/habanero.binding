@@ -32,6 +32,10 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
     {
         public GridColumnAutoSizingStrategies ColumnAutoSizingStrategy { get; set; }
         public int ColumnAutoSizingPadding { get; set; }
+        public bool EnableAlternateRowColoring { get; set; }
+        public bool HideObjectIDColumn { get; set; }
+        public bool AutoResizeColumnsOnGridResize { get; set; }
+        
 
         protected readonly DataGridView _gridView;
         private readonly GridBaseManager _manager;
@@ -42,7 +46,12 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             ConfirmDeletion = false;
             CheckUserConfirmsDeletionDelegate = CheckUserWantsToDelete;
             _manager = new GridBaseManagerBindingList(this);
-            this.GridBaseManager.CollectionChanged += delegate { FireCollectionChanged(); };
+            this.GridBaseManager.CollectionChanged += delegate { 
+                FireCollectionChanged();
+                ImplementColumnAutoSizingStrategy();
+                ImplementAlternatRowColoring();
+
+            };
             this.GridBaseManager.BusinessObjectSelected += delegate { FireBusinessObjectSelected(); };
             _gridView.DoubleClick += DoubleClickHandler;
 
@@ -50,13 +59,42 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
             {
                 this.ColumnAutoSizingStrategy = GlobalUIRegistry.UIStyleHints.GridHints.ColumnAutoSizingStrategy;
                 this.ColumnAutoSizingPadding = GlobalUIRegistry.UIStyleHints.GridHints.ColumnAutoSizingPadding;
+                this.EnableAlternateRowColoring = GlobalUIRegistry.UIStyleHints.GridHints.EnableAlternateRowColoring;
+                this.HideObjectIDColumn = GlobalUIRegistry.UIStyleHints.GridHints.HideObjectIDColumn;
             }
 
             _gridView.Resize += (sender, e) =>
                 {
-                    this.ImplementColumnAutoSizingStrategy();
+                    if (this.AutoResizeColumnsOnGridResize)
+                        this.ImplementColumnAutoSizingStrategy();
                 };
         }
+
+        private void ImplementAlternatRowColoring()
+        {
+            if (!this.EnableAlternateRowColoring)
+            {
+                this._gridView.AlternatingRowsDefaultCellStyle = null;
+            }
+            else
+            {
+                var s = new DataGridViewCellStyle();
+                var bg = SystemColors.Window;
+                var fg = SystemColors.WindowText;
+                s.ForeColor = fg;
+                s.BackColor = Color.FromArgb(this.ApproachColor(fg.R, bg.R), this.ApproachColor(fg.G, bg.G), this.ApproachColor(fg.B, bg.B));
+                this._gridView.AlternatingRowsDefaultCellStyle = s;
+            }
+        }
+
+        private byte ApproachColor(byte fg, byte bg)
+        {
+            int fore = (int)fg;
+            int back = (int)bg;
+            return (byte)(back + (0.1 * (fore - back)));
+        }
+
+
 
         #region Events
 
