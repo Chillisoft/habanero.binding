@@ -89,7 +89,7 @@ getnugetpackages :installNugetPackages do |ip|
 						"Habanero.Testability.#{$nuget_testability_version}",  
 						"Habanero.Testability.Helpers.#{$nuget_testability_version}",  
 						"Habanero.Testability.Testers.#{$nuget_testability_version}",
-						"nunit.framework"]
+						"nunit.Trunk"]
 end
 
 desc "Publish the Habanero.ProgrammaticBinding nuget package"
