@@ -9,7 +9,7 @@ require 'albacore'
 # deeper in the repo you will need to add another ..
 bs = File.dirname(__FILE__)
 bs = File.join(bs, "..") if bs.index("branches") != nil
-bs = File.join(bs, "../../../HabaneroCommunity/BuildScripts")
+bs = File.join(bs, "../HabaneroCommunity/BuildScripts")
 $buildscriptpath = File.expand_path(bs)
 $:.unshift($buildscriptpath) unless
     $:.include?(bs) || $:.include?($buildscriptpath)
@@ -37,6 +37,9 @@ else
 	$nuget_publish_version_id = 'v1.2'
 end
 
+$binaries_baselocation = "bin"
+$nuget_baselocation = "nugetArtifacts"
+$app_version ='9.9.9.999'
 #------------------------build settings--------------------------
 require 'rake-settings.rb'
 
@@ -47,20 +50,44 @@ msbuild_settings = {
   #:use => :net35  ;uncomment to use .net 3.5 - default is 4.0
 }
 
+puts cyan("Nuget Details #{$nuget_publish_version }, #{$nuget_publish_version_id} ")	
+$major_version = ''
+$minor_version = ''
+$patch_version = ''
 #------------------------dependency settings---------------------
 #------------------------project settings------------------------
-$basepath = 'http://delicious:8080/svn/habanero/HabaneroCommunity/Habanero.Binding/trunk'
 $solution = "source/Habanero.Binding - 2010.sln"
-
 #______________________________________________________________________________
 #---------------------------------TASKS----------------------------------------
 
 desc "Runs the build all task"
-task :default => [:build]
+task :default, [:major, :minor, :patch] => [:build]
 
 desc "Builds solution, including tests"
-task :build => [:clean, :installNugetPackages, :msbuild, :test, :publishHabaneroProgrammaticBindingNugetPackage]
+task :build, [:major, :minor, :patch] => [:clean, :setupversion, :set_assembly_version, :installNugetPackages, :msbuild, :copy_to_nuget, :test, :publishHabaneroProgrammaticBindingNugetPackage]
 
+#------------------------Setup Versions---------
+desc "Setup Versions"
+task :setupversion,:major ,:minor,:patch do |t, args|
+	puts cyan("Setup Versions")
+	args.with_defaults(:major => "0")
+	args.with_defaults(:minor => "0")
+	args.with_defaults(:patch => "0000")
+	$major_version = "#{args[:major]}"
+	$minor_version = "#{args[:minor]}"
+	$patch_version = "#{args[:patch]}"
+	$app_version = "#{$major_version}.#{$minor_version}.#{$patch_version}.0"
+	puts cyan("Assembly Version #{$app_version}")	
+end
+
+task :set_assembly_version do
+	puts green("Setting Shared AssemblyVersion to: #{$app_version}")
+	file_path = "source/Common/AssemblyInfoShared.cs"
+	outdata = File.open(file_path).read.gsub(/"9.9.9.999"/, "\"#{$app_version}\"")
+	File.open(file_path, 'w') do |out|
+		out << outdata
+	end	
+end
 #------------------------build Faces  --------------------
 
 desc "Cleans the bin folder"
@@ -90,6 +117,15 @@ getnugetpackages :installNugetPackages do |ip|
 						"Habanero.Testability.Helpers.#{$nuget_testability_version}",  
 						"Habanero.Testability.Testers.#{$nuget_testability_version}",
 						"nunit.Trunk"]
+end
+
+def copy_nuget_files_to location
+	FileUtils.cp "#{$binaries_baselocation}/Habanero.ProgrammaticBinding.dll", location
+end
+
+task :copy_to_nuget do
+	puts cyan("Copying files to the nuget folder")	
+	copy_nuget_files_to $nuget_baselocation
 end
 
 desc "Publish the Habanero.ProgrammaticBinding nuget package"
