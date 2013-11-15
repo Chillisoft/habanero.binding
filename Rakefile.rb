@@ -94,6 +94,8 @@ desc "Cleans the bin folder"
 task :clean do
 	puts cyan("Cleaning bin folder")
 	FileUtils.rm_rf 'bin'
+	FileUtils.rm_rf $nuget_baselocation	
+	FileSystem.ensure_dir_exists $nuget_baselocation
 end
 
 svn :update_lib_from_svn do |s|
