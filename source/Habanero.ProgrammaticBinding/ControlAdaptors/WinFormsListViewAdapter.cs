@@ -29,9 +29,10 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
         {
             if (SelectedIndexChanged != null) SelectedIndexChanged(sender, e);
         }
-
+#pragma warning disable
         public event EventHandler SelectedValueChanged;
-/*
+#pragma warning enable
+        /*
         public event EventHandler SelectedValueChanged;
         public event EventHandler SelectedIndexChanged;
         

@@ -19,10 +19,10 @@ namespace Habanero.ProgrammaticBinding.ControlAdaptors
         {
             _numericUpDown = control;
         }
-
+#pragma warning disable
         public event EventHandler Enter;
         public event EventHandler ValueChanged;
-
+#pragma warning enable
         public int DecimalPlaces
         {
             get { return _numericUpDown.DecimalPlaces; }

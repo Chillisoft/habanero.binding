@@ -7,6 +7,7 @@ using Habanero.Base;
 using Habanero.Base.Exceptions;
 using Habanero.Base.Logging;
 using Habanero.BO;
+using Habanero.BO.Exceptions;
 using Habanero.Faces.Base;
 using Habanero.Faces.Win;
 using Habanero.Faces.Win.Grid;
