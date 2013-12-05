@@ -50,7 +50,7 @@ desc "Pulls habanero deps from local nuget, builds , tests and pushes faces"
 task :build_test_push_internal, [:majorhab, :minorhab, :patchhab,:majorbin, :minorbin, :patchbin, :apikey, :sourceurl] => [:updatesubmodules,:setupvars, :installNugetPackages, :build, :publishHabaneroProgrammaticBindingNugetPackage]
 
 desc "Builds solution, including tests"
-task :build, [:majorhab, :minorhab, :patchhab,:majorbin, :minorbin, :patchbin, :apikey, :sourceurl] => [:clean, :setupvars, :set_assembly_version, :installNugetPackages, :msbuild, :copy_to_nuget, :test]
+task :build, [:majorhab, :minorhab, :patchhab,:majorbin, :minorbin, :patchbin, :apikey, :sourceurl] => [:clean, :restorepackages, :setupvars, :set_assembly_version, :installNugetPackages, :msbuild, :copy_to_nuget, :test]
 
 #------------------------Setup Versions---------
 desc "Setup Variables"
