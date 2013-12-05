@@ -8,38 +8,15 @@ require 'albacore'
 # This should be the same for most projects, but if your project is a level
 # deeper in the repo you will need to add another ..
 bs = File.dirname(__FILE__)
-bs = File.join(bs, "..") if bs.index("branches") != nil
-bs = File.join(bs, "../HabaneroCommunity/BuildScripts")
+bs = File.join(bs, "/rake-tasks")
 $buildscriptpath = File.expand_path(bs)
 $:.unshift($buildscriptpath) unless
     $:.include?(bs) || $:.include?($buildscriptpath)
 
-if (bs.index("branches") == nil)
-	nuget_version = 'Trunk'
-	nuget_version_id = '9.9.999'
-	
-	$nuget_habanero_version	= nuget_version
-	$nuget_smooth_version =	nuget_version
-	$nuget_testability_version = nuget_version
-	$nuget_faces_version = nuget_version
-	$nuget_security_version = nuget_version
-	
-	$nuget_publish_version = nuget_version
-	$nuget_publish_version_id = nuget_version_id
-else
-	$nuget_habanero_version	= 'v2.6-2012-06-12'
-	$nuget_smooth_version =	'v1.5_2011-08-24'
-	$nuget_testability_version = 'v1.3'
-	$nuget_faces_version = 'v2.7-13_02_2012'
-	$nuget_security_version = 'v2.7'
-	
-	$nuget_publish_version = 'v1.2'
-	$nuget_publish_version_id = 'v1.2'
-end
-
 $binaries_baselocation = "bin"
 $nuget_baselocation = "nugetArtifacts"
-$app_version ='9.9.9.999'
+$app_version_hab ='9.9.9.999'
+$app_version_bin ='9.9.9.999'
 #------------------------build settings--------------------------
 require 'rake-settings.rb'
 
@@ -50,40 +27,75 @@ msbuild_settings = {
   #:use => :net35  ;uncomment to use .net 3.5 - default is 4.0
 }
 
-puts cyan("Nuget Details #{$nuget_publish_version }, #{$nuget_publish_version_id} ")	
-$major_version = ''
-$minor_version = ''
-$patch_version = ''
 #------------------------dependency settings---------------------
 #------------------------project settings------------------------
 $solution = "source/Habanero.Binding - 2010.sln"
+$solutionNuget = '"source/Habanero.Binding - 2010.sln"'
+$major_version_hab = ''
+$minor_version_hab = ''
+$patch_version_hab = ''
+$major_version_binding = ''
+$minor_version_binding = ''
+$patch_version_binding = ''
+$nuget_apikey = ''
+$nuget_sourceurl = ''
+$nuget_publish_version = 'Trunk'
 #______________________________________________________________________________
 #---------------------------------TASKS----------------------------------------
 
 desc "Runs the build all task"
-task :default, [:major, :minor, :patch] => [:build]
+task :default, [:majorhab, :minorhab, :patchhab,:majorbin, :minorbin, :patchbin] => [:updatesubmodules, :setupvars,:build]
+
+desc "Pulls habanero deps from local nuget, builds , tests and pushes faces"
+task :build_test_push_internal, [:majorhab, :minorhab, :patchhab,:majorbin, :minorbin, :patchbin, :apikey, :sourceurl] => [:updatesubmodules,:setupvars, :installNugetPackages, :build, :publishHabaneroProgrammaticBindingNugetPackage]
 
 desc "Builds solution, including tests"
-task :build, [:major, :minor, :patch] => [:clean, :setupversion, :set_assembly_version, :installNugetPackages, :msbuild, :copy_to_nuget, :test, :publishHabaneroProgrammaticBindingNugetPackage]
+task :build, [:majorhab, :minorhab, :patchhab,:majorbin, :minorbin, :patchbin, :apikey, :sourceurl] => [:clean, :setupvars, :set_assembly_version, :installNugetPackages, :msbuild, :copy_to_nuget, :test]
 
 #------------------------Setup Versions---------
-desc "Setup Versions"
-task :setupversion,:major ,:minor,:patch do |t, args|
-	puts cyan("Setup Versions")
-	args.with_defaults(:major => "0")
-	args.with_defaults(:minor => "0")
-	args.with_defaults(:patch => "0000")
-	$major_version = "#{args[:major]}"
-	$minor_version = "#{args[:minor]}"
-	$patch_version = "#{args[:patch]}"
-	$app_version = "#{$major_version}.#{$minor_version}.#{$patch_version}.0"
-	puts cyan("Assembly Version #{$app_version}")	
+desc "Setup Variables"
+task :setupvars,:majorhab, :minorhab, :patchhab, :majorbin, :minorbin, :patchbin, :apikey, :sourceurl do |t, args|
+	puts cyan("Setup Variables")
+	args.with_defaults(:majorhab => "0")
+	args.with_defaults(:minorhab => "0")
+	args.with_defaults(:patchhab => "0000")
+	args.with_defaults(:majorbin => "0")
+	args.with_defaults(:minorbin => "0")
+	args.with_defaults(:patchbin => "0000")
+	args.with_defaults(:apikey => "")
+	args.with_defaults(:sourceurl => "")
+	$major_version_hab = "#{args[:majorhab]}"
+	$minor_version_hab = "#{args[:minorhab]}"
+	$patch_version_hab = "#{args[:patchhab]}"
+	$major_version_binding = "#{args[:majorbin]}"
+	$minor_version_binding = "#{args[:minorbin]}"
+	$patch_version_binding = "#{args[:patchbin]}"
+	$nuget_apikey = "#{args[:apikey]}"
+	$nuget_sourceurl = "#{args[:sourceurl]}"
+	$app_version_hab = "#{$major_version_hab}.#{$minor_version_hab}.#{$patch_version_hab}.0"
+	$app_version_bin = "#{$major_version_binding}.#{$minor_version_binding}.#{$patch_version_binding}.0"
+	puts cyan("Assembly Version Habanero : #{$app_version_hab}")
+	puts cyan("Assembly Version Binding : #{$app_version_bin}")
+	puts cyan("Nuget key: #{$nuget_apikey} for: #{$nuget_sourceurl}")
+end
+
+desc "Restore Nuget Packages"
+task :restorepackages do
+	puts cyan('lib\nuget.exe restore '+"#{$solutionNuget}")
+	system 'lib\nuget.exe restore '+"#{$solutionNuget}"
+end
+
+desc "Update Submodules"
+task :updatesubmodules do
+	puts cyan("Updating Git Submodules")
+	system 'git submodule foreach git checkout master'
+	system 'git submodule foreach git pull'
 end
 
 task :set_assembly_version do
-	puts green("Setting Shared AssemblyVersion to: #{$app_version}")
+	puts green("Setting Shared AssemblyVersion to: #{$app_version_bin}")
 	file_path = "source/Common/AssemblyInfoShared.cs"
-	outdata = File.open(file_path).read.gsub(/"9.9.9.999"/, "\"#{$app_version}\"")
+	outdata = File.open(file_path).read.gsub(/"9.9.9.999"/, "\"#{$app_version_bin}\"")
 	File.open(file_path, 'w') do |out|
 		out << outdata
 	end	
@@ -98,27 +110,24 @@ task :clean do
 	FileSystem.ensure_dir_exists $nuget_baselocation
 end
 
-svn :update_lib_from_svn do |s|
-	s.parameters "update lib"
-end
-
 desc "Install nuget packages"
 getnugetpackages :installNugetPackages do |ip|
-    ip.package_names = ["Habanero.Base.#{$nuget_habanero_version}",  
-						"Habanero.BO.#{$nuget_habanero_version}",  
-						"Habanero.Console.#{$nuget_habanero_version}",  
-						"Habanero.DB.#{$nuget_habanero_version}", 
-						"Habanero.Test.#{$nuget_habanero_version}", 
-						"Habanero.Smooth.#{$nuget_smooth_version}",  
-						"Habanero.Naked.#{$nuget_smooth_version}",  
-						"Habanero.Faces.Base.#{$nuget_faces_version}",  
-						"Habanero.Faces.Win.#{$nuget_faces_version}",   
-						"Habanero.Faces.Test.Win.#{$nuget_faces_version}",   
-						"Habanero.Faces.Test.Base.#{$nuget_faces_version}",  
-						"Habanero.Testability.#{$nuget_testability_version}",  
-						"Habanero.Testability.Helpers.#{$nuget_testability_version}",  
-						"Habanero.Testability.Testers.#{$nuget_testability_version}",
-						"nunit.Trunk"]
+    ip.package_names = ["Habanero.Base.#{$nuget_publish_version}",  
+						"Habanero.BO.#{$nuget_publish_version}",  
+						"Habanero.Console.#{$nuget_publish_version}",  
+						"Habanero.DB.#{$nuget_publish_version}", 
+						"Habanero.Test.#{$nuget_publish_version}", 
+						"Habanero.Smooth.#{$nuget_publish_version}",  
+						"Habanero.Naked.#{$nuget_publish_version}",  
+						"Habanero.Faces.Base.#{$nuget_publish_version}",  
+						"Habanero.Faces.Win.#{$nuget_publish_version}",   
+						"Habanero.Faces.Test.Win.#{$nuget_publish_version}",   
+						"Habanero.Faces.Test.Base.#{$nuget_publish_version}",  
+						"Habanero.Testability.#{$nuget_publish_version}",  
+						"Habanero.Testability.Helpers.#{$nuget_publish_version}",  
+						"Habanero.Testability.Testers.#{$nuget_publish_version}"]
+	ip.SourceUrl = "#{$nuget_sourceurl}/nuget"
+	ip.Version = $app_version_hab
 end
 
 def copy_nuget_files_to location
@@ -131,11 +140,13 @@ task :copy_to_nuget do
 end
 
 desc "Publish the Habanero.ProgrammaticBinding nuget package"
-pushnugetpackages :publishHabaneroProgrammaticBindingNugetPackage do |package|
+pushnugetpackagesonline :publishHabaneroProgrammaticBindingNugetPackage do |package|
   package.InputFileWithPath = "bin/Habanero.ProgrammaticBinding.dll"
   package.Nugetid = "Habanero.ProgrammaticBinding.#{$nuget_publish_version}"
-  package.Version = $nuget_publish_version_id
+  package.Version = $app_version_bin
   package.Description = "Habanero.ProgrammaticBinding"
+  package.ApiKey = "#{$nuget_apikey}"
+  package.SourceUrl = "#{$nuget_sourceurl}"
 end
 
 desc "Builds the solution with msbuild"
