@@ -1,0 +1,10 @@
+/buildreports/**
+/lib/**
+**/bin/**
+*.FileListAbsolute.txt
+*.cache
+**/obj/**
+/source/packages/**
+/nugetArtifacts/**
+*.DotSettings.user
+*.suo
